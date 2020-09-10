@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PitCrew
+namespace HumanResources
 {
 
     public class CrewScarcity

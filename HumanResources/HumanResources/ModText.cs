@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PitCrew
+namespace HumanResources
 {
     public class ModCrewNames
     {

@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine;
 using us.frostraptor.modUtils.sorts;
 
-namespace PitCrew.Patches
+namespace HumanResources.Patches
 {
 
     //[HarmonyPatch(typeof(SimGameState), "GetExpenditures")]

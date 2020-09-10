@@ -2,7 +2,7 @@
 using BattleTech;
 using System.Collections.Generic;
 
-namespace PitCrew
+namespace HumanResources
 {
 
     public class PilotCreateState

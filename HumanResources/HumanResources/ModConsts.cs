@@ -1,6 +1,6 @@
 ﻿
 
-namespace PitCrew
+namespace HumanResources
 {
     public static class ModConsts
     {

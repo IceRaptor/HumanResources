@@ -1,10 +1,10 @@
 ﻿using BattleTech;
 using Harmony;
-using PitCrew.Helper;
+using HumanResources.Helper;
 using System;
 using System.Collections.Generic;
 
-namespace PitCrew.Patches
+namespace HumanResources.Patches
 {
     [HarmonyPatch(typeof(StarSystem), "GeneratePilots")]
     static class StarSystem_GeneratePilots

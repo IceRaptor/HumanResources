@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PitCrew.Patches.UI
+namespace HumanResources.Patches.UI
 {
     [HarmonyPatch(typeof(SGSystemViewPopulator), "UpdateRoutedSystem")]
     static class SGSystemViewPopulator_UpdateRoutedSystem

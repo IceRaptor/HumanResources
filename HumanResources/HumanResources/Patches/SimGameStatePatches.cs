@@ -3,7 +3,7 @@ using BattleTech.Data;
 using Harmony;
 using SVGImporter;
 
-namespace PitCrew.Patches
+namespace HumanResources.Patches
 {
     [HarmonyPatch(typeof(SimGameState), "_OnInit")]
     static class SimGameState__OnInit

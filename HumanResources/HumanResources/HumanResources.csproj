@@ -81,15 +81,14 @@
     <Compile Include="ModInit.cs" />
     <Compile Include="ModState.cs" />
     <Compile Include="ModText.cs" />
-    <Compile Include="Patches\MechTechs\SGBarracksRosterPatches.cs" />
+    <Compile Include="Patches\SGBarracksRosterPatches.cs" />
     <Compile Include="Patches\MonthlyCostsPatches.cs" />
-    <Compile Include="Patches\Patches.cs" />
     <Compile Include="Patches\PilotGeneratorPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterListPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterSlotPatches.cs" />
     <Compile Include="Patches\SimGameStatePatches.cs" />
     <Compile Include="Patches\StarSystemPatches.cs" />
-    <Compile Include="Patches\UI\SGNavigationScreenPatches.cs" />
+    <Compile Include="Patches\SGNavigationScreenPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -9,7 +9,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PitCrew.Patches
+namespace HumanResources.Patches
 {
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "RefreshCostColorAndAvailability")]
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability

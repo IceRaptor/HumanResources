@@ -6,14 +6,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-namespace PitCrew
+namespace HumanResources
 {
 
     public static class Mod
     {
 
-        public const string HarmonyPackage = "us.frostraptor.PitCrew";
-        public const string LogName = "pit_crew";
+        public const string HarmonyPackage = "us.frostraptor.HumanResources";
+        public const string LogName = "human_resources";
 
         public static DeferringLogger Log;
         public static string ModDir;

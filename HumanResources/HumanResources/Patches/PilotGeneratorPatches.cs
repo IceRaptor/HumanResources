@@ -3,7 +3,7 @@ using Harmony;
 using System;
 using System.Collections.Generic;
 
-namespace PitCrew.Patches
+namespace HumanResources.Patches
 {
     [HarmonyPatch(typeof(PilotGenerator), MethodType.Constructor)]
     [HarmonyPatch(new Type[] { typeof(SimGameState), typeof(List<LifepathNodeDef>), typeof(List<SimGameStringList>) })]

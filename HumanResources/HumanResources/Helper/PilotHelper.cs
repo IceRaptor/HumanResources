@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace PitCrew.Helper
+namespace HumanResources.Helper
 {
 
     public static class PilotHelper

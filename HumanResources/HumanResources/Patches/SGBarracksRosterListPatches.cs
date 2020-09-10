@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace PitCrew.Patches
+namespace HumanResources.Patches
 {
 
     [HarmonyPatch(typeof(SGBarracksRosterList), "AddPilot")]

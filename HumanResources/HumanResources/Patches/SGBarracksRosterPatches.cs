@@ -3,7 +3,7 @@ using BattleTech.UI;
 using Harmony;
 using System.Collections.Generic;
 
-namespace PitCrew.Patches.MechTechs
+namespace HumanResources.Patches.MechTechs
 {
 
     // NOTE: Barracks used for both lance configuration as well as hiring hall
