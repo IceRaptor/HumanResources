@@ -8,7 +8,6 @@ using System.Reflection;
 
 namespace HumanResources
 {
-
     public static class Mod
     {
 

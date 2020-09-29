@@ -13,6 +13,7 @@ namespace HumanResources.Patches
 
         // TODO: Manipulate # of pilots by planet tags
         // TODO: Manipulate # of ronin by planet tags
+        // TODO: Check for Allow flags by each type
         static bool Prefix(StarSystem __instance, int count)
         {
             int systemDiff = __instance.Def.GetDifficulty(SimGameState.SimGameType.CAREER);
@@ -22,6 +23,7 @@ namespace HumanResources.Patches
             int vehicleCrewsUpperBound = 0;
             int mechTechsUpperBound = 0;
             int medTechsUpperBound = 0;
+            int aerospaceUpperBound = 0;
 
             foreach (string tag in __instance.Tags)
             {
@@ -34,19 +36,22 @@ namespace HumanResources.Patches
                     mechTechsUpperBound += scarcity.MechTechs;
                     medTechsUpperBound += scarcity.MedTechs;
                     vehicleCrewsUpperBound += scarcity.VehicleCrews;
+                    aerospaceUpperBound += scarcity.Aerospace;
                 }
             }
             Mod.Log.Debug?.Write($"Final scarcity for planet {__instance.Name} => " +
                 $"mechwarriors: {mechWarriorsUpperBound}  mechTechs: {mechTechsUpperBound}  medTechs: {medTechsUpperBound}  vehicleCrews: {vehicleCrewsUpperBound}");
 
             int mechWarriorsLowerBound = Math.Max(0, mechWarriorsUpperBound / 2);
-            int vehicleCrewsLowerBound = Math.Max(0, vehicleCrewsUpperBound / 2);
-            int mechTechLowerBound = Math.Max(0, mechTechsUpperBound / 2);
-            int medTechsLowerBound = Math.Max(0, medTechsUpperBound / 2);
             Mod.Log.Debug?.Write($"  MechWarriors lowerBound: {mechWarriorsLowerBound}  upperBound: {mechWarriorsUpperBound}");
+            int vehicleCrewsLowerBound = Math.Max(0, vehicleCrewsUpperBound / 2);
             Mod.Log.Debug?.Write($"  VehicleCrews lowerBound: {vehicleCrewsLowerBound}  upperBound: {vehicleCrewsUpperBound}");
+            int mechTechLowerBound = Math.Max(0, mechTechsUpperBound / 2);
             Mod.Log.Debug?.Write($"  MechTechs lowerBound: {mechTechLowerBound}  upperBound: {mechTechsUpperBound}");
+            int medTechsLowerBound = Math.Max(0, medTechsUpperBound / 2);
             Mod.Log.Debug?.Write($"  MedTechs lowerBound: {medTechsLowerBound}  upperBound: {medTechsUpperBound}");
+            int aerospaceLowerBound = Math.Max(0, aerospaceUpperBound / 2);
+            Mod.Log.Debug?.Write($"  Aerospace lowerBound: {aerospaceLowerBound}  upperBound: {aerospaceUpperBound}");
 
             int mechWarriors = mechWarriorsUpperBound > 0 ? 
                 Math.Max(0, Mod.Random.Next(mechWarriorsLowerBound, mechWarriorsUpperBound)) : 0;
@@ -56,8 +61,11 @@ namespace HumanResources.Patches
                 Math.Max(0, Mod.Random.Next(mechTechLowerBound, mechTechsUpperBound)) : 0;
             int medTechs = medTechsUpperBound > 0 ? 
                 Math.Max(0, Mod.Random.Next(medTechsLowerBound, medTechsUpperBound)) : 0;
+            int aerospace = aerospaceUpperBound > 0 ?
+                Math.Max(0, Mod.Random.Next(aerospaceLowerBound, aerospaceUpperBound)) : 0;
+
             Mod.Log.Debug?.Write($"Generated  {mechWarriors} mechWarriors  {vehicleCrews} vehicleCrews  " +
-                $"{mechTechs} mechTechs  {medTechs} medTechs");
+                $"{mechTechs} mechTechs  {medTechs} medTechs  {aerospace} aerospace");
 
             // Generate pilots and crews
 
@@ -120,6 +128,8 @@ namespace HumanResources.Patches
                 PilotDef pDef = PilotHelper.GenerateTechs(3, false);
                 __instance.AvailablePilots.Add(pDef);
             }
+
+            // TODO: Add aerospace
 
             return false;
         }

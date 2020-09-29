@@ -83,6 +83,8 @@ namespace HumanResources.Patches.UI
                 sb.Append(medTechBoundsText);
             }
 
+            // TODO: Add aerospace
+
             __instance.SetField(___SystemDescriptionFields, sb.ToString());
 
         }

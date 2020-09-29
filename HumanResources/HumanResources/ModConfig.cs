@@ -7,36 +7,52 @@ namespace HumanResources
 
     public class CrewScarcity
     {
+        // TODO: These probably need to be floats, so the addition is less granular. 
         public int MechWarriors = 0;
         public int VehicleCrews = 0;
         public int MechTechs = 0;
         public int MedTechs = 0;
+        public int Aerospace = 0;
+    }
+    public class DistributionOpts
+    {
+        // Defines how broad the grouping is, which influences the height of the curve.
+        public int Sigma = 1;
+        // Where on the number line the curve is centered, i.e. the tallest point of the curve
+        public int Mu = 0;
+
+        // Breakpoints on the PDF (Probability distribution function), from worst to best. Must be 4 values.
+        public float[] Breakpoints = new float[] { -1.0f, 1.0f, 2.0f, 3.0f };
     }
 
     public class HiringHall
     {
-        public float[] SkillDistribution = { 0.2f, 0.4f, 0.2f, 0.15f, 0.05f };
-        public float[] SizeDistribution = { 0.1f, 0.2f, 0.4f, 0.2f, 0.1f };
+        public DistributionOpts SkillDistribution = new DistributionOpts() 
+        {
+            // Rookie, Regular, Veteran, Elite, Legendary
+            Breakpoints = new float[] { -1.5f, 1.5f, 2f, 2.5f  }
+        };
         
-        [JsonIgnore]
-        public float rookieThreshold = 0f;
-        [JsonIgnore]
-        public float regularThreshold = 0f;
-        [JsonIgnore]
-        public float veteranThreshold = 0f;
-        [JsonIgnore]        
-        public float eliteThreshold = 0f;
-        [JsonIgnore]
-        public float legendaryThreshold = 0f;
+        public DistributionOpts SizeDistribution = new DistributionOpts()
+        {
+            // Tiny, Small, Medium, Large, Huge
+            Breakpoints = new float[] { -1f, 0.5f, 1.25f, 2f }
+        };
 
+        public bool AllowVehicleCrews = true;
+        public bool AllowMechTechs = true;
+        public bool AllowMedTechs = true;
+        public bool AllowAerospace = true;
+        
         public bool EnableScarcity = true;
         public CrewScarcity DefaultScarcity = new CrewScarcity();
         public Dictionary<string, CrewScarcity> ScarcityByPlanetTag = new Dictionary<string, CrewScarcity>()
         {
-            {  "planet_civ_innersphere",  new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1 } },
-            {  "planet_civ_periphery",  new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1 } },
-            {  "planet_civ_primitive",  new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4 } }
+            {  "planet_civ_innersphere",  new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
+            {  "planet_civ_periphery",  new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 0 } },
+            {  "planet_civ_primitive",  new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
         };
+
     }
 
     public class Poaching
@@ -60,34 +76,9 @@ namespace HumanResources
 
         public float[] MechwarriorRGB = { 0.376f, 0.533f, 0.604f };
         public Color MechwarriorColor = Color.blue;
-    }
 
-    public class MonthlyCost
-    {
-        public float DefaultComponentCostMulti = 0.1f;
-    }
-
-    public class ArmorRepair
-    {
-        public float PointsPerTP = 6; // How many armor points count as one TP
-        public int TonsPerTP = 20; // How many points to add by tonnage
-        public int CBillsPerPoint = 60;
-    }
-
-    public class StructureRepair
-    {
-        public float PointsPerTP = 6;
-        public int TonsPerTP = 5;
-        public int CBillsPerPoint = 600;
-    }
-
-    public class TagModifiers
-    {
-        public float ArmorRepairTPMulti = 0f;
-        public float ArmorRepairCBMulti = 0f;
-
-        public float StructureRepairTPMulti = 0f;
-        public float StructureRepairCBMulti = 0f;
+        public float[] AerospaceRGB = { 0.376f, 0.533f, 0.604f };
+        public Color AerospaceColor = Color.cyan;
     }
 
     public class Icons
@@ -105,7 +96,6 @@ namespace HumanResources
 
     public class ModConfig
     {
-
         public bool Debug = false;
         public bool Trace = false;
 
@@ -114,12 +104,6 @@ namespace HumanResources
         public CrewCfg Crew = new CrewCfg();
         public HiringHall HiringHall = new HiringHall();
         public Poaching Poaching = new Poaching();
-
-        public MonthlyCost MonthlyCost = new MonthlyCost();
-        public ArmorRepair ArmorRepair = new ArmorRepair();
-        public StructureRepair StructureRepair = new StructureRepair();
-        public Dictionary<string, TagModifiers> ChassisTagMods = new Dictionary<string, TagModifiers>();
-        public Dictionary<string, TagModifiers> ComponentTagMods = new Dictionary<string, TagModifiers>();
 
         public void LogConfig()
         {
@@ -145,6 +129,10 @@ namespace HumanResources
             if (this.Crew.MechwarriorRGB != null && this.Crew.MechwarriorRGB.Length == 3)
             {
                 this.Crew.MechwarriorColor = new Color(this.Crew.MechwarriorRGB[0], this.Crew.MechwarriorRGB[1], this.Crew.MechwarriorRGB[2]);
+            }
+            if (this.Crew.AerospaceRGB!= null && this.Crew.AerospaceRGB.Length == 3)
+            {
+                this.Crew.AerospaceColor = new Color(this.Crew.AerospaceRGB[0], this.Crew.AerospaceRGB[1], this.Crew.AerospaceRGB[2]);
             }
 
             // TODO: Validate the hiring hall distributions

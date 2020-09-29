@@ -12,6 +12,8 @@ namespace HumanResources
         public const string GO_Crew_Block = "hr_crew_block";
         public const string GO_Crew_Skill = "hr_crew_skill_text";
         public const string GO_Crew_Size = "hr_crew_size_text";
+
+        public const int GaussianResultsPerGeneration = 65536;
     }
 
     // All of these tags are pilot tags

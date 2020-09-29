@@ -86,6 +86,8 @@
     <Compile Include="Patches\PilotGeneratorPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterListPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterSlotPatches.cs" />
+    <Compile Include="Patches\SGHiringHallScreenPatches.cs" />
+    <Compile Include="Patches\SGLocationWidgetPatches.cs" />
     <Compile Include="Patches\SimGameStatePatches.cs" />
     <Compile Include="Patches\StarSystemPatches.cs" />
     <Compile Include="Patches\SGNavigationScreenPatches.cs" />

@@ -5,6 +5,7 @@ using SVGImporter;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace HumanResources.Patches
@@ -13,9 +14,30 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "AddPilot")]
     static class SGBarracksRosterList_AddPilot
     {
-        static void Prefix(SGBarracksRosterList __instance, Pilot pilot)
+        static bool Prefix(SGBarracksRosterList __instance, 
+            Pilot pilot, UnityAction<SGBarracksRosterSlot> pilotSelectedOnClick, bool isInHireHall,
+            Dictionary<string, SGBarracksRosterSlot> ___currentRoster)
         {
             Mod.Log.Debug?.Write($"Adding pilot {pilot.Callsign} to roster list.");
+
+            if (!___currentRoster.ContainsKey(pilot.GUID))
+            {
+                SGBarracksRosterSlot slot = __instance.GetSlot();
+                if (isInHireHall)
+                {
+                    slot.InitNoDrag(pilot, ModState.SimGameState, pilotSelectedOnClick, showTheCost: true);
+                    slot.SetDraggable(isDraggable: false);
+                }
+                else
+                {
+                    slot.Init(pilot, __instance, pilotSelectedOnClick);
+                }
+                ___currentRoster.Add(pilot.GUID, slot);
+                slot.AddToRadioSet(__instance.listRadioSet);
+                //ForceRefreshImmediate();
+            }
+
+            return false;
         }
 
     }
