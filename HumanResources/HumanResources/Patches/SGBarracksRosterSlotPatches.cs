@@ -4,6 +4,8 @@ using BattleTech.UI.TMProWrapper;
 using BattleTech.UI.Tooltips;
 using Harmony;
 using HBS.Extensions;
+using HumanResources.Extensions;
+using HumanResources.Helper;
 using SVGImporter;
 using TMPro;
 using UnityEngine;
@@ -14,9 +16,32 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "RefreshCostColorAndAvailability")]
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability
     {
-        static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
+        static void Postfix(SGBarracksRosterSlot __instance, Pilot ___pilot, 
+            UIColorRefTracker ___costTextColor, GameObject ___cantBuyMRBOverlay,
+            HBSTooltip ___cantBuyToolTip
+            )
         {
-            Mod.Log.Debug?.Write($"Updating colors for pilot: {___pilot.Name}");
+            Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
+            
+            // TODO: This may need to be improved, as it's used inside a loop. Maybe write to company stats?
+            CrewDetails details = ___pilot.Evaluate();
+            Mod.Log.Debug?.Write($"  -- pilot requires: {details.Size} berths");
+
+            int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
+            int availableBerths = ModState.SimGameState.GetMaxMechWarriors() - usedBerths;
+            Mod.Log.Debug?.Write($"AvailableBerths: {availableBerths} = max: {ModState.SimGameState.GetMaxMechWarriors()} - used: {usedBerths}");
+            
+            if (details.Size > availableBerths)
+            {
+                Mod.Log.Info?.Write($"Pilot {___pilot.Name} cannot be hired, not enough berths (needs {details.Size})");
+
+                ___cantBuyMRBOverlay.SetActive(true);
+
+                HBSTooltipStateData tooltipStateData = new HBSTooltipStateData();
+                tooltipStateData.SetContextString($"DM.BaseDescriptionDefs[{ModConsts.Tooltip_NotEnoughBerths}]");
+                ___cantBuyToolTip.SetDefaultStateData(tooltipStateData);
+            }
+
         }
     }
 
@@ -64,31 +89,26 @@ namespace HumanResources.Patches
             if (___pilot == null) return;
             Mod.Log.Debug?.Write($"POST Calling refresh for pilot: {___pilot.Name}");
 
-            bool isMechTech = false;
-            bool isMedTech = false;
-            bool isVehicle = false;
-            foreach (string tag in ___pilot.pilotDef.PilotTags)
-            {
-                if (ModTags.Tag_CrewType_MechTech.Equals(tag, System.StringComparison.InvariantCultureIgnoreCase))
-                {
-                    isMechTech = true;
-                }
-                if (ModTags.Tag_CrewType_MedTech.Equals(tag, System.StringComparison.InvariantCultureIgnoreCase))
-                {
-                    isMedTech = true;
-                }
-                if (ModTags.Tag_CrewType_Vehicle.Equals(tag, System.StringComparison.InvariantCultureIgnoreCase))
-                {
-                    isVehicle = true;
-                }
+            CrewDetails details = ___pilot.Evaluate();
 
-            }
+            // Find the common GameObjects we need to manipulate
+            GameObject portraitOverride = GetOrCreateProfileOverride(___portrait);
+            if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsVehicleCrew) portraitOverride.SetActive(true);
+            else portraitOverride.SetActive(false);
 
-            if (!isMechTech && !isMedTech && !isVehicle) return; // nothing to do
+            GameObject crewBlock = GetOrCreateCrewBlock(___portrait.gameObject);
+            if (details.IsMechTechCrew || details.IsMedTechCrew) crewBlock.SetActive(true);
+            else crewBlock.SetActive(false);
 
-            GameObject layoutTitleGO = __instance.GameObject.FindFirstChildNamed("layout_title");
+            GameObject mwStats = ___portrait.transform.parent.parent.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Stats_Block);
+            if (details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
+            else mwStats.SetActive(true);
+
+            if (details.IsMechWarrior) return; // nothing to do
+
+            GameObject layoutTitleGO = __instance.GameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Layout_Title);
             Image layoutTitleImg = layoutTitleGO.GetComponent<Image>();
-            if (isMechTech)
+            if (details.IsMechTechCrew)
             {
                 layoutTitleImg.color = Mod.Config.Crew.MechTechCrewColor;
 
@@ -97,19 +117,29 @@ namespace HumanResources.Patches
                 ___roninIcon.gameObject.SetActive(false);
                 ___veteranIcon.gameObject.SetActive(false);
 
-                GameObject mwStats = ___portrait.transform.parent.parent.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_MW_Stats_Block);
-                if (mwStats != null) mwStats.SetActive(false);
+                // Set the portrait icon
+                SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_MechTech, BattleTechResourceType.SVGAsset);
+                if (icon == null) Mod.Log.Warn?.Write($"ERROR READING ICON: {Mod.Config.Icons.CrewPortrait_MechTech}");
+                SVGImage image = portraitOverride.GetComponentInChildren<SVGImage>();
+                image.vectorGraphics = icon;
 
-                SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.MechTechPortait, BattleTechResourceType.SVGAsset);
-                if (icon == null) Mod.Log.Warn?.Write($"ERROR READING ICON: {Mod.Config.Icons.MechTechButton}");
+                // Set the crew size
+                LocalizableText lt1 = crewBlock.GetComponentInChildren<LocalizableText>();
+                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size], 
+                    new object[] { details.SizeLabel, details.Size }).ToString();
+                lt1.SetText(sizeText);
 
-                GameObject profileOverrideGO = GetOrCreateProfileOverride(___portrait, icon);
-                profileOverrideGO.SetActive(true);
+                // Force the font size here, otherwise the right hand panel isn't correct
+                lt1.fontSize = 18f;
+                lt1.fontSizeMin = 18f;
+                lt1.fontSizeMax = 18f;
 
-                GameObject crewBlock = GetOrCreateCrewBlock(___portrait.gameObject, 2);
-                if (crewBlock == null) Mod.Log.Warn?.Write("FAILED TO FIND hr_crew_block, will NRE!");
+                // Set the expertise of the crew
+                ___expertise.color = Color.white;
+                ___expertise.SetText(details.SkillLabel);
+
             }
-            else if (isMedTech)
+            else if (details.IsMedTechCrew)
             {
                 layoutTitleImg.color = Mod.Config.Crew.MedTechCrewColor;
 
@@ -118,25 +148,50 @@ namespace HumanResources.Patches
                 ___roninIcon.gameObject.SetActive(false);
                 ___veteranIcon.gameObject.SetActive(false);
 
-                SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.MedTechButton, BattleTechResourceType.SVGAsset);
-                if (icon == null) Mod.Log.Warn?.Write($"ERROR READING ICON: {Mod.Config.Icons.MedTechButton}");
+                // Set the portrait icon
+                SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_MedTech, BattleTechResourceType.SVGAsset);
+                if (icon == null) Mod.Log.Warn?.Write($"ERROR READING ICON: {Mod.Config.Icons.CrewPortrait_MedTech}");
+                SVGImage image = portraitOverride.GetComponentInChildren<SVGImage>();
+                image.vectorGraphics = icon;
 
-                GameObject profileOverrideGO = GetOrCreateProfileOverride(___portrait, icon);
-                profileOverrideGO.SetActive(true);
+                // Set the crew size
+                LocalizableText lt1 = crewBlock.GetComponentInChildren<LocalizableText>();
+                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size], 
+                    new object[] { details.SizeLabel, details.Size }).ToString();
+                lt1.SetText(sizeText);
+
+                // Force the font size here, otherwise the right hand panel isn't correct
+                lt1.fontSize = 18f;
+                lt1.fontSizeMin = 18f;
+                lt1.fontSizeMax = 18f;
+
+                // Set the expertise of the crew
+                ___expertise.color = Color.white;
+                ___expertise.SetText(details.SkillLabel);
             }
-            else if (isVehicle)
+            else if (details.IsVehicleCrew)
             {
                 layoutTitleImg.color = Mod.Config.Crew.VehicleCrewColor;
+
+                ___portrait.gameObject.SetActive(false);
+                ___roninIcon.gameObject.SetActive(false);
+
                 ___callsign.SetText("VCREW: " + ___pilot.Callsign);
 
-                // VCrew can't be ronin
-                ___roninIcon.gameObject.SetActive(false);
+                // Set the portrait icon
+                SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_Vehicle, BattleTechResourceType.SVGAsset);
+                if (icon == null) Mod.Log.Warn?.Write($"ERROR READING ICON: {Mod.Config.Icons.CrewPortrait_Vehicle}");
+                SVGImage image = portraitOverride.GetComponentInChildren<SVGImage>();
+                image.vectorGraphics = icon;
+
+                ___expertise.color = Color.white;
             }
+            // TODO: Aerospace
 
             Mod.Log.Debug?.Write($"LayoutTitleImg color set to: {layoutTitleImg.color}");
         }
 
-        private static GameObject GetOrCreateProfileOverride(Image portrait, SVGAsset icon)
+        private static GameObject GetOrCreateProfileOverride(Image portrait)
         {
             GameObject profileOverrideGO = portrait.transform.parent.gameObject.FindFirstChildNamed(ModConsts.GO_Profile_Override);
             if (profileOverrideGO == null)
@@ -155,24 +210,23 @@ namespace HumanResources.Patches
                 SVGImage image = profileOverrideGO.GetOrAddComponent<SVGImage>();
                 if (image == null) Mod.Log.Warn?.Write(" -- FAILED TO LOAD IMAGE - WILL NRE!");
                 image.color = Color.white;
-                image.vectorGraphics = icon;
                 image.enabled = true;
             }
 
             return profileOverrideGO;
         }
 
-        private static GameObject GetOrCreateCrewBlock(GameObject portrait, int crewSize)
+        private static GameObject GetOrCreateCrewBlock(GameObject portrait)
         {
             // mw_Image -> mw_PortraitSlot -> layout_details
             GameObject portraitSlot = portrait.transform.parent.gameObject;
-            Mod.Log.Debug?.Write($"Is mw_PortraitSlot ? : {portraitSlot.name}");
+            //Mod.Log.Debug?.Write($"Is mw_PortraitSlot ? : {portraitSlot.name}");
 
             GameObject layoutDetails = portraitSlot.transform.parent.gameObject;
-            Mod.Log.Debug?.Write($"Is layout_details ? : {layoutDetails.name}");
+            //Mod.Log.Debug?.Write($"Is layout_details ? : {layoutDetails.name}");
 
-            GameObject layoutStatsOrHiringCost = layoutDetails.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Layout_Stats);
-            if (layoutStatsOrHiringCost == null) Mod.Log.Warn?.Write("FAILED TO FIND layout_Stats-Or-HiringCost, will NRE!");
+            //GameObject layoutStatsOrHiringCost = layoutDetails.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Layout_Stats);
+            //if (layoutStatsOrHiringCost == null) Mod.Log.Warn?.Write("FAILED TO FIND layout_Stats-Or-HiringCost, will NRE!");
 
             GameObject layoutGO = layoutDetails.FindFirstChildNamed(ModConsts.GO_Crew_Block);
             if (layoutGO == null)
@@ -181,7 +235,7 @@ namespace HumanResources.Patches
                 layoutGO.name = ModConsts.GO_Crew_Block;
                 layoutGO.transform.parent = layoutDetails.transform;
                 layoutGO.transform.SetAsFirstSibling();
-                layoutGO.transform.localPosition = Vector3.zero;
+                layoutGO.transform.localPosition = new Vector3(-30f, 0f);
 
                 ContentSizeFitter csf = layoutGO.AddComponent<ContentSizeFitter>();
                 csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -201,7 +255,7 @@ namespace HumanResources.Patches
                 hlg.childAlignment = TextAnchor.MiddleLeft;
                 
                 layoutGO.transform.SetAsFirstSibling();
-                Mod.Log.Debug?.Write("ADDED CONTENT FITTER BLOCK");
+                //Mod.Log.Debug?.Write("ADDED CONTENT FITTER BLOCK");
 
                 GameObject textBlock1 = new GameObject();
                 textBlock1.transform.parent = hlg.transform;
@@ -210,14 +264,15 @@ namespace HumanResources.Patches
 
                 LayoutElement le1 = textBlock1.AddComponent<LayoutElement>();
                 le1.preferredHeight = 60f;
-                le1.preferredWidth = 120f;
+                le1.preferredWidth = 180f;
 
                 LocalizableText lt1 = textBlock1.AddComponent<LocalizableText>();
-                lt1.SetText($"Size: {crewSize}");
                 lt1.fontSize = 18f;
+                lt1.fontSizeMin = 18f;
+                lt1.fontSizeMax = 18f;
                 lt1.alignment = TextAlignmentOptions.Left;
-                //lt1.enableAutoSizing = true;
-                Mod.Log.Debug?.Write("ADDED TEXTBLOCK1");
+                lt1.enableAutoSizing = false;
+                //Mod.Log.Debug?.Write("ADDED TEXTBLOCK1");
 
                 portraitSlot.transform.SetAsFirstSibling();
             }

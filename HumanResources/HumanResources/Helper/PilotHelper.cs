@@ -1,6 +1,7 @@
 ﻿using BattleTech;
 using BattleTech.Portraits;
 using HBS.Collections;
+using HumanResources.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,20 @@ namespace HumanResources.Helper
 
     public static class PilotHelper
     {
+
+        public static int UsedBerths(IEnumerable<Pilot> pilots)
+        {
+            int used = 0;
+
+            foreach (Pilot pilot in pilots)
+            {
+                CrewDetails details = pilot.Evaluate();
+                used += details.Size;
+            }
+
+            return used;
+        }
+
         public static PilotDef GenerateTechs(int systemDifficulty, bool isMechTech)
         {
 
@@ -26,9 +41,17 @@ namespace HumanResources.Helper
 
             int currentAge = Mod.Random.Next(initialAge, 70);
             PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
+            
             TagSet tagSet = new TagSet();
-            if (isMechTech) tagSet.Add(ModTags.Tag_CrewType_MechTech);
-            else tagSet.Add(ModTags.Tag_CrewType_MedTech);
+            if (isMechTech) tagSet.Add(ModTags.Tag_Crew_Type_MechTech);
+            else tagSet.Add(ModTags.Tag_Crew_Type_MedTech);
+
+            // TODO: Determine crew size
+            tagSet.Add(ModTags.Tag_Crew_Size_5);
+            
+            // TODO: Determine crew skill
+            tagSet.Add(ModTags.Tag_Crew_Skill_5);
+
             // TODO: Randomize N factions
             // TODO: Build jibberish history
             // TODO: Add crew size, loyalty, etc to description

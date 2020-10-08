@@ -1,12 +1,11 @@
 ﻿using BattleTech;
 using BattleTech.UI;
+using BattleTech.UI.TMProWrapper;
 using Harmony;
-using SVGImporter;
-using System;
+using HumanResources.Extensions;
+using HumanResources.Helper;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace HumanResources.Patches
 {
@@ -56,40 +55,15 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "SetRosterBerthText")]
     static class SGBarracksRosterList_SetRosterBerthText
     {
-        static bool Prefix(SGBarracksRosterList __instance)
+        static bool Prefix(SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
         {
-            Mod.Log.Debug?.Write("Parsing berths consumed by current pilots.");
+            
+            int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
+            Mod.Log.Debug?.Write($"Berths => used: {usedBerths}  available: {ModState.SimGameState.GetMaxMechWarriors()}");
 
-            int berthsUsed = 0;
-            foreach (Pilot pilot in __instance.Sim.PilotRoster)
-            {
-                bool foundSizeTag = false;
-                foreach (string tag in pilot.pilotDef.PilotTags)
-                {
-                    if (tag.StartsWith(ModTags.Tag_CrewSize_Prefix))
-                    {
-                        foundSizeTag = true;
-
-                        string crewSizeS = tag.Substring(ModTags.Tag_CrewSize_Prefix.Length);
-                        try 
-                        {
-                            int crewSize = Int32.Parse(crewSizeS);
-                            Mod.Log.Debug?.Write($"Crew '{pilot.Callsign}' consumes {crewSize} berths.");
-                            berthsUsed += crewSize;
-                            
-                            
-                        }
-                        catch (Exception e)
-                        {
-                            Mod.Log.Info?.Write(e, $"Failed to parse crew size tag: {tag}, defaulting to 1 berth.");
-                            berthsUsed++;
-                        }
-                        break;
-                    }
-                }
-
-                if (!foundSizeTag) berthsUsed++;
-            }
+            string text = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Berths_Used],
+                new object[] { usedBerths, ModState.SimGameState.GetMaxMechWarriors() }).ToString(); 
+            ___mechWarriorCount.SetText(text);
 
             return false;
         }

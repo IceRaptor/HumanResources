@@ -83,13 +83,9 @@ namespace HumanResources
 
     public class Icons
     {
-        public string MechWarriorButton = "pc_missile-mech";
-        
-        public string MechTechButton = "pc_apc";
-        public string MedTechPortrait = "pc_auto-repair";
-        
-        public string MedTechButton = "pc_hospital-cross";
-        public string MechTechPortait = "pc_auto-repair";
+        public string CrewPortrait_MedTech = "pc_hospital-cross";
+        public string CrewPortrait_MechTech = "pc_auto-repair";
+        public string CrewPortrait_Vehicle = "pc_apc";
 
         public string GroupPortrait = "pc_three-friends";
     }
