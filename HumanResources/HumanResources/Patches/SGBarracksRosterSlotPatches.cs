@@ -16,10 +16,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "RefreshCostColorAndAvailability")]
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability
     {
-        static void Postfix(SGBarracksRosterSlot __instance, Pilot ___pilot, 
-            UIColorRefTracker ___costTextColor, GameObject ___cantBuyMRBOverlay,
-            HBSTooltip ___cantBuyToolTip
-            )
+        static void Postfix(Pilot ___pilot, GameObject ___cantBuyMRBOverlay, HBSTooltip ___cantBuyToolTip)
         {
             Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
             
@@ -104,8 +101,6 @@ namespace HumanResources.Patches
             if (details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
             else mwStats.SetActive(true);
 
-            if (details.IsMechWarrior) return; // nothing to do
-
             GameObject layoutTitleGO = __instance.GameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Layout_Title);
             Image layoutTitleImg = layoutTitleGO.GetComponent<Image>();
             if (details.IsMechTechCrew)
@@ -124,15 +119,28 @@ namespace HumanResources.Patches
                 image.vectorGraphics = icon;
 
                 // Set the crew size
-                LocalizableText lt1 = crewBlock.GetComponentInChildren<LocalizableText>();
-                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size], 
+                LocalizableText[] texts = crewBlock.GetComponentsInChildren<LocalizableText>();
+                Mod.Log.Info?.Write($" TEXTS SIZE IS: {texts}");
+
+                LocalizableText lt1 = texts[0];
+                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size],
                     new object[] { details.SizeLabel, details.Size }).ToString();
                 lt1.SetText(sizeText);
 
                 // Force the font size here, otherwise the right hand panel isn't correct
-                lt1.fontSize = 18f;
-                lt1.fontSizeMin = 18f;
-                lt1.fontSizeMax = 18f;
+                lt1.fontSize = 16f;
+                lt1.fontSizeMin = 16f;
+                lt1.fontSizeMax = 16f;
+
+                LocalizableText lt2 = texts[1];
+                string skillText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Skill_MechTech_Points],
+                    new object[] { details.MechTechPoints }).ToString();
+                lt2.SetText(skillText);
+
+                // Force the font size here, otherwise the right hand panel isn't correct
+                lt2.fontSize = 16f;
+                lt2.fontSizeMin = 16f;
+                lt2.fontSizeMax = 16f;
 
                 // Set the expertise of the crew
                 ___expertise.color = Color.white;
@@ -155,15 +163,28 @@ namespace HumanResources.Patches
                 image.vectorGraphics = icon;
 
                 // Set the crew size
-                LocalizableText lt1 = crewBlock.GetComponentInChildren<LocalizableText>();
-                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size], 
+                LocalizableText[] texts = crewBlock.GetComponentsInChildren<LocalizableText>();
+                Mod.Log.Info?.Write($" TEXTS SIZE IS: {texts}");
+
+                LocalizableText lt1 = texts[0];
+                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size],
                     new object[] { details.SizeLabel, details.Size }).ToString();
                 lt1.SetText(sizeText);
 
                 // Force the font size here, otherwise the right hand panel isn't correct
-                lt1.fontSize = 18f;
-                lt1.fontSizeMin = 18f;
-                lt1.fontSizeMax = 18f;
+                lt1.fontSize = 16f;
+                lt1.fontSizeMin = 16f;
+                lt1.fontSizeMax = 16f;
+
+                LocalizableText lt2 = texts[1];
+                string skillText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Skill_MedTech_Points],
+                    new object[] { details.MedTechPoints }).ToString();
+                lt2.SetText(skillText);
+
+                // Force the font size here, otherwise the right hand panel isn't correct
+                lt2.fontSize = 16f;
+                lt2.fontSizeMin = 16f;
+                lt2.fontSizeMax = 16f;
 
                 // Set the expertise of the crew
                 ___expertise.color = Color.white;
@@ -185,6 +206,10 @@ namespace HumanResources.Patches
                 image.vectorGraphics = icon;
 
                 ___expertise.color = Color.white;
+            }
+            else
+            {
+                ___portrait.gameObject.SetActive(true);
             }
             // TODO: Aerospace
 
@@ -235,7 +260,7 @@ namespace HumanResources.Patches
                 layoutGO.name = ModConsts.GO_Crew_Block;
                 layoutGO.transform.parent = layoutDetails.transform;
                 layoutGO.transform.SetAsFirstSibling();
-                layoutGO.transform.localPosition = new Vector3(-30f, 0f);
+                layoutGO.transform.localPosition = new Vector3(-20f, 0f);
 
                 ContentSizeFitter csf = layoutGO.AddComponent<ContentSizeFitter>();
                 csf.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -247,31 +272,48 @@ namespace HumanResources.Patches
                 newLocalPos.y -= 0f;
                 rt.transform.localPosition = newLocalPos;
 
-                HorizontalLayoutGroup hlg = layoutGO.AddComponent<HorizontalLayoutGroup>();
-                hlg.childControlWidth = true;
-                hlg.childControlHeight = false;
-                hlg.childForceExpandHeight = false;
-                hlg.childForceExpandWidth = false;
-                hlg.childAlignment = TextAnchor.MiddleLeft;
+                VerticalLayoutGroup vlg = layoutGO.AddComponent<VerticalLayoutGroup>();
+                vlg.childControlWidth = true;
+                vlg.childControlHeight = true;
+                vlg.childForceExpandHeight = false;
+                vlg.childForceExpandWidth = false;
+                vlg.childAlignment = TextAnchor.MiddleLeft;
                 
                 layoutGO.transform.SetAsFirstSibling();
                 //Mod.Log.Debug?.Write("ADDED CONTENT FITTER BLOCK");
 
                 GameObject textBlock1 = new GameObject();
-                textBlock1.transform.parent = hlg.transform;
+                textBlock1.transform.parent = vlg.transform;
                 textBlock1.name = ModConsts.GO_Crew_Size;
                 textBlock1.SetActive(true);
 
                 LayoutElement le1 = textBlock1.AddComponent<LayoutElement>();
-                le1.preferredHeight = 60f;
-                le1.preferredWidth = 180f;
+                le1.preferredHeight = 24f;
+                le1.preferredWidth = 200f;
 
                 LocalizableText lt1 = textBlock1.AddComponent<LocalizableText>();
-                lt1.fontSize = 18f;
-                lt1.fontSizeMin = 18f;
-                lt1.fontSizeMax = 18f;
+                lt1.fontSize = 16f;
+                lt1.fontSizeMin = 16f;
+                lt1.fontSizeMax = 16f;
                 lt1.alignment = TextAlignmentOptions.Left;
                 lt1.enableAutoSizing = false;
+                //Mod.Log.Debug?.Write("ADDED TEXTBLOCK1");
+
+                GameObject textBlock2 = new GameObject();
+                textBlock2.transform.parent = vlg.transform;
+                textBlock2.name = ModConsts.GO_Crew_Skill;
+                textBlock2.SetActive(true);
+
+                LayoutElement le2 = textBlock2.AddComponent<LayoutElement>();
+                le2.preferredHeight = 24f;
+                le2.preferredWidth = 200f;
+
+                LocalizableText lt2 = textBlock2.AddComponent<LocalizableText>();
+                lt2.fontSize = 16f;
+                lt2.fontSizeMin = 16f;
+                lt2.fontSizeMax = 16f;
+                lt2.alignment = TextAlignmentOptions.Left;
+                lt2.enableAutoSizing = false;
                 //Mod.Log.Debug?.Write("ADDED TEXTBLOCK1");
 
                 portraitSlot.transform.SetAsFirstSibling();

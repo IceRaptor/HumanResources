@@ -47,10 +47,14 @@ namespace HumanResources.Helper
             else tagSet.Add(ModTags.Tag_Crew_Type_MedTech);
 
             // TODO: Determine crew size
-            tagSet.Add(ModTags.Tag_Crew_Size_5);
-            
+            string sizeTag = GaussianHelper.GetCrewSizeTag(0, 0);
+            Mod.Log.Info?.Write($" Adding sizeTag: {sizeTag}");
+            tagSet.Add(sizeTag);
+
             // TODO: Determine crew skill
-            tagSet.Add(ModTags.Tag_Crew_Skill_5);
+            string skillTag = GaussianHelper.GetCrewSkillTag(0, 0);
+            Mod.Log.Info?.Write($" Adding skillTag: {skillTag}");
+            tagSet.Add(skillTag);
 
             // TODO: Randomize N factions
             // TODO: Build jibberish history

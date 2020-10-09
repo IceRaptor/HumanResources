@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace HumanResources
@@ -14,6 +13,7 @@ namespace HumanResources
         public int MedTechs = 0;
         public int Aerospace = 0;
     }
+
     public class DistributionOpts
     {
         // Defines how broad the grouping is, which influences the height of the curve.
@@ -48,10 +48,32 @@ namespace HumanResources
         public CrewScarcity DefaultScarcity = new CrewScarcity();
         public Dictionary<string, CrewScarcity> ScarcityByPlanetTag = new Dictionary<string, CrewScarcity>()
         {
-            {  "planet_civ_innersphere",  new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
-            {  "planet_civ_periphery",  new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 0 } },
-            {  "planet_civ_primitive",  new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
+            {  "planet_civ_innersphere",  
+                new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
+            {  "planet_civ_periphery",  
+                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 0 } },
+            {  "planet_civ_primitive",  
+                new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
         };
+
+        public int[][] MechTechPointsBySkillAndSize = new int[][]
+        {
+            new int[] { 1, 2, 3, 5, 8 },
+            new int[] { 2, 4, 6, 10, 16 },
+            new int[] { 3, 6, 9, 15, 24 },
+            new int[] { 4, 8, 12, 20, 32 },
+            new int[] { 5, 10, 15, 25, 40 }
+        };
+
+        public int[][] MedTechPointsBySkillAndSize = new int[][]
+        {
+            new int[] { 1, 2, 3, 5, 8 },
+            new int[] { 2, 4, 6, 10, 16 },
+            new int[] { 3, 6, 9, 15, 24 },
+            new int[] { 4, 8, 12, 20, 32 },
+            new int[] { 5, 10, 15, 25, 40 }
+        };
+
 
     }
 

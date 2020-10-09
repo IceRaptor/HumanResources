@@ -17,6 +17,9 @@ namespace HumanResources
         public const string LT_Crew_Skill_Level_4 = "SKILL_LEVEL_4";
         public const string LT_Crew_Skill_Level_5 = "SKILL_LEVEL_5";
 
+        public const string LT_Skill_MechTech_Points = "SKILL_MECHTECH_POINTS";
+        public const string LT_Skill_MedTech_Points = "SKILL_MEDTECH_POINTS";
+
         public const string LT_Crew_Size_1 = "CREW_SIZE_1";
         public const string LT_Crew_Size_2 = "CREW_SIZE_2";
         public const string LT_Crew_Size_3 = "CREW_SIZE_3";
@@ -33,6 +36,9 @@ namespace HumanResources
             { LT_Crew_Skill_Level_3, "Veteran" },
             { LT_Crew_Skill_Level_4, "Elite" },
             { LT_Crew_Skill_Level_5, "Legendary" },
+
+            { LT_Skill_MechTech_Points, "MechTech Points: +{0}" },
+            { LT_Skill_MedTech_Points, "MedTech Points: +{0}" },
 
             { LT_Crew_Size_1, "Tiny" },
             { LT_Crew_Size_2, "Small" },

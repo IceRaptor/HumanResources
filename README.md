@@ -7,3 +7,25 @@ You should disable or remove the above mods before activating this mod.
 
  * Hirable MechTech, MedTech, and Vehicle crews in the Hiring Hall
 
+
+
+### MechTech Points
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+### Medtech Points
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+

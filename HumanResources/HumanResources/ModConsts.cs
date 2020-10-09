@@ -14,8 +14,6 @@ namespace HumanResources
         public const string GO_Crew_Skill = "hr_crew_skill_text";
         public const string GO_Crew_Size = "hr_crew_size_text";
 
-        public const int GaussianResultsPerGeneration = 65536;
-
         public const string Tooltip_NotEnoughBerths = "HRTooltipNotEnoughBerths";
     }
 
@@ -26,13 +24,15 @@ namespace HumanResources
         public const string Tag_Crew_Type_MedTech = "HR_CREW_MED_TECH";
         public const string Tag_Crew_Type_MechTech = "HR_CREW_MECH_TECH";
         public const string Tag_Crew_Type_Vehicle = "HR_CREW_VEHICLE";
-        
+
+        public const string Tag_Crew_Size_Template = "HR_CREW_SIZE_{0}";
         public const string Tag_Crew_Size_1 = "HR_CREW_SIZE_1";
         public const string Tag_Crew_Size_2 = "HR_CREW_SIZE_2";
         public const string Tag_Crew_Size_3 = "HR_CREW_SIZE_3";
         public const string Tag_Crew_Size_4 = "HR_CREW_SIZE_4";
         public const string Tag_Crew_Size_5 = "HR_CREW_SIZE_5";
 
+        public const string Tag_Crew_Skill_Template = "HR_CREW_SKILL_{0}";
         public const string Tag_Crew_Skill_1 = "HR_CREW_SKILL_1";
         public const string Tag_Crew_Skill_2 = "HR_CREW_SKILL_2";
         public const string Tag_Crew_Skill_3 = "HR_CREW_SKILL_3";

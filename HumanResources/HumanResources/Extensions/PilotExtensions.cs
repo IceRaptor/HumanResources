@@ -120,5 +120,45 @@ namespace HumanResources.Extensions
         public int Skill { get { return skill; } }
         public string SkillLabel { get { return skillLabel; } }
 
+        public int MechTechPoints 
+        {  
+            get 
+            {
+                if (!IsMechTechCrew) return 0;
+
+                int points = 0;
+                try
+                {
+                    points = Mod.Config.HiringHall.MechTechPointsBySkillAndSize[Skill][Size];
+                }
+                catch (Exception e)
+                {
+                    Mod.Log.Error?.Write(e, $"Failed to read mechTech points matrix for skill: {Skill} and size: {Size}." +
+                        $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
+                }
+                return points;
+            } 
+        }
+
+        public int MedTechPoints
+        {
+            get
+            {
+                if (!IsMedTechCrew) return 0;
+
+                int points = 0;
+                try
+                {
+                    points = Mod.Config.HiringHall.MedTechPointsBySkillAndSize[Skill][Size];
+                }
+                catch (Exception e)
+                {
+                    Mod.Log.Error?.Write(e, $"Failed to read medTech points matrix for skill: {Skill} and size: {Size}." +
+                        $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
+                }
+                return points;
+            }
+        }
+
     }
 }

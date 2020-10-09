@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\PilotExtensions.cs" />
+    <Compile Include="Helper\GuassianHelper.cs" />
     <Compile Include="Helper\PilotHelper.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="ModConsts.cs" />
