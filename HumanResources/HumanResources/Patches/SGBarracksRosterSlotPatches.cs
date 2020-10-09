@@ -16,7 +16,8 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "RefreshCostColorAndAvailability")]
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability
     {
-        static void Postfix(Pilot ___pilot, GameObject ___cantBuyMRBOverlay, HBSTooltip ___cantBuyToolTip)
+        static void Postfix(Pilot ___pilot, GameObject ___cantBuyMRBOverlay, HBSTooltip ___cantBuyToolTip,
+            LocalizableText ___costText, UIColorRefTracker ___costTextColor)
         {
             Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
             
@@ -38,6 +39,23 @@ namespace HumanResources.Patches
                 tooltipStateData.SetContextString($"DM.BaseDescriptionDefs[{ModConsts.Tooltip_NotEnoughBerths}]");
                 ___cantBuyToolTip.SetDefaultStateData(tooltipStateData);
             }
+
+            // Set the prices
+            //int purchaseCostAfterReputationModifier = ModState.SimGameState.CurSystem.GetPurchaseCostAfterReputationModifier(
+            //    ModState.SimGameState.GetMechWarriorHiringCost(___pilot.pilotDef)
+            //    );
+            // TODO: Apply system cost multiplier
+            // Hiring cost is influenced by:
+            //  - current morale rating
+            //  - any faction alignment for units
+            //  - any reputation modifiers
+
+            ___costText.SetText(SimGameState.GetCBillString(details.Bonus));
+
+            UIColor costColor = UIColor.Red;
+            if (details.Bonus <= ModState.SimGameState.Funds) costColor = UIColor.White;
+            ___costTextColor.SetUIColor(costColor);
+
 
         }
     }
@@ -120,7 +138,6 @@ namespace HumanResources.Patches
 
                 // Set the crew size
                 LocalizableText[] texts = crewBlock.GetComponentsInChildren<LocalizableText>();
-                Mod.Log.Info?.Write($" TEXTS SIZE IS: {texts}");
 
                 LocalizableText lt1 = texts[0];
                 string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size],
@@ -164,7 +181,6 @@ namespace HumanResources.Patches
 
                 // Set the crew size
                 LocalizableText[] texts = crewBlock.GetComponentsInChildren<LocalizableText>();
-                Mod.Log.Info?.Write($" TEXTS SIZE IS: {texts}");
 
                 LocalizableText lt1 = texts[0];
                 string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size],

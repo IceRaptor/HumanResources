@@ -56,6 +56,12 @@ namespace HumanResources
                 new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
         };
 
+        public int SalaryCostPerPoint = 30000;
+        public float SalaryVariance = 0.05f;
+
+        public int BonusCostPerPoint = 45000;
+        public float BonusVariance = 0.05f;
+
         public int[][] MechTechPointsBySkillAndSize = new int[][]
         {
             new int[] { 1, 2, 3, 5, 8 },

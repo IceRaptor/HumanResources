@@ -26,18 +26,14 @@ namespace HumanResources
         public const string Tag_Crew_Type_Vehicle = "HR_CREW_VEHICLE";
 
         public const string Tag_Crew_Size_Template = "HR_CREW_SIZE_{0}";
-        public const string Tag_Crew_Size_1 = "HR_CREW_SIZE_1";
-        public const string Tag_Crew_Size_2 = "HR_CREW_SIZE_2";
-        public const string Tag_Crew_Size_3 = "HR_CREW_SIZE_3";
-        public const string Tag_Crew_Size_4 = "HR_CREW_SIZE_4";
-        public const string Tag_Crew_Size_5 = "HR_CREW_SIZE_5";
+        public const string Tag_Crew_Size_Prefix = "HR_CREW_SIZE_";
 
         public const string Tag_Crew_Skill_Template = "HR_CREW_SKILL_{0}";
-        public const string Tag_Crew_Skill_1 = "HR_CREW_SKILL_1";
-        public const string Tag_Crew_Skill_2 = "HR_CREW_SKILL_2";
-        public const string Tag_Crew_Skill_3 = "HR_CREW_SKILL_3";
-        public const string Tag_Crew_Skill_4 = "HR_CREW_SKILL_4";
-        public const string Tag_Crew_Skill_5 = "HR_CREW_SKILL_5";
+        public const string Tag_Crew_Skill_Prefix = "HR_CREW_SKILL_";
+
+        public const string Tag_Crew_Bonus_Prefix = "HR_CREW_BONUS_";
+        public const string Tag_Crew_Salary_Prefix = "HR_CREW_SALARY_";
+        public const string Tag_Crew_HireDate_Prefix = "HR_CREW_HIRE_DATE_";
 
         // CU Vehicles - pilot_vehicle_crew allow tank piloting, 
         // if also has pilot_nomech_crew than its tank only

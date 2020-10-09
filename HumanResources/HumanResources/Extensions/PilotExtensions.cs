@@ -24,6 +24,9 @@ namespace HumanResources.Extensions
         private readonly int skill = 1;
         private readonly string skillLabel = "UNKNOWN";
 
+        private readonly int bonus = 0;
+        private readonly int salary = 0;
+
         public CrewDetails(Pilot pilot)
         {
             if (pilot != null && pilot.pilotDef != null && pilot.pilotDef.PilotTags != null)
@@ -51,60 +54,104 @@ namespace HumanResources.Extensions
                         hasCrewFlagVehicle = true;
                     }
 
-                    // Size
-                    if (ModTags.Tag_Crew_Size_1.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
+                    if (tag.StartsWith(ModTags.Tag_Crew_Size_Prefix))
                     {
-                        size = 1;
-                        sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_1];
-                    }
-                    if (ModTags.Tag_Crew_Size_2.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        size = 2;
-                        sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_2];
-                    }
-                    if (ModTags.Tag_Crew_Size_3.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        size = 3;
-                        sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_3];
-                    }
-                    if (ModTags.Tag_Crew_Size_4.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        size = 4;
-                        sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_4];
-                    }
-                    if (ModTags.Tag_Crew_Size_5.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        size = 5;
-                        sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_5];
+                        string value = tag.Substring(ModTags.Tag_Crew_Size_Prefix.Length);
+                        int size = Int32.Parse(value);
+                        switch (size)
+                        {
+                            case 5:
+                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_5];
+                                break;
+                            case 4:
+                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_4];
+                                break;
+                            case 3:
+                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_3];
+                                break;
+                            case 2:
+                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_2];
+                                break;
+                            default:
+                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_1];
+                                break;
+                        }
+
                     }
 
-                    // Skill
-                    if (ModTags.Tag_Crew_Skill_1.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
+                    if (tag.StartsWith(ModTags.Tag_Crew_Skill_Prefix))
                     {
-                        skill = 1;
-                        skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_1];
+                        string value = tag.Substring(ModTags.Tag_Crew_Skill_Prefix.Length);
+                        int skill = Int32.Parse(value);
+                        switch (skill)
+                        {
+                            case 5:
+                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_5];
+                                break;
+                            case 4:
+                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_4];
+                                break;
+                            case 3:
+                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_3];
+                                break;
+                            case 2:
+                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_2];
+                                break;
+                            default:
+                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_1];
+                                break;
+                        }
                     }
-                    if (ModTags.Tag_Crew_Skill_2.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
+
+                    if (tag.StartsWith(ModTags.Tag_Crew_Bonus_Prefix))
                     {
-                        skill = 2;
-                        skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_2];
+                        string value = tag.Substring(ModTags.Tag_Crew_Bonus_Prefix.Length);
+                        bonus = Int32.Parse(value);
                     }
-                    if (ModTags.Tag_Crew_Skill_3.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
+
+                    if (tag.StartsWith(ModTags.Tag_Crew_Salary_Prefix))
                     {
-                        skill = 3;
-                        skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_3];
+                        string value = tag.Substring(ModTags.Tag_Crew_Salary_Prefix.Length);
+                        salary = Int32.Parse(value);
                     }
-                    if (ModTags.Tag_Crew_Skill_4.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        skill = 4;
-                        skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_4];
-                    }
-                    if (ModTags.Tag_Crew_Skill_5.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        skill = 5;
-                        skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_5];
-                    }
+
                 }
+
+                // If no bonus was found, set it
+                if (bonus == 0 || salary == 0)
+                {
+                    if (IsMechTechCrew || IsMedTechCrew)
+                    {
+                        bonus = skill * size * Mod.Config.HiringHall.BonusCostPerPoint;
+                        salary = skill * size * Mod.Config.HiringHall.SalaryCostPerPoint;
+                        Mod.Log.Debug?.Write($" - crew hiring bonus: {bonus}  monthlyCost: {salary}");
+                    }
+                    else
+                    {
+                        bonus = ModState.SimGameState.GetMechWarriorValue(pilot.pilotDef);
+                        salary = bonus;
+                        Mod.Log.Debug?.Write($" - warrior hiring bonus: {bonus}  monthlyCost: {salary}");
+                    }
+
+                    // Apply a variance
+                    float bonusFrac = bonus / 10f;
+                    float bonusVarianceRange = (bonusFrac * Mod.Config.HiringHall.SalaryVariance);
+                    float bonusRawVariance = Mod.Random.Next((int)Math.Floor(bonusVarianceRange));
+                    int bonusVariance = (int)Math.Floor(bonusRawVariance * 10f);
+                    Mod.Log.Debug?.Write($" bonusVariance => frac: {bonusFrac}  varianceRange: {bonusVarianceRange}  rawVariance: {bonusRawVariance}  variance: {bonusVariance}");
+                    bonus += bonusVariance;
+
+                    float salaryFrac = bonus / 10f;
+                    float salaryVarianceRange = (bonusFrac * Mod.Config.HiringHall.SalaryVariance);
+                    float salaryRawVariance = Mod.Random.Next((int)Math.Floor(bonusVarianceRange));
+                    int salaryVariance = (int)Math.Floor(bonusRawVariance * 10f);
+                    Mod.Log.Debug?.Write($" salaryVariance => frac: {salaryFrac}  varianceRange: {salaryVarianceRange}  rawVariance: {salaryRawVariance}  variance: {salaryVariance}");
+                    salary += salaryVariance;
+
+                    pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
+                    pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
+                }
+
             }
         }
 
@@ -119,6 +166,9 @@ namespace HumanResources.Extensions
         
         public int Skill { get { return skill; } }
         public string SkillLabel { get { return skillLabel; } }
+
+        public int Bonus { get { return bonus; } }
+        public int Salary { get { return salary; } }
 
         public int MechTechPoints 
         {  
