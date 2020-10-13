@@ -62,7 +62,23 @@ namespace HumanResources
         public int BonusCostPerPoint = 45000;
         public float BonusVariance = 0.05f;
 
-        public int[][] MechTechPointsBySkillAndSize = new int[][]
+        public PointsBySkillAndSizeContainer PointsBySkillAndSize = new PointsBySkillAndSizeContainer();
+
+    }
+
+    public class PointsBySkillAndSizeContainer
+    {
+
+        public int[][] Aerospace = new int[][]
+{
+            new int[] { 1, 2, 3, 5, 8 },
+            new int[] { 2, 4, 6, 10, 16 },
+            new int[] { 3, 6, 9, 15, 24 },
+            new int[] { 4, 8, 12, 20, 32 },
+            new int[] { 5, 10, 15, 25, 40 }
+        };
+
+        public int[][] MechTech = new int[][]
         {
             new int[] { 1, 2, 3, 5, 8 },
             new int[] { 2, 4, 6, 10, 16 },
@@ -71,7 +87,7 @@ namespace HumanResources
             new int[] { 5, 10, 15, 25, 40 }
         };
 
-        public int[][] MedTechPointsBySkillAndSize = new int[][]
+        public int[][] MedTech = new int[][]
         {
             new int[] { 1, 2, 3, 5, 8 },
             new int[] { 2, 4, 6, 10, 16 },
@@ -79,8 +95,6 @@ namespace HumanResources
             new int[] { 4, 8, 12, 20, 32 },
             new int[] { 5, 10, 15, 25, 40 }
         };
-
-
     }
 
     public class Poaching

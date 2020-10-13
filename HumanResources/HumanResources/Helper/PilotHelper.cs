@@ -19,7 +19,7 @@ namespace HumanResources.Helper
 
             foreach (Pilot pilot in pilots)
             {
-                CrewDetails details = pilot.Evaluate();
+                CrewDetails details = pilot.pilotDef.Evaluate();
                 used += details.Size;
             }
 

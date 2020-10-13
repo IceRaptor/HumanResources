@@ -2,7 +2,6 @@
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
-using HumanResources.Extensions;
 using HumanResources.Helper;
 using System.Collections.Generic;
 using UnityEngine.Events;

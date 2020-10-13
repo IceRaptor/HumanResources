@@ -1,11 +1,77 @@
 ﻿using BattleTech;
 using Harmony;
+using HumanResources.Extensions;
 using HumanResources.Helper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace HumanResources.Patches
 {
+
+    [HarmonyPatch(typeof(StarSystem), "HirePilot")]
+    [HarmonyBefore("io.github.mpstark.AbilityRealizer")]
+    static class StartSystem_HirePilot
+    {
+        // Contains a duplicate of https://github.com/BattletechModders/AbilityRealizer/blob/5fdbb5aa1576f18056d2b2a6236891f41fe44c26/AbilityRealizer/Patches/StarSystem.cs#L14
+        //   plus extensions 
+        static bool Prefix(StarSystem __instance, PilotDef def)
+        {
+
+            //		if (!__instance.AvailablePilots.Contains(def))
+            if (__instance.AvailablePilots.Any(x => x.Description.Id == def.Description.Id))
+            {
+                __instance.AvailablePilots.Remove(def);
+                if (__instance.PermanentRonin.Contains(def))
+                {
+                    __instance.PermanentRonin.Remove(def);
+                    __instance.Sim.UsedRoninIDs.Add(def.Description.Id);
+                }
+                def.SetDayOfHire(__instance.Sim.DaysPassed);
+                __instance.Sim.AddPilotToRoster(def, true, false);
+
+                CrewDetails details = def.Evaluate();
+
+                // Apply their hiring bonus
+                __instance.Sim.AddFunds(-details.AdjustedBonus, null, true, true);
+
+                // Add any mechtech, medtech, or aerospace points
+                if (details.IsMechTechCrew)
+                {
+                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1, 
+                        ModStats.HBS_Company_MechTech_Skill,
+                        StatCollection.StatOperation.Int_Add, details.MechTechPoints);
+                }
+                else if (details.IsMedTechCrew)
+                {
+                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
+                        ModStats.HBS_Company_MedTech_Skill,
+                        StatCollection.StatOperation.Int_Add, details.MedTechPoints);
+                }
+                else if (details.IsAerospaceCrew)
+                {
+                    Statistic aerospaceSkill = __instance.Sim.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
+                    if (aerospaceSkill == null)
+                        __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0);
+
+                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
+                         ModStats.Aerospace_Skill,
+                         StatCollection.StatOperation.Int_Add, details.AerospacePoints);
+                }
+                else if (details.IsVehicleCrew)
+                {
+
+                }
+
+                __instance.Sim.RoomManager.RefreshTimeline(false);
+                __instance.Sim.RoomManager.RefreshDisplay();
+            }
+
+            return false;
+        }
+    }
+
     [HarmonyPatch(typeof(StarSystem), "GeneratePilots")]
     static class StarSystem_GeneratePilots
     {

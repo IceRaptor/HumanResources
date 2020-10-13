@@ -1,13 +1,14 @@
 ﻿using BattleTech;
 using System;
+using UnityEngine;
 
 namespace HumanResources.Extensions
 {
     public static class PilotExtensions
     {
-        public static CrewDetails Evaluate(this Pilot pilot)
+        public static CrewDetails Evaluate(this PilotDef pilotDef)
         {
-            return new CrewDetails(pilot);
+            return new CrewDetails(pilotDef);
         }
     }
 
@@ -17,7 +18,7 @@ namespace HumanResources.Extensions
         private readonly bool hasCrewFlagMedTech = false;
         private readonly bool hasCrewFlagVehicle = false;
         private readonly bool hasCrewFlagAerospace = false;
-        
+
         private readonly int size = 1;
         private readonly string sizeLabel = "UNKNOWN";
 
@@ -27,12 +28,12 @@ namespace HumanResources.Extensions
         private readonly int bonus = 0;
         private readonly int salary = 0;
 
-        public CrewDetails(Pilot pilot)
+        public CrewDetails(PilotDef pilotDef)
         {
-            if (pilot != null && pilot.pilotDef != null && pilot.pilotDef.PilotTags != null)
+            if (pilotDef != null && pilotDef.PilotTags != null)
             {
                 //Mod.Log.Debug?.Write($"Evaluating tags on pilot: {pilot.Name}");
-                foreach (string tag in pilot.pilotDef.PilotTags)
+                foreach (string tag in pilotDef.PilotTags)
                 {
                     //Mod.Log.Debug?.Write($" -- tag: {tag}");
 
@@ -128,7 +129,7 @@ namespace HumanResources.Extensions
                     }
                     else
                     {
-                        bonus = ModState.SimGameState.GetMechWarriorValue(pilot.pilotDef);
+                        bonus = ModState.SimGameState.GetMechWarriorValue(pilotDef);
                         salary = bonus;
                         Mod.Log.Debug?.Write($" - warrior hiring bonus: {bonus}  monthlyCost: {salary}");
                     }
@@ -148,8 +149,8 @@ namespace HumanResources.Extensions
                     Mod.Log.Debug?.Write($" salaryVariance => frac: {salaryFrac}  varianceRange: {salaryVarianceRange}  rawVariance: {salaryRawVariance}  variance: {salaryVariance}");
                     salary += salaryVariance;
 
-                    pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
-                    pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
+                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
+                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
                 }
 
             }
@@ -163,23 +164,23 @@ namespace HumanResources.Extensions
 
         public int Size { get { return size; } }
         public string SizeLabel { get { return sizeLabel; } }
-        
+
         public int Skill { get { return skill; } }
         public string SkillLabel { get { return skillLabel; } }
 
         public int Bonus { get { return bonus; } }
         public int Salary { get { return salary; } }
 
-        public int MechTechPoints 
-        {  
-            get 
+        public int MechTechPoints
+        {
+            get
             {
                 if (!IsMechTechCrew) return 0;
 
                 int points = 0;
                 try
                 {
-                    points = Mod.Config.HiringHall.MechTechPointsBySkillAndSize[Skill][Size];
+                    points = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[Skill][Size];
                 }
                 catch (Exception e)
                 {
@@ -187,7 +188,7 @@ namespace HumanResources.Extensions
                         $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
                 }
                 return points;
-            } 
+            }
         }
 
         public int MedTechPoints
@@ -199,7 +200,7 @@ namespace HumanResources.Extensions
                 int points = 0;
                 try
                 {
-                    points = Mod.Config.HiringHall.MedTechPointsBySkillAndSize[Skill][Size];
+                    points = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[Skill][Size];
                 }
                 catch (Exception e)
                 {
@@ -207,6 +208,47 @@ namespace HumanResources.Extensions
                         $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
                 }
                 return points;
+            }
+        }
+
+        public int AerospacePoints
+        {
+            get
+            {
+                if (!IsAerospaceCrew) return 0;
+                int points = 0;
+                try
+                {
+                    points = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[Skill][Size];
+                }
+                catch (Exception e)
+                {
+                    Mod.Log.Error?.Write(e, $"Failed to read aerospace points matrix for skill: {Skill} and size: {Size}." +
+                        $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
+                }
+                return points;
+            }
+        }
+
+        public int AdjustedBonus
+        {
+            get
+            {
+                float adjustedForMorale = Bonus *
+                    ModState.SimGameState.GetExpenditureCostModifier(ModState.SimGameState.ExpenditureLevel);
+                int rounded = (int)Mathf.RoundToInt(adjustedForMorale);
+                return rounded;
+            }
+        }
+
+        public int AdjustedSalary
+        {
+            get
+            {
+                float adjustedForMorale = Salary *
+                    ModState.SimGameState.GetExpenditureCostModifier(ModState.SimGameState.ExpenditureLevel);
+                int rounded = (int)Mathf.RoundToInt(adjustedForMorale);
+                return rounded;
             }
         }
 

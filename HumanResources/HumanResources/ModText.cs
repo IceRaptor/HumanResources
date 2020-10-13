@@ -29,6 +29,10 @@ namespace HumanResources
         public const string LT_Crew_Size = "CREW_SIZE_LABEL";
         public const string LT_Crew_Berths_Used = "CREW_BERTHS_USED";
 
+        public const string LT_Crew_Hire_Button = "CREW_HIRE_BUTTON";
+        public const string LT_Crew_Bonus_Label = "CREW_HIRE_BONUS_LABEL";
+        public const string LT_Crew_Salary_Label = "CREW_HIRE_SALARY_LABEL";
+
         public Dictionary<string, string> Labels = new Dictionary<string, string>
         {
             { LT_Crew_Skill_Level_1, "Rookie" },
@@ -47,7 +51,11 @@ namespace HumanResources
             { LT_Crew_Size_5, "Huge" },
 
             { LT_Crew_Size, "{0} Crew ({1} berths)" },
-            { LT_Crew_Berths_Used, "{0} / {1} Berths" }
+            { LT_Crew_Berths_Used, "{0} / {1} Berths" },
+
+            { LT_Crew_Hire_Button, "Hire for {0}?" },
+            { LT_Crew_Bonus_Label, "{0} Bonus" },
+            { LT_Crew_Salary_Label, "{0} / Mo" }
 
         };
 

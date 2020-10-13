@@ -22,7 +22,7 @@ namespace HumanResources.Patches
             Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
             
             // TODO: This may need to be improved, as it's used inside a loop. Maybe write to company stats?
-            CrewDetails details = ___pilot.Evaluate();
+            CrewDetails details = ___pilot.pilotDef.Evaluate();
             Mod.Log.Debug?.Write($"  -- pilot requires: {details.Size} berths");
 
             int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
@@ -104,7 +104,7 @@ namespace HumanResources.Patches
             if (___pilot == null) return;
             Mod.Log.Debug?.Write($"POST Calling refresh for pilot: {___pilot.Name}");
 
-            CrewDetails details = ___pilot.Evaluate();
+            CrewDetails details = ___pilot.pilotDef.Evaluate();
 
             // Find the common GameObjects we need to manipulate
             GameObject portraitOverride = GetOrCreateProfileOverride(___portrait);

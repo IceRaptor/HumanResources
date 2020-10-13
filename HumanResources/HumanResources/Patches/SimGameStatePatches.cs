@@ -1,7 +1,9 @@
 ﻿using BattleTech;
 using BattleTech.Data;
 using Harmony;
+using HumanResources.Extensions;
 using SVGImporter;
+using System;
 
 namespace HumanResources.Patches
 {
@@ -40,5 +42,48 @@ namespace HumanResources.Patches
         }
     }
 
+    [HarmonyPatch(typeof(SimGameState), "DismissPilot")]
+    [HarmonyPatch(new Type[] { typeof(Pilot) })]
+    static class SimGameState_DismissPilot
+    {
+        static void Prefix(SimGameState __instance, Pilot p)
+        {
+            if (p == null || !__instance.PilotRoster.Contains(p)) return;
 
+            Mod.Log.Debug?.Write($"Removing pilot: {p.Name} from company.");
+
+            CrewDetails details = p.pilotDef.Evaluate();
+
+            // Remove any mechtech, medtech, or aerospace points
+            if (details.IsMechTechCrew)
+            {
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.HBS_Company_MechTech_Skill,
+                    StatCollection.StatOperation.Int_Subtract, details.MechTechPoints);
+            }
+            else if (details.IsMedTechCrew)
+            {
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.HBS_Company_MedTech_Skill,
+                    StatCollection.StatOperation.Int_Subtract, details.MedTechPoints);
+            }
+            else if (details.IsAerospaceCrew)
+            {
+                Statistic aerospaceSkill = __instance.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
+                if (aerospaceSkill == null)
+                    __instance.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0);
+
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                     ModStats.Aerospace_Skill,
+                     StatCollection.StatOperation.Int_Subtract, details.AerospacePoints);
+            }
+            else if (details.IsVehicleCrew)
+            {
+
+            }
+
+            __instance.RoomManager.RefreshTimeline(false);
+            __instance.RoomManager.RefreshDisplay();
+        }
+    }
 }

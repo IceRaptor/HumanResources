@@ -40,6 +40,10 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>E:\steam\SteamApps\common\BATTLETECH\BattleTech_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="InControl, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\steam\SteamApps\common\BATTLETECH\BattleTech_Data\Managed\InControl.dll</HintPath>
+    </Reference>
     <Reference Include="IRBTModUtils">
       <HintPath>E:\steam\SteamApps\common\BATTLETECH\Mods\IRBTModUtils\IRBTModUtils.dll</HintPath>
     </Reference>
@@ -83,6 +87,7 @@
     <Compile Include="ModInit.cs" />
     <Compile Include="ModState.cs" />
     <Compile Include="ModText.cs" />
+    <Compile Include="Patches\LanceConfiguratorPanelPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterPatches.cs" />
     <Compile Include="Patches\MonthlyCostsPatches.cs" />
     <Compile Include="Patches\PilotGeneratorPatches.cs" />

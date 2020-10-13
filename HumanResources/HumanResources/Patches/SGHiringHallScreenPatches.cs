@@ -2,6 +2,7 @@
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
+using HBS;
 using HumanResources.Extensions;
 using Localize;
 using System;
@@ -44,16 +45,16 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write(" -- pilot is selected");
 
                 // Account for the salary 
-                CrewDetails details = ___selectedPilot.Evaluate();
-                float salaryExpense = details.Bonus *
-                    ModState.SimGameState.GetExpenditureCostModifier(ModState.SimGameState.ExpenditureLevel);
-                int modifiedSalary = (int)Mathf.RoundToInt(salaryExpense);
-                string salaryS = Strings.T("{0} Bonus", SimGameState.GetCBillString(Mathf.RoundToInt(modifiedSalary)));
+                CrewDetails details = ___selectedPilot.pilotDef.Evaluate();
+                int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
+                string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Bonus_Label],
+                    new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
+                    .ToString();
                 Mod.Log.Debug?.Write($"  -- bonus will be: {salaryS}");
 
                 ___MWInitialCostText.SetText(salaryS);
 
-                if (modifiedSalary > ModState.SimGameState.Funds)
+                if (modifiedBonus > ModState.SimGameState.Funds)
                 {
                     Mod.Log.Debug?.Write(" -- Disabling hire.");
                     ___MWCostColor.SetUIColor(UIColor.Red);
@@ -70,6 +71,40 @@ namespace HumanResources.Patches
         }
     }
 
+    [HarmonyPatch(typeof(SG_HiringHall_Screen), "ReceiveButtonPress")]
+    static class SG_HiringHall_Screen_ReceiveButtonPress
+    {
+        static bool Prefix(SG_HiringHall_Screen __instance, Pilot ___selectedPilot, string button)
+        {
+            Mod.Log.Debug?.Write("Updating Dialog");
+
+            if (___selectedPilot != null && 
+                "Hire".Equals(button, StringComparison.InvariantCultureIgnoreCase) &&
+                __instance.HireButtonValid())
+            {
+                Mod.Log.Debug?.Write(" -- pilot is selected");
+
+                CrewDetails details = ___selectedPilot.pilotDef.Evaluate();
+                int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
+                string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hire_Button], 
+                    new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
+                    .ToString();
+                Mod.Log.Debug?.Write($"  -- bonus will be: {salaryS}");
+
+                GenericPopupBuilder.Create("Confirm?", salaryS)
+                    .AddButton("Cancel")
+                    .AddButton("Accept", __instance.HireCurrentPilot)
+                    .CancelOnEscape()
+                    .AddFader(LazySingletonBehavior<UIManager>.Instance.UILookAndColorConstants.PopupBackfill)
+                    .Render();
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     [HarmonyPatch(typeof(SG_HiringHall_MWSelectedPanel), "DisplayPilot")]
     static class SG_HiringHall_MWSelectedPanel_DisplayPilot
     {
@@ -78,11 +113,11 @@ namespace HumanResources.Patches
             Mod.Log.Debug?.Write("Updating MWSelectedPanel");
 
             // Account for the salary 
-            CrewDetails details = p.Evaluate();
-            float salaryExpense = details.Salary * 
-                ModState.SimGameState.GetExpenditureCostModifier(ModState.SimGameState.ExpenditureLevel);
-            int modifiedSalary = (int)Mathf.RoundToInt(salaryExpense);
-            string salaryS = Strings.T("{0} / Mo", SimGameState.GetCBillString(Mathf.RoundToInt(modifiedSalary)));
+            CrewDetails details = p.pilotDef.Evaluate();
+            int modifiedSalary = (int)Mathf.RoundToInt(details.AdjustedSalary);
+            string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Salary_Label],
+                new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedSalary)) })
+                .ToString();
             Mod.Log.Debug?.Write($"  -- salary will be: {salaryS}");
 
             ___BaseSalaryText.SetText(salaryS);

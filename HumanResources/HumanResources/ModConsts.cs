@@ -41,6 +41,10 @@ namespace HumanResources
 
     public static class ModStats
     {
+        public const string HBS_Company_MechTech_Skill = "MechTechSkill";
+        public const string HBS_Company_MedTech_Skill = "MedTechSkill";
+
+        public const string Aerospace_Skill = "AerospaceSkill";
 
     }
 

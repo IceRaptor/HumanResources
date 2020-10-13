@@ -29,3 +29,25 @@ You should disable or remove the above mods before activating this mod.
 | Large     | 4      | 8       | 12      | 20    | 32        |
 | Huge      | 5      | 10      | 15      | 25    | 40        |
 
+### TODO
+
+* Descriptions for MedTechs/MercTechs
+* Add Aerospace Wings
+* Prevent MedTechs/MechTechs from lance selection
+* Hiring cost varies by planet tag *not* faction owner
+  * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
+* Hiring limits by type (1 aerospace, 1 medtech, etc)
+* Firing events takes forever according to t-bone; profile when firing the event
+* skill distribution mu and sigma modified by planet tags
+* size distribution mu and sigma modified by planet tags
+* Contract time for each hirable
+  * Variable scale of contracts (180 - 270 days?)
+* Mercenary loyalty
+  * Low morale decays their loyalty to your crew
+  * Fighting against their faction has a slight reduction
+  * Company reputation; go with options that make you hated and it becomes harder to hire
+  * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do
+*  t-bone would like a company state indicating mechtechs / medtechs were hired
+* SGBarracksMWDetail panel needs to be heavily customized to prevent these
+* Sort pilots in list by type, then skill
+
