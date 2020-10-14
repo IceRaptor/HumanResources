@@ -108,4 +108,37 @@ namespace HumanResources.Patches
             return false;
         }
     }
+
+    [HarmonyPatch(typeof(SimGameState), "GetExpenditures")]
+    [HarmonyPatch(new Type[] { typeof(EconomyScale), typeof(bool) })]
+    [HarmonyAfter(new string[] { "de.morphyum.MechMaintenanceByCost", "us.frostraptor.IttyBittyLivingSpace" })]
+    public static class SimGameState_GetExpenditures
+    {
+        public static void Postfix(SimGameState __instance, ref int __result, EconomyScale expenditureLevel, bool proRate)
+        {
+            Mod.Log.Trace?.Write($"SGS:GE entered with {__result}");
+
+            // Evaluate old versus new cost
+            int vanillaCosts = 0;
+            int newCosts = 0;
+            for (int i = 0; i < __instance.PilotRoster.Count; i++)
+            {
+                PilotDef def = __instance.PilotRoster[i].pilotDef;
+                vanillaCosts += __instance.GetMechWarriorValue(def);
+
+                CrewDetails details = new CrewDetails(def);
+                newCosts += details.AdjustedSalary;
+            }
+
+            // Multiply old costs by expenditure. New has that built in. Then subtract them from the running total
+            float expenditureCostModifier = __instance.GetExpenditureCostModifier(expenditureLevel);
+            int vanillaTotal = Mathf.CeilToInt((float)vanillaCosts * expenditureCostModifier);
+            Mod.Log.Debug?.Write($"Removing {vanillaCosts} costs x {expenditureCostModifier} expenditureMulti " +
+                $"= {vanillaTotal} total vanilla costs.");
+            __result -= vanillaTotal;
+
+            // Add the new costs
+            __result += newCosts;
+        }
+    }
 }

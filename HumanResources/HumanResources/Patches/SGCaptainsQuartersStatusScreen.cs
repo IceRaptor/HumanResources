@@ -1,54 +1,58 @@
 ﻿using BattleTech;
 using BattleTech.UI;
 using Harmony;
+using HumanResources.Extensions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
-using us.frostraptor.modUtils.sorts;
 
 namespace HumanResources.Patches
 {
-
-    //[HarmonyPatch(typeof(SimGameState), "GetExpenditures")]
-    //[HarmonyPatch(new Type[] { typeof(EconomyScale), typeof(bool) })]
-    //[HarmonyAfter(new string[] { "de.morphyum.MechMaintenanceByCost", "us.frostraptor.IttyBittyLivingSpace" })]
-    public static class SimGameState_GetExpenditures
-    {
-        public static void Postfix(SimGameState __instance, ref int __result, EconomyScale expenditureLevel, bool proRate)
-        {
-            Mod.Log.Trace?.Write($"SGS:GE entered with {__result}");
-
-            //Statistic aerospaceAssets = __instance.CompanyStats.GetStatistic("AerospaceAssets");
-            ////int aerospaceSupport = aerospaceAssets != null ? aerospaceAssets.Value<int>() : 0;
-
-            //// Subtract the base cost of mechs
-            //float expenditureCostModifier = __instance.GetExpenditureCostModifier(expenditureLevel);
-            //int defaultActiveMechCosts = 0;
-            //foreach (MechDef mechDef in __instance.ActiveMechs.Values)
-            //{
-            //    defaultActiveMechCosts += Mathf.RoundToInt(expenditureCostModifier * (float)__instance.Constants.Finances.MechCostPerQuarter);
-            //}
-
-            //// Add the new costs
-            //int newActiveMechCosts = MonthlyCostCalcs.SumMonthlyMechCosts(__instance);
-
-            //int total = __result - defaultActiveMechCosts + newActiveMechCosts;
-            //Mod.Log.Info?.Write($"SGS:GE - total:{total} ==> result: {__result} - defaultActiveMechs: {defaultActiveMechCosts} = {__result - defaultActiveMechCosts} + activeMechs: {newActiveMechCosts} ");
-            //__result = total;
-        }
-    }
-
-    //[HarmonyPatch(typeof(SGCaptainsQuartersStatusScreen), "RefreshData")]
-    //[HarmonyAfter(new string[] { "dZ.Zappo.MonthlyTechAdjustment", "us.frostraptor.IttyBittyLivingSpace", "us.frostraptor.IttyBittyLivingSpace" })]
+    [HarmonyPatch(typeof(SGCaptainsQuartersStatusScreen), "RefreshData")]
+    [HarmonyAfter(new string[] { "dZ.Zappo.MonthlyTechAdjustment", "us.frostraptor.IttyBittyLivingSpace" })]
     public static class SGCaptainsQuartersStatusScreen_RefreshData
     {
-        public static void Postfix(SGCaptainsQuartersStatusScreen __instance, EconomyScale expenditureLevel, bool showMoraleChange,
-            Transform ___SectionOneExpensesList, TextMeshProUGUI ___SectionOneExpensesField,
+        public static void Postfix(SGCaptainsQuartersStatusScreen __instance, 
+            EconomyScale expenditureLevel, bool showMoraleChange,
+            Transform ___SectionTwoExpensesList, TextMeshProUGUI ___SectionTwoExpensesField,
             SimGameState ___simState)
         {
+
+            // Redo all the mechwarrior cost
+            float expenditureCostModifier = ___simState.GetExpenditureCostModifier(expenditureLevel);
+            ClearListLineItems(___SectionTwoExpensesList, ___simState);
+            int ongoingMechWariorCosts = 0;
+
+            //int oldCosts = 0;
+            List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
+            foreach (Pilot item in ___simState.PilotRoster)
+            {
+                string key = item.pilotDef.Description.DisplayName;
+                
+                CrewDetails details = new CrewDetails(item.pilotDef);
+                //oldCosts += Mathf.CeilToInt(expenditureCostModifier * (float)___simState.GetMechWarriorValue(item.pilotDef));
+
+                Mod.Log.Debug?.Write($" Pilot: {item.Name} has salary: {details.AdjustedSalary}");
+                list.Add(new KeyValuePair<string, int>(key, details.AdjustedSalary));
+            }
+
+            // Sort by most expensive
+            list.Sort((KeyValuePair<string, int> a, KeyValuePair<string, int> b) => b.Value.CompareTo(a.Value));
+
+            // Create a new line item for each
+            list.ForEach(delegate (KeyValuePair<string, int> entry)
+            {
+                ongoingMechWariorCosts += entry.Value;
+                AddListLineItem(___SectionTwoExpensesList, ___simState, entry.Key, 
+                    SimGameState.GetCBillString(entry.Value));
+            });
+
+            ___SectionTwoExpensesField.SetText(SimGameState.GetCBillString(ongoingMechWariorCosts));
+
+            // Rectify the salary field
 
             //SimGameState simGameState = UnityGameInstance.BattleTechGame.Simulation;
             //if (__instance == null || ___SectionOneExpensesList == null || ___SectionOneExpensesField == null || simGameState == null)
@@ -191,52 +195,5 @@ namespace HumanResources.Patches
             }
         }
 
-        private static List<KeyValuePair<string, int>> FilterActiveMechs(List<KeyValuePair<string, int>> keysAndValues, SimGameState sgs)
-        {
-
-            // Find active mechs
-            List<string> mechNames = new List<string>();
-            foreach (KeyValuePair<int, MechDef> entry in sgs.ActiveMechs)
-            {
-                MechDef mechDef = entry.Value;
-                mechNames.Add(mechDef.Name);
-                Mod.Log.Debug?.Write($"SGCQSS:RD - excluding mech name:({mechDef.Name})");
-            }
-
-            List<KeyValuePair<string, int>> filteredList = new List<KeyValuePair<string, int>>();
-            foreach (KeyValuePair<string, int> kvp in keysAndValues)
-            {
-                // Try to catch IBLS interfering with us
-                string keyId = kvp.Key.Replace("UPKEEP: ", "");
-
-                if (!mechNames.Contains(keyId))
-                {
-                    filteredList.Add(kvp);
-                }
-                else
-                {
-                    mechNames.Remove(kvp.Key);
-                }
-            }
-
-            return filteredList;
-        }
-
-        //private static List<KeyValuePair<string, int>> GetUpkeepLabels(SimGameState sgs)
-        //{
-        //    //Mod.Log.Info?.Write($" === Calculating Active Mech Labels === ");
-
-        //    //List<KeyValuePair<string, int>> labels = new List<KeyValuePair<string, int>>();
-        //    //foreach (KeyValuePair<int, MechDef> entry in sgs.ActiveMechs)
-        //    //{
-        //    //    MechDef mechDef = entry.Value;
-        //    //    int mechCost = MonthlyCostCalcs.CalcMechCost(mechDef);
-        //    //    Mod.Log.Debug?.Write($"  Adding mech:{mechDef.Name} with cost:{mechCost}");
-        //    //    labels.Add(new KeyValuePair<string, int>("UPKEEP: " + mechDef.Name, mechCost));
-        //    //}
-
-        //    //return labels;
-        //}
     }
-
 }

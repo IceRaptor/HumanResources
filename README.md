@@ -48,6 +48,5 @@ You should disable or remove the above mods before activating this mod.
   * Company reputation; go with options that make you hated and it becomes harder to hire
   * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do
 *  t-bone would like a company state indicating mechtechs / medtechs were hired
-* SGBarracksMWDetail panel needs to be heavily customized to prevent these
-* Sort pilots in list by type, then skill
+* Fix finances screen salary
 

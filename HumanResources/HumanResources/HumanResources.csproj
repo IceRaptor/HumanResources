@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Comparable\SGBarracksRosterSlotComparisons.cs" />
     <Compile Include="Patches\SGBarracksMWDetailPanelPatches.cs" />
+    <Compile Include="Patches\SGCaptainsQuartersStatusScreen.cs" />
     <Compile Include="Pilot\CrewDetails.cs" />
     <Compile Include="Pilot\PilotExtensions.cs" />
     <Compile Include="Helper\GuassianHelper.cs" />
@@ -92,7 +93,6 @@
     <Compile Include="ModText.cs" />
     <Compile Include="Patches\LanceConfiguratorPanelPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterPatches.cs" />
-    <Compile Include="Patches\MonthlyCostsPatches.cs" />
     <Compile Include="Patches\PilotGeneratorPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterListPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterSlotPatches.cs" />
