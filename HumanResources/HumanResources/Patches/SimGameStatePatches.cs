@@ -2,8 +2,10 @@
 using BattleTech.Data;
 using Harmony;
 using HumanResources.Extensions;
+using Localize;
 using SVGImporter;
 using System;
+using UnityEngine;
 
 namespace HumanResources.Patches
 {
@@ -84,6 +86,26 @@ namespace HumanResources.Patches
 
             __instance.RoomManager.RefreshTimeline(false);
             __instance.RoomManager.RefreshDisplay();
+        }
+    }
+
+    [HarmonyPatch(typeof(SimGameState), "GetMechWarriorSalary")]
+    static class SimGameState_GetMechWarriorSalary
+    {
+        static bool Prefix(SimGameState __instance, PilotDef def, ref string __result)
+        {
+            string salaryLabel = "------";
+            if (!def.IsFree)
+            {
+                CrewDetails details = new CrewDetails(def);
+                string cbillString = SimGameState.GetCBillString(Mathf.RoundToInt(details.AdjustedSalary));
+                salaryLabel = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Salary_Label],
+                    new object[] { cbillString })
+                    .ToString();
+            }
+            __result = salaryLabel;
+
+            return false;
         }
     }
 }

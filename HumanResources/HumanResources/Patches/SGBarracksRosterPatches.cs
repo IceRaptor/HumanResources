@@ -7,43 +7,30 @@ namespace HumanResources.Patches.MechTechs
 {
 
     // NOTE: Barracks used for both lance configuration as well as hiring hall
-    [HarmonyPatch(typeof(SGBarracksRosterList), "PopulateRosterAsync")]
-    public static class SGBarracksRosterList_PopulateRosterAsync
-    {
-        public static void Postfix(SGBarracksRosterList __instance, SG_HiringHall_Screen ___HireHall)
-        {
-            Mod.Log.Trace?.Write("SGBRL:PRA entered.");
+    //[HarmonyPatch(typeof(SGBarracksRosterList), "PopulateRosterAsync")]
+    //public static class SGBarracksRosterList_PopulateRosterAsync
+    //{
+    //    public static void Postfix(SGBarracksRosterList __instance, SG_HiringHall_Screen ___HireHall)
+    //    {
+    //        Mod.Log.Trace?.Write("SGBRL:PRA entered.");
 
-            if (___HireHall != null)
-            {
-                Mod.Log.Debug?.Write("Attempting to force color update");
-                __instance.ForceRefreshImmediate();
-            }
+    //        if (___HireHall != null)
+    //        {
+    //            Mod.Log.Debug?.Write("Attempting to force color update");
+    //        }
             
-        }
-    }
+    //    }
+    //}
 
-    [HarmonyPatch(typeof(SG_HiringHall_Screen), "AddPeople")]
-    public static class SG_HiringHall_Screen_AddPeople
-    {
-        public static void Postfix(SG_HiringHall_Screen __instance)
-        {
-            Mod.Log.Debug?.Write("SG_HH_S:AP entered.");
-
-            //int bobNum = 0;
-            //List<Pilot> mechTechsAsPilots = new List<Pilot>();
-            //foreach (TechDef mechTech in ModState.GetSimGameState().CurSystem.AvailableMechTechs)
-            //{
-            //    Mod.Log.Debug?.Write($"Found techDef with desc: {mechTech.Description} skill: {mechTech.Skill}");
-            //    PilotDef mechTechPD = new PilotDef();
-            //    HumanDescriptionDef mechTechPDDef = mechTechPD.Description;
-            //    mechTechPD.Description.SetFirstName($"Bob");
-            //    mechTechPD.Description.SetLastName($"{bobNum}");
-
-            //    Pilot mechTechAsPilot = new Pilot(new PilotDef(), mechTechPD.Description.FullName(), true);
-            //}
-        }
-    }
+    //[HarmonyPatch(typeof(SG_HiringHall_Screen), "AddPeople")]
+    //public static class SG_HiringHall_Screen_AddPeople
+    //{
+    //    public static void Postfix(SG_HiringHall_Screen __instance)
+    //    {
+    //        Mod.Log.Debug?.Write("SG_HH_S:AP entered.");
+       
+    //    }
+    //}
 
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "InitData")]
     public static class SG_HiringHall_Screen_InitData
