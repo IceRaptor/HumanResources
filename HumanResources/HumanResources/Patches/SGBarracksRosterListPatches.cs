@@ -2,6 +2,7 @@
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
+using HumanResources.Comparable;
 using HumanResources.Helper;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -40,13 +41,39 @@ namespace HumanResources.Patches
 
     }
 
+    [HarmonyPatch(typeof(SGBarracksRosterList), "SetSorting")]
+    static class SGBarracksRosterList_SetSorting
+    {
+        static void Prefix(SGBarracksRosterList __instance, int val)
+        {
+            Mod.Log.Info?.Write($"RosterList Sorting by name");
+        }
+
+    }
+
     [HarmonyPatch(typeof(SGBarracksRosterList), "ApplySort")]
     static class SGBarracksRosterList_ApplySort
     {
         static bool Prefix(SGBarracksRosterList __instance, List<SGBarracksRosterSlot> inventory)
         {
+
             // TODO: Apply a logical sort here
-            return true;
+            Mod.Log.Info?.Write($"Sorting {inventory?.Count} pilot slots");
+
+            List<SGBarracksRosterSlot> sortedSlots = new List<SGBarracksRosterSlot>(inventory);
+            sortedSlots.Sort(SGBarracksRosterSlotComparisons.CompareByCrewDetailTypeAndExperience);
+
+            int index = 0;
+            foreach (SGBarracksRosterSlot slot in sortedSlots)
+            {
+                Mod.Log.Debug?.Write($" -- pilot: {slot.Pilot.Name} has index: {index}");
+                slot.gameObject.transform.SetSiblingIndex(index);
+                index++;
+            }
+
+            __instance.ForceRefreshImmediate();
+
+            return false;
         }
 
     }

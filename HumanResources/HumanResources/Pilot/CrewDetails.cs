@@ -4,14 +4,6 @@ using UnityEngine;
 
 namespace HumanResources.Extensions
 {
-    public static class PilotExtensions
-    {
-        public static CrewDetails Evaluate(this PilotDef pilotDef)
-        {
-            return new CrewDetails(pilotDef);
-        }
-    }
-
     public class CrewDetails
     {
         private readonly bool hasCrewFlagMechTech = false;
@@ -153,6 +145,15 @@ namespace HumanResources.Extensions
                     pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
                 }
 
+                // If the unit is a mechwarrior or vehicle, set their skill equal to the sum of their stats
+                if (IsMechWarrior || IsVehicleCrew)
+                {
+                    skill = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
+                        pilotDef.BasePiloting + pilotDef.BonusPiloting +
+                        pilotDef.BaseGuts + pilotDef.BonusGuts +
+                        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                }
+
             }
         }
 
@@ -252,5 +253,51 @@ namespace HumanResources.Extensions
             }
         }
 
+        // Evaluation is highest skills == lowest
+        public static int CompareBySkill(CrewDetails details1, CrewDetails details2)
+        {
+            // Check nullity
+            if (details1 == null && details2 == null) return 0;
+            else if (details1 != null && details2 == null) return 1;
+            else if (details1 == null && details2 != null) return -1;
+
+            // Check skill
+            if (details1.Skill > details2.Skill) return -1;
+            else if (details2.Skill > details1.Skill) return 1;
+
+            return 0;
+        }
+
+        // Evaluation is MW, VCrew, Aerospace, MechTech, MedTech
+        public static int CompareByType(CrewDetails details1, CrewDetails details2)
+        {
+            // Check nullity
+            if (details1 == null && details2 == null) return 0;
+            else if (details1 != null && details2 == null) return -1;
+            else if (details1 == null && details2 != null) return 1;
+
+            // Check type
+            int detailsType1 = details1.TypeSortPriority();
+            int detailsType2 = details2.TypeSortPriority();
+
+            if (detailsType1 > detailsType2) return 1;
+            else if (detailsType2 > detailsType1) return -1;
+
+            return 0;
+        }
+
+        private int TypeSortPriority()
+        {
+            int priority = 0;
+
+            if (IsMechWarrior) priority = 0;
+            else if (IsVehicleCrew) priority = 1;
+            else if (IsVehicleCrew) priority = 2;
+            else if (IsAerospaceCrew) priority = 3;
+            else if (IsMechTechCrew) priority = 4;
+            else if (IsMedTechCrew) priority = 5;
+
+            return priority;
+        }
     }
 }

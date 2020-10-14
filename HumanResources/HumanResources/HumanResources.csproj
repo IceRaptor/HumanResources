@@ -79,7 +79,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\PilotExtensions.cs" />
+    <Compile Include="Comparable\SGBarracksRosterSlotComparisons.cs" />
+    <Compile Include="Pilot\CrewDetails.cs" />
+    <Compile Include="Pilot\PilotExtensions.cs" />
     <Compile Include="Helper\GuassianHelper.cs" />
     <Compile Include="Helper\PilotHelper.cs" />
     <Compile Include="ModConfig.cs" />

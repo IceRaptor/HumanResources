@@ -7,14 +7,21 @@ namespace HumanResources.Patches.MechTechs
 {
 
     // NOTE: Barracks used for both lance configuration as well as hiring hall
-    //[HarmonyPatch(typeof(SGBarracksRosterList), "PopulateRosterAsync")]
-    //public static class SGBarracksRosterList_PopulateRosterAsync
-    //{
-    //    public static void Postfix(SGBarracksRosterList __instance)
-    //    {
-    //        Mod.Log.Debug?.Write("SGBRL:PRA entered.");
-    //    }
-    //}
+    [HarmonyPatch(typeof(SGBarracksRosterList), "PopulateRosterAsync")]
+    public static class SGBarracksRosterList_PopulateRosterAsync
+    {
+        public static void Postfix(SGBarracksRosterList __instance, SG_HiringHall_Screen ___HireHall)
+        {
+            Mod.Log.Trace?.Write("SGBRL:PRA entered.");
+
+            if (___HireHall != null)
+            {
+                Mod.Log.Debug?.Write("Attempting to force color update");
+                __instance.ForceRefreshImmediate();
+            }
+            
+        }
+    }
 
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "AddPeople")]
     public static class SG_HiringHall_Screen_AddPeople
