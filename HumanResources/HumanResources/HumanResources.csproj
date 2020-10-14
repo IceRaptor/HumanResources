@@ -85,7 +85,7 @@
     <Compile Include="Pilot\CrewDetails.cs" />
     <Compile Include="Pilot\PilotExtensions.cs" />
     <Compile Include="Helper\GuassianHelper.cs" />
-    <Compile Include="Helper\PilotHelper.cs" />
+    <Compile Include="Pilot\PilotHelper.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="ModConsts.cs" />
     <Compile Include="ModInit.cs" />

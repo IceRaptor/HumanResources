@@ -3,6 +3,7 @@ using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
 using HumanResources.Comparable;
+using HumanResources.Extensions;
 using HumanResources.Helper;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -33,20 +34,18 @@ namespace HumanResources.Patches
                 }
                 ___currentRoster.Add(pilot.GUID, slot);
                 slot.AddToRadioSet(__instance.listRadioSet);
+
+                // Update the pilot's contract end date
+                CrewDetails details = new CrewDetails(pilot.pilotDef);
+                int contractEndDay = ModState.SimGameState.DaysPassed + details.ContractTerm;
+                Mod.Log.Debug?.Write($"  - pilot's contract ends on day: {contractEndDay}");
+                pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractEndDay_Prefix}{contractEndDay}");
+
+                // Performance tweak; skip
                 //ForceRefreshImmediate();
             }
 
             return false;
-        }
-
-    }
-
-    [HarmonyPatch(typeof(SGBarracksRosterList), "SetSorting")]
-    static class SGBarracksRosterList_SetSorting
-    {
-        static void Prefix(SGBarracksRosterList __instance, int val)
-        {
-            Mod.Log.Info?.Write($"RosterList Sorting by name");
         }
 
     }

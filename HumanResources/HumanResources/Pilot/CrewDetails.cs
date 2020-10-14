@@ -20,6 +20,9 @@ namespace HumanResources.Extensions
         private readonly int bonus = 0;
         private readonly int salary = 0;
 
+        private readonly int contractTerm = 0;
+        private readonly int contractEndDay = 0;
+
         public CrewDetails(PilotDef pilotDef)
         {
             if (pilotDef != null && pilotDef.PilotTags != null)
@@ -108,6 +111,17 @@ namespace HumanResources.Extensions
                         salary = Int32.Parse(value);
                     }
 
+                    if (tag.StartsWith(ModTags.Tag_Crew_ContractEndDay_Prefix))
+                    {
+                        string value = tag.Substring(ModTags.Tag_Crew_ContractEndDay_Prefix.Length);
+                        contractEndDay = Int32.Parse(value);
+                    }
+
+                    if (tag.StartsWith(ModTags.Tag_Crew_ContractTerm_Prefix))
+                    {
+                        string value = tag.Substring(ModTags.Tag_Crew_ContractTerm_Prefix.Length);
+                        contractTerm = Int32.Parse(value);
+                    }
                 }
 
                 // If no bonus was found, set it
@@ -171,6 +185,9 @@ namespace HumanResources.Extensions
 
         public int Bonus { get { return bonus; } }
         public int Salary { get { return salary; } }
+
+        public int ContractTerm { get { return contractTerm; } }
+        public int ContractEndDay { get { return contractEndDay; } }
 
         public int MechTechPoints
         {

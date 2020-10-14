@@ -13,19 +13,6 @@ namespace HumanResources.Helper
     public static class PilotHelper
     {
 
-        public static int UsedBerths(IEnumerable<Pilot> pilots)
-        {
-            int used = 0;
-
-            foreach (Pilot pilot in pilots)
-            {
-                CrewDetails details = pilot.pilotDef.Evaluate();
-                used += details.Size;
-            }
-
-            return used;
-        }
-
         public static PilotDef GenerateTechs(int systemDifficulty, bool isMechTech)
         {
 
@@ -46,15 +33,19 @@ namespace HumanResources.Helper
             if (isMechTech) tagSet.Add(ModTags.Tag_Crew_Type_MechTech);
             else tagSet.Add(ModTags.Tag_Crew_Type_MedTech);
 
-            // TODO: Determine crew size
+            // Determine crew size
             string sizeTag = GaussianHelper.GetCrewSizeTag(0, 0);
             Mod.Log.Info?.Write($" Adding sizeTag: {sizeTag}");
             tagSet.Add(sizeTag);
 
-            // TODO: Determine crew skill
+            // Determine crew skill
             string skillTag = GaussianHelper.GetCrewSkillTag(0, 0);
             Mod.Log.Info?.Write($" Adding skillTag: {skillTag}");
             tagSet.Add(skillTag);
+
+            // Determine contract length
+            int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+            tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
             // TODO: Randomize N factions
             // TODO: Build jibberish history
@@ -120,6 +111,10 @@ namespace HumanResources.Helper
             TagSet tagSet;
             StringBuilder lifepathDescParagraphs;
             GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
+
+            // Determine contract length
+            int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+            tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
             string id = GenerateID();
             Gender voiceGender = newGender;
@@ -474,6 +469,19 @@ namespace HumanResources.Helper
                 default:
                     return SkillType.NotSet;
             }
+        }
+
+        public static int UsedBerths(IEnumerable<Pilot> pilots)
+        {
+            int used = 0;
+
+            foreach (Pilot pilot in pilots)
+            {
+                CrewDetails details = pilot.pilotDef.Evaluate();
+                used += details.Size;
+            }
+
+            return used;
         }
 
     }

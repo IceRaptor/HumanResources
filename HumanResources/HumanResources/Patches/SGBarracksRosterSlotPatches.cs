@@ -55,8 +55,6 @@ namespace HumanResources.Patches
             UIColor costColor = UIColor.Red;
             if (details.Bonus <= ModState.SimGameState.Funds) costColor = UIColor.White;
             ___costTextColor.SetUIColor(costColor);
-
-
         }
     }
 

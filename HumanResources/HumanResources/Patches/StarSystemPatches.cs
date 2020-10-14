@@ -143,6 +143,14 @@ namespace HumanResources.Patches
                     __instance.Def.RoninHiringChance : __instance.Sim.Constants.Story.DefaultRoninHiringChance;
                 List<PilotDef> collection = 
                     __instance.Sim.PilotGenerator.GeneratePilots(count, __instance.Def.GetDifficulty(__instance.Sim.SimGameMode), roninChance, out roninList);
+
+                // For each pilot, set a contract length (handled for crews elsewhere)
+                foreach (PilotDef def in collection)
+                {
+                    // Determine contract length
+                    int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+                    def.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
+                }
                 
                 // Remove Ronins that have already been used
                 for (int num = roninList.Count - 1; num >= 0; num--)

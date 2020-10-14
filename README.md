@@ -32,10 +32,13 @@ You should disable or remove the above mods before activating this mod.
 ### TODO
 
 * Descriptions for MedTechs/MercTechs
+  * Background
+  * Attributes
+  * Faction loyalty
 * Add Aerospace Wings
-* Prevent MedTechs/MechTechs from lance selection
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
+* Mechwarrior & Vehicle pilots costs differ from vanilla
 * Hiring limits by type (1 aerospace, 1 medtech, etc)
 * Firing events takes forever according to t-bone; profile when firing the event
 * skill distribution mu and sigma modified by planet tags
@@ -48,5 +51,5 @@ You should disable or remove the above mods before activating this mod.
   * Company reputation; go with options that make you hated and it becomes harder to hire
   * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do
 *  t-bone would like a company state indicating mechtechs / medtechs were hired
-* Fix finances screen salary
+* Max injuries should be hidden on hiring screen
 

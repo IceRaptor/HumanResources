@@ -1,6 +1,7 @@
 ﻿using BattleTech;
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
+using BattleTech.UI.Tooltips;
 using Harmony;
 using HBS;
 using HumanResources.Extensions;
@@ -47,12 +48,12 @@ namespace HumanResources.Patches
                 // Account for the salary 
                 CrewDetails details = ___selectedPilot.pilotDef.Evaluate();
                 int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
-                string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Bonus_Label],
+                string bonus = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Bonus_Label],
                     new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
                     .ToString();
-                Mod.Log.Debug?.Write($"  -- bonus will be: {salaryS}");
+                Mod.Log.Debug?.Write($"  -- bonus will be: {bonus}");
 
-                ___MWInitialCostText.SetText(salaryS);
+                ___MWInitialCostText.SetText(bonus);
 
                 if (modifiedBonus > ModState.SimGameState.Funds)
                 {
@@ -121,6 +122,30 @@ namespace HumanResources.Patches
             Mod.Log.Debug?.Write($"  -- salary will be: {salaryS}");
 
             ___BaseSalaryText.SetText(salaryS);
+        }
+    }
+
+    [HarmonyPatch(typeof(SG_HiringHall_Screen), "WarningsCheck")]
+    static class SG_HiringHall_Screen_WarningsCheck
+    {
+        static void Postfix(SG_HiringHall_Screen __instance, GameObject ___WarningAreaObject,
+            HBSDOTweenButton ___HireButton, LocalizableText ___WarningText,
+            HBSTooltip ___NoHireTooltip, Pilot ___selectedPilot)
+        {
+            Mod.Log.Debug?.Write("Updating MWSelectedPanel:WarningsCheck");
+
+            // Use the warnings area to display the contract length terms
+            if (___selectedPilot != null && ___HireButton.State == ButtonState.Enabled)
+            {
+                ___WarningAreaObject.SetActive(true);
+
+                CrewDetails details = new CrewDetails(___selectedPilot.pilotDef);
+
+                string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Contract_Term],
+                    new object[] { details.ContractTerm }
+                    ).ToString();
+                ___WarningText.SetText(contractTermS);
+            }
         }
     }
 

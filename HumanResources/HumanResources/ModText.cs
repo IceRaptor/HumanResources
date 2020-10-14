@@ -33,6 +33,12 @@ namespace HumanResources
         public const string LT_Crew_Bonus_Label = "CREW_HIRE_BONUS_LABEL";
         public const string LT_Crew_Salary_Label = "CREW_HIRE_SALARY_LABEL";
 
+        public const string LT_Crew_Contract_Term = "CREW_CONTRACT_TERM";
+        public const string LT_Crew_Name_Format = "CREW_NAME_FORMAT";
+
+        public const string LT_Crew_Dossier_Contract_Term = "CREW_DOSSIER_CONTRACT_TERM";
+        public const string LT_Crew_Dossier_Days_Remaining = "CREW_DOSSIER_DAYS_REMAINING";
+
         public Dictionary<string, string> Labels = new Dictionary<string, string>
         {
             { LT_Crew_Skill_Level_1, "Rookie" },
@@ -55,7 +61,14 @@ namespace HumanResources
 
             { LT_Crew_Hire_Button, "Hire for {0}?" },
             { LT_Crew_Bonus_Label, "{0} Bonus" },
-            { LT_Crew_Salary_Label, "{0} / Mo" }
+            { LT_Crew_Salary_Label, "{0} / Mo" },
+
+            { LT_Crew_Contract_Term, "The contract term for this mercenary is {0} days. " },
+
+            { LT_Crew_Name_Format, "{0} {1}" },
+            
+            { LT_Crew_Dossier_Contract_Term, "Contract End" },
+            { LT_Crew_Dossier_Days_Remaining, "{0} days" }
 
         };
 

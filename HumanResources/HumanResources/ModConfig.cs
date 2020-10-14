@@ -62,6 +62,9 @@ namespace HumanResources
         public int BonusCostPerPoint = 45000;
         public float BonusVariance = 0.05f;
 
+        public int MinContractLength = 90;
+        public int MaxContractLength = 270;
+
         public PointsBySkillAndSizeContainer PointsBySkillAndSize = new PointsBySkillAndSizeContainer();
 
     }

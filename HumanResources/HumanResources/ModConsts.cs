@@ -8,6 +8,9 @@ namespace HumanResources
         public const string GO_HBS_Profile_Layout_Title = "layout_title";
         public const string GO_HBS_Profile_Stats_Block = "mw_Stats";
         public const string GO_HBS_Profile_Layout_Stats = "layout_Stats-Or-HiringCost";
+        
+        public const string GO_HBS_Barracks_ServicePanel_BattleStats = "obj-BattleStats";
+        public const string GO_HBS_Barracks_Dossier_LastName = "text_lastName";
 
         public const string GO_Profile_Override = "hr_crew_profile";
         public const string GO_Crew_Block = "hr_crew_block";
@@ -33,7 +36,9 @@ namespace HumanResources
 
         public const string Tag_Crew_Bonus_Prefix = "HR_CREW_BONUS_";
         public const string Tag_Crew_Salary_Prefix = "HR_CREW_SALARY_";
-        public const string Tag_Crew_HireDate_Prefix = "HR_CREW_HIRE_DATE_";
+
+        public const string Tag_Crew_ContractEndDay_Prefix = "HR_CREW_CONTRACT_END_DATE_";
+        public const string Tag_Crew_ContractTerm_Prefix = "HR_CREW_CONTRACT_TERM_";
 
         // CU Vehicles - pilot_vehicle_crew allow tank piloting, 
         // if also has pilot_nomech_crew than its tank only

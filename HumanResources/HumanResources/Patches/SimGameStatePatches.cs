@@ -141,4 +141,21 @@ namespace HumanResources.Patches
             __result += newCosts;
         }
     }
+
+    // Upgrade all the existing pilots w/ a contract time
+    [HarmonyPatch(typeof(SimGameState), "OnCareerModeCharacterCreationComplete")]
+    static class SimGameState_OnCareerModeCharacterCreationComplete
+    {
+        static void Postfix(SimGameState __instance)
+        {
+            foreach (Pilot pilot in __instance.PilotRoster)
+            {
+                if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
+
+                // Determine contract length
+                int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+                pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
+            }
+        }
+    }
 }
