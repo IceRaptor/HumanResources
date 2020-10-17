@@ -1,4 +1,5 @@
 ﻿using BattleTech;
+using HumanResources.Helper;
 using System;
 using UnityEngine;
 
@@ -124,41 +125,6 @@ namespace HumanResources.Extensions
                     }
                 }
 
-                // If no bonus was found, set it
-                if (bonus == 0 || salary == 0)
-                {
-                    if (IsMechTechCrew || IsMedTechCrew)
-                    {
-                        bonus = skill * size * Mod.Config.HiringHall.BonusCostPerPoint;
-                        salary = skill * size * Mod.Config.HiringHall.SalaryCostPerPoint;
-                        Mod.Log.Debug?.Write($" - crew hiring bonus: {bonus}  monthlyCost: {salary}");
-                    }
-                    else
-                    {
-                        bonus = ModState.SimGameState.GetMechWarriorValue(pilotDef);
-                        salary = bonus;
-                        Mod.Log.Debug?.Write($" - warrior hiring bonus: {bonus}  monthlyCost: {salary}");
-                    }
-
-                    // Apply a variance
-                    float bonusFrac = bonus / 10f;
-                    float bonusVarianceRange = (bonusFrac * Mod.Config.HiringHall.SalaryVariance);
-                    float bonusRawVariance = Mod.Random.Next((int)Math.Floor(bonusVarianceRange));
-                    int bonusVariance = (int)Math.Floor(bonusRawVariance * 10f);
-                    Mod.Log.Debug?.Write($" bonusVariance => frac: {bonusFrac}  varianceRange: {bonusVarianceRange}  rawVariance: {bonusRawVariance}  variance: {bonusVariance}");
-                    bonus += bonusVariance;
-
-                    float salaryFrac = bonus / 10f;
-                    float salaryVarianceRange = (bonusFrac * Mod.Config.HiringHall.SalaryVariance);
-                    float salaryRawVariance = Mod.Random.Next((int)Math.Floor(bonusVarianceRange));
-                    int salaryVariance = (int)Math.Floor(bonusRawVariance * 10f);
-                    Mod.Log.Debug?.Write($" salaryVariance => frac: {salaryFrac}  varianceRange: {salaryVarianceRange}  rawVariance: {salaryRawVariance}  variance: {salaryVariance}");
-                    salary += salaryVariance;
-
-                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
-                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
-                }
-
                 // If the unit is a mechwarrior or vehicle, set their skill equal to the sum of their stats
                 if (IsMechWarrior || IsVehicleCrew)
                 {
@@ -168,6 +134,42 @@ namespace HumanResources.Extensions
                         pilotDef.BaseTactics + pilotDef.BonusTactics;
                 }
 
+                // If no bonus was found, set it
+                if (bonus == 0 || salary == 0)
+                {
+
+                    int unitValue = 0;
+                    CrewOpts config = null;
+                    if (IsAerospaceCrew)
+                    {
+                        unitValue = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[skill][size];
+                        config = Mod.Config.HiringHall.AerospaceWings;
+                    }
+                    else if (IsMechTechCrew)
+                    {
+                        unitValue = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[skill][size];
+                        config = Mod.Config.HiringHall.MechTechCrews;
+                    }
+                    else if (IsMedTechCrew)
+                    {
+                        unitValue = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[skill][size];
+                        config = Mod.Config.HiringHall.MedTechCrews;
+                    }
+                    else if (IsMechWarrior)
+                    {
+                        unitValue = skill;
+                        config = Mod.Config.HiringHall.MechWarriors;
+                    }
+                    else if (IsVehicleCrew)
+                    {
+                        unitValue = skill;
+                        config = Mod.Config.HiringHall.VehicleCrews;
+                    }
+
+                    SalaryHelper.CalculateSalary(unitValue, config, out int salary, out int bonus);
+                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
+                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
+                }
             }
         }
 

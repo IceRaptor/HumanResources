@@ -1,10 +1,12 @@
 ﻿using BattleTech;
 using BattleTech.Data;
+using BattleTech.UI;
 using Harmony;
 using HumanResources.Extensions;
 using Localize;
 using SVGImporter;
 using System;
+using System.Text;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -38,9 +40,62 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SimGameState), "OnDayPassed")]
     static class SimGameState_OnDayPassed
     {
-        static void Postfix(SimGameState __instance, int timeLapse)
+        static void Postfix(SimGameState __instance, int timeLapse, SimGameInterruptManager ___interruptQueue,
+            SimGameEventTracker ___companyEventTracker, SimGameEventTracker ___mechWarriorEventTracker,
+            SimGameEventTracker ___deadEventTracker, SimGameEventTracker ___moraleEventTracker)
         {
             Mod.Log.Debug?.Write($"OnDayPassed called with timeLapse: {timeLapse}");
+
+            if (!___interruptQueue.IsOpen)
+            {
+                // Force fire our test event - works
+                Mod.Log.Debug?.Write("FIRING EVENT");
+                //SimGameEventDef companyEventDef = __instance.DataManager.SimGameEventDefs.Get("event_hr_co_smearCampaign");
+                //___companyEventTracker.ActivateEvent(companyEventDef, null);
+
+                foreach (Pilot pilot in __instance.PilotRoster)
+                {
+
+                    Mod.Log.Debug?.Write($"Pilot: {pilot.Name} has tags:");
+                    // Enumerate tags
+                    foreach (string tag in pilot.pilotDef.PilotTags)
+                    {
+                        Mod.Log.Debug?.Write($" -- {tag}");
+                    }
+
+                    CrewDetails details = new CrewDetails(pilot.pilotDef);
+                    if (details.ContractEndDay <= __instance.DaysPassed)
+                    {
+                        Mod.Log.Debug?.Write($"CONTRACT FOR PILOT: {pilot.Name} HAS ELAPSED, FIRING EVENT");
+
+                        __instance.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, pilot);
+                        SimGameEventDef crewEventDef = __instance.DataManager.SimGameEventDefs.Get("event_hr_mw_contractExpired");
+                        BaseDescriptionDef baseDescDef = crewEventDef.Description;
+                        
+                        StringBuilder sb = new StringBuilder(baseDescDef.Details);
+                        sb.Append("\n");
+                        sb.Append("<margin=5em>\n");
+                        sb.Append($" Hiring Bonus: {SimGameState.GetCBillString(details.AdjustedBonus)}\n\n");
+                        sb.Append($" Monthly Salary: {SimGameState.GetCBillString(details.AdjustedSalary)}\n\n");
+                        sb.Append("</margin>\n");
+
+                        Mod.Log.Debug?.Write($"Setting baseDefDesc to: {sb}");
+
+                        Traverse baseDescDefDetailsSetT = Traverse.Create(baseDescDef).Property("Details");
+                        baseDescDefDetailsSetT.SetValue(sb.ToString());
+
+                        Traverse crewEventDescT = Traverse.Create(crewEventDef).Property("Description");
+                        crewEventDescT.SetValue(baseDescDef);
+
+                        ___mechWarriorEventTracker.ActivateEvent(crewEventDef);
+
+                    }
+                }
+            }
+            else
+            {
+                Mod.Log.Debug?.Write("EVENT CONDITIONALS FAILED");
+            }
         }
     }
 
@@ -133,7 +188,7 @@ namespace HumanResources.Patches
             // Multiply old costs by expenditure. New has that built in. Then subtract them from the running total
             float expenditureCostModifier = __instance.GetExpenditureCostModifier(expenditureLevel);
             int vanillaTotal = Mathf.CeilToInt((float)vanillaCosts * expenditureCostModifier);
-            Mod.Log.Debug?.Write($"Removing {vanillaCosts} costs x {expenditureCostModifier} expenditureMulti " +
+            Mod.Log.Trace?.Write($"Removing {vanillaCosts} costs x {expenditureCostModifier} expenditureMulti " +
                 $"= {vanillaTotal} total vanilla costs.");
             __result -= vanillaTotal;
 
@@ -153,9 +208,25 @@ namespace HumanResources.Patches
                 if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
 
                 // Determine contract length
-                int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+                int contractLength = Mod.Random.Next(
+                    Mod.Config.HiringHall.MechWarriors.MinContractLength, 
+                    Mod.Config.HiringHall.MechWarriors.MaxContractLength);
                 pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(SimGameState), "GetMechWarriorValue")]
+    static class SimGameState_GetMechWarriorValue
+    {
+        static bool Prefix(SimGameState __instance, PilotDef def, ref int __result)
+        {
+            int totalPoints = def.BaseGunnery + def.BaseGuts + def.BasePiloting + def.BaseTactics +
+                def.BonusGunnery + def.BonusGuts + def.BonusPiloting + def.BonusTactics;
+
+            __result = 0;
+
+            return false;
         }
     }
 }

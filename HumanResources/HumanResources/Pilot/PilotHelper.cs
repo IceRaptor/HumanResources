@@ -44,7 +44,9 @@ namespace HumanResources.Helper
             tagSet.Add(skillTag);
 
             // Determine contract length
-            int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+            int contractLength = isMechTech ?
+                Mod.Random.Next(Mod.Config.HiringHall.MechTechCrews.MinContractLength, Mod.Config.HiringHall.MechTechCrews.MaxContractLength) :
+                Mod.Random.Next(Mod.Config.HiringHall.MedTechCrews.MinContractLength, Mod.Config.HiringHall.MedTechCrews.MaxContractLength);
             tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
             // TODO: Randomize N factions
@@ -113,7 +115,9 @@ namespace HumanResources.Helper
             GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
 
             // Determine contract length
-            int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+            int contractLength = Mod.Random.Next(
+                Mod.Config.HiringHall.VehicleCrews.MinContractLength, 
+                Mod.Config.HiringHall.VehicleCrews.MaxContractLength);
             tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
             string id = GenerateID();

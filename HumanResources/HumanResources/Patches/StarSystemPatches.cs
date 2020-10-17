@@ -148,7 +148,8 @@ namespace HumanResources.Patches
                 foreach (PilotDef def in collection)
                 {
                     // Determine contract length
-                    int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MinContractLength, Mod.Config.HiringHall.MaxContractLength);
+                    int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MechWarriors.MinContractLength, 
+                        Mod.Config.HiringHall.MechWarriors.MaxContractLength);
                     def.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
                 }
                 

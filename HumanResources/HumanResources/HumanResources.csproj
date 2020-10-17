@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparable\SGBarracksRosterSlotComparisons.cs" />
+    <Compile Include="Helper\SalaryHelper.cs" />
     <Compile Include="Patches\SGBarracksMWDetailPanelPatches.cs" />
     <Compile Include="Patches\SGCaptainsQuartersStatusScreen.cs" />
     <Compile Include="Pilot\CrewDetails.cs" />

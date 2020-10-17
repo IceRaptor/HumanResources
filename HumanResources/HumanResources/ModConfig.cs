@@ -4,15 +4,7 @@ using UnityEngine;
 namespace HumanResources
 {
 
-    public class CrewScarcity
-    {
-        // TODO: These probably need to be floats, so the addition is less granular. 
-        public int MechWarriors = 0;
-        public int VehicleCrews = 0;
-        public int MechTechs = 0;
-        public int MedTechs = 0;
-        public int Aerospace = 0;
-    }
+
 
     public class DistributionOpts
     {
@@ -23,6 +15,50 @@ namespace HumanResources
 
         // Breakpoints on the PDF (Probability distribution function), from worst to best. Must be 4 values.
         public float[] Breakpoints = new float[] { -1.0f, 1.0f, 2.0f, 3.0f };
+    }
+
+    public class CrewOpts
+    {
+        public bool Enabled = true;
+
+        public int MinContractLength = 90;
+        public int MaxContractLength = 180;
+
+        // ab^x where a = multiplier, b = exponent, x = skill level
+        public int SalaryMulti = 30000;
+        public float SalaryExponent = 1.1f;
+        
+        // Salary variance is up or down; if salary is 10,000 variance will calculate from 9,500 to 10,500
+        public float SalaryVariance = 0.05f;
+        // Bonus variance is always above the salary range; 10,000 salary will be between 10,000 and 13,000
+        public float BonusVariance = 1.3f;
+    }
+
+    public class CrewScarcity
+    {
+        // TODO: These probably need to be floats, so the addition is less granular. 
+        public int MechWarriors = 0;
+        public int VehicleCrews = 0;
+        public int MechTechs = 0;
+        public int MedTechs = 0;
+        public int Aerospace = 0;
+    }
+
+    public class ScarcityOps
+    {
+        public bool Enabled = true;
+
+        public CrewScarcity Defaults = new CrewScarcity();
+
+        public Dictionary<string, CrewScarcity> PlanetTagModifiers = new Dictionary<string, CrewScarcity>()
+        {
+            {  "planet_civ_innersphere",
+                new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
+            {  "planet_civ_periphery",
+                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 0 } },
+            {  "planet_civ_primitive",
+                new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
+        };
     }
 
     public class HiringHall
@@ -39,37 +75,68 @@ namespace HumanResources
             Breakpoints = new float[] { -1f, 0.5f, 1.25f, 2f }
         };
 
-        public bool AllowVehicleCrews = true;
-        public bool AllowMechTechs = true;
-        public bool AllowMedTechs = true;
-        public bool AllowAerospace = true;
+        public ScarcityOps Scarcity = new ScarcityOps();
         
-        public bool EnableScarcity = true;
-        public CrewScarcity DefaultScarcity = new CrewScarcity();
-        public Dictionary<string, CrewScarcity> ScarcityByPlanetTag = new Dictionary<string, CrewScarcity>()
+        public PointsBySkillAndSizeOpts PointsBySkillAndSize = new PointsBySkillAndSizeOpts();
+
+        public CrewOpts AerospaceWings = new CrewOpts
         {
-            {  "planet_civ_innersphere",  
-                new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
-            {  "planet_civ_periphery",  
-                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 0 } },
-            {  "planet_civ_primitive",  
-                new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
+            Enabled = true,
+            MinContractLength = 90,
+            MaxContractLength = 180,
+            SalaryMulti = 30000,
+            SalaryExponent = 1.1f,
+            SalaryVariance = 1.1f,
+            BonusVariance = 1.5f
         };
 
-        public int SalaryCostPerPoint = 30000;
-        public float SalaryVariance = 0.05f;
+        public CrewOpts MechTechCrews = new CrewOpts
+        {
+            Enabled = true,
+            MinContractLength = 90,
+            MaxContractLength = 180,
+            SalaryMulti = 30000,
+            SalaryExponent = 1.1f,
+            SalaryVariance = 1.1f,
+            BonusVariance = 1.5f
+        };
 
-        public int BonusCostPerPoint = 45000;
-        public float BonusVariance = 0.05f;
+        public CrewOpts MedTechCrews = new CrewOpts
+        {
+            Enabled = true,
+            MinContractLength = 90,
+            MaxContractLength = 180,
+            SalaryMulti = 30000,
+            SalaryExponent = 1.1f,
+            SalaryVariance = 1.1f,
+            BonusVariance = 1.5f
+        };
 
-        public int MinContractLength = 90;
-        public int MaxContractLength = 270;
+        public CrewOpts MechWarriors = new CrewOpts
+        {
+            Enabled = true,
+            MinContractLength = 90,
+            MaxContractLength = 180,
+            SalaryMulti = 30000,
+            SalaryExponent = 1.1f,
+            SalaryVariance = 1.1f,
+            BonusVariance = 1.5f
+        };
 
-        public PointsBySkillAndSizeContainer PointsBySkillAndSize = new PointsBySkillAndSizeContainer();
+        public CrewOpts VehicleCrews = new CrewOpts
+        {
+            Enabled = true,
+            MinContractLength = 90,
+            MaxContractLength = 180,
+            SalaryMulti = 30000,
+            SalaryExponent = 1.1f,
+            SalaryVariance = 1.1f,
+            BonusVariance = 1.5f
+        };
 
     }
 
-    public class PointsBySkillAndSizeContainer
+    public class PointsBySkillAndSizeOpts
     {
 
         public int[][] Aerospace = new int[][]

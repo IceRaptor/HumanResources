@@ -40,6 +40,14 @@ namespace HumanResources
         public const string Tag_Crew_ContractEndDay_Prefix = "HR_CREW_CONTRACT_END_DATE_";
         public const string Tag_Crew_ContractTerm_Prefix = "HR_CREW_CONTRACT_TERM_";
 
+        public const string Tag_Crew_LoyaltyLevel_Prefix = "HR_CREW_LOYALTY_LEVEL_";
+
+        public const string Tag_Crew_Loyalty_Dedicated = "HR_CREW_LOYALTY_DEDICATED";
+        public const string Tag_Crew_Loyalty_Comfortable = "HR_CREW_LOYALTY_COMFORTABLE";
+        public const string Tag_Crew_Loyalty_Neutral = "HR_CREW_LOYALTY_NEUTRAL";
+        public const string Tag_Crew_Loyalty_Unhappy = "HR_CREW_LOYALTY_UNHAPPY";
+        public const string Tag_Crew_Loyalty_Hated = "HR_CREW_LOYALTY_HATED";
+
         // CU Vehicles - pilot_vehicle_crew allow tank piloting, 
         // if also has pilot_nomech_crew than its tank only
     }
@@ -49,8 +57,8 @@ namespace HumanResources
         public const string HBS_Company_MechTech_Skill = "MechTechSkill";
         public const string HBS_Company_MedTech_Skill = "MedTechSkill";
 
-        public const string Aerospace_Skill = "AerospaceSkill";
-
+        public const string Aerospace_Skill = "HR_AerospaceSkill";
+        public const string Company_Reputation = "HR_CompanyRep";
     }
 
 }

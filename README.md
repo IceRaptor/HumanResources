@@ -43,6 +43,7 @@ You should disable or remove the above mods before activating this mod.
 * Firing events takes forever according to t-bone; profile when firing the event
 * skill distribution mu and sigma modified by planet tags
 * size distribution mu and sigma modified by planet tags
+* MechWarrior skill distribution to reflect our distribution
 * Contract time for each hirable
   * Variable scale of contracts (180 - 270 days?)
 * Mercenary loyalty
