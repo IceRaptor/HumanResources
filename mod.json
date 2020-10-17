@@ -1,26 +1,28 @@
 {
-    "Name": "PitCrew",
+    "Name": "HumanResources",
     "Enabled": true,
     "Version": "0.1.0",
-    "Description": "Revamps repair system and adds hirable MechTeks",
+    "Description": "Allows you to hire MechTech, MedTech, and Vehicle crews.",
     "Author": "IceRaptor",
-    "Website": "https://github.com/IceRaptor/PitCrew",
+    "Website": "https://github.com/IceRaptor/HumanResources",
     "Contact": "",
-    "DLL": "PitCrew.dll",
-    "DLLEntryPoint" : "PitCrew.Mod.Init",
-    "DependsOn" : [ "IRBTModUtils", "CustomComponents" ],
+    "DLL": "HumanResources.dll",
+    "DLLEntryPoint" : "HumanResources.Mod.Init",
+    "DependsOn" : [ "IRBTModUtils" ],
     "OptionallyDependsOn" :  [ ],
 	"CustomResourceTypes": [ "CustomSVGIcon" ],
-    "Manifest": [ { "Type": "SVGAsset", "Path": "icons/"} ],
+    "Manifest": [ 
+        { "Type": "BaseDescriptionDef", "Path": "tooltip/" },
+        { "Type": "SimGameEventDef", "Path": "events/" },
+        { "Type": "SVGAsset", "Path": "icons/"} 
+    ],
     "Settings": {
         "Debug" : true,
         "Trace" : false,
         "Icons" : {
-            "MechWarriorButton" : "pc_missile-mech",
-            "MechTechButton" : "pc_apc",
-            "MedTechPortrait" : "pc_auto-repair",
-            "MedTechButton" : "pc_hospital-cross",
-            "MechTechPortait" : "pc_auto-repair",
+            "CrewPortrait_MechTech" : "pc_auto-repair",
+            "CrewPortrait_MedTech" : "pc_hospital-cross",
+            "CrewPortrait_Vehicle" : "pc_apc",
             "GroupPortrait" : "pc_three-friends"
         },
         "Crew": {
@@ -29,44 +31,125 @@
             "VehicleCrewRGB" : [ 0.486, 0.745, 0.525 ],
             "MechwarriorRGB" : [ 0.376, 0.533, 0.604 ]
         },
-        "MonthlyCost" : {},
-        "ArmorRepair" : {},
-        "StructureRepair" : {},
-        "ChassisTagMods" : {},
-        "ComponentTagMods" : {},
         "HiringHall" : {
-            "EnableScarcity": true,
-            "DefaultScarcity" : { "MechWarriors" : 1, "VehicleCrews" : 2, "MechTechs" : 1, "MedTechs": 1 },
-            "ScarcityByPlanetTag" : {
-                "planet_civ_innersphere" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_civ_periphery" : { "MechWarriors" : 1, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_civ_primitive" : { "MechWarriors" : -2, "VehicleCrews" : 1, "MechTechs" : -2, "MedTechs" : -4 },
 
-                "planet_other_capital" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 2, "MedTechs" : 2 },
-                "planet_other_hub" : { "MechWarriors" : 1, "VehicleCrews" : 1, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_other_megacity" : { "MechWarriors" : 2, "VehicleCrews" : 2, "MechTechs" : 2, "MedTechs" : 2 },
-                "planet_other_newcolony" : { "MechWarriors" : 0, "VehicleCrews" : 1, "MechTechs" : -3, "MedTechs" : -3 },
-                "planet_other_pirate" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : -2, "MedTechs" : -2 },
-                "planet_other_plague" : { "MechWarriors" : -4, "VehicleCrews" : -4, "MechTechs" : -2, "MedTechs" : 2 },
+            "Scarcity" : {
+                "Enabled": true,
+                "Defaults" : { "MechWarriors" : 1, "VehicleCrews" : 2, "MechTechs" : 1, "MedTechs": 1 },
+                "PlanetTagModifiers" : {
+                    "planet_civ_innersphere" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_civ_periphery" : { "MechWarriors" : 1, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_civ_primitive" : { "MechWarriors" : -2, "VehicleCrews" : 1, "MechTechs" : -2, "MedTechs" : -4 },
 
-                "planet_pop_large" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 9, "MedTechs" : 9 },
-                "planet_pop_medium" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_pop_none" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_pop_small" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_other_capital" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 2, "MedTechs" : 2 },
+                    "planet_other_hub" : { "MechWarriors" : 1, "VehicleCrews" : 1, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_other_megacity" : { "MechWarriors" : 2, "VehicleCrews" : 2, "MechTechs" : 2, "MedTechs" : 2 },
+                    "planet_other_newcolony" : { "MechWarriors" : 0, "VehicleCrews" : 1, "MechTechs" : -3, "MedTechs" : -3 },
+                    "planet_other_pirate" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : -2, "MedTechs" : -2 },
+                    "planet_other_plague" : { "MechWarriors" : -4, "VehicleCrews" : -4, "MechTechs" : -2, "MedTechs" : 2 },
 
-                "planet_industry_agriculture" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_aquaculture" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_manufacturing" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_mining" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_electronics" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_chemicals" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_poor" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_recreation" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_research" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
-                "planet_industry_rich" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_pop_large" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 9, "MedTechs" : 9 },
+                    "planet_pop_medium" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_pop_none" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_pop_small" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
 
-                "planet_event_pox" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 }
+                    "planet_industry_agriculture" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_aquaculture" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_manufacturing" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_mining" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_electronics" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_chemicals" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_poor" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_recreation" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_research" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+                    "planet_industry_rich" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 },
+
+                    "planet_event_pox" : { "MechWarriors" : 2, "VehicleCrews" : 4, "MechTechs" : 1, "MedTechs" : 1 }
+                }
+            },
+
+            "SkillDistribution" : {
+                "Breakpoints" : [ -1.5, 1.5, 2, 2.5 ]
+            },
+
+            "SizeDistribution" : {
+                "Breakpoints" : [ -1, 0.5, 1.25, 2 ]
+            },
+
+            "PointsBySkillAndSize" : {
+                "Aerospace" : [
+                    [ 1, 2, 3, 5, 8 ],
+                    [ 2, 4, 6, 10, 16 ],
+                    [ 3, 6, 9, 15, 24 ],
+                    [ 4, 8, 12, 20, 32 ],
+                    [ 5, 10, 15, 25, 40 ]
+                ],
+                "MechTech" : [
+                    [ 1, 2, 3, 5, 8 ],
+                    [ 2, 4, 6, 10, 16 ],
+                    [ 3, 6, 9, 15, 24 ],
+                    [ 4, 8, 12, 20, 32 ],
+                    [ 5, 10, 15, 25, 40 ]
+                ],
+                "MedTech" : [
+                    [ 1, 2, 3, 5, 8 ],
+                    [ 2, 4, 6, 10, 16 ],
+                    [ 3, 6, 9, 15, 24 ],
+                    [ 4, 8, 12, 20, 32 ],
+                    [ 5, 10, 15, 25, 40 ]
+                ]
+            },
+
+            "AerospaceWings" : {
+                "Enabled" : true,
+                "MinContractLength": 90,
+                "MaxContractLength" : 180,
+                "SalaryMulti" : 30000,
+                "SalaryExponent" : 1.1,
+                "SalaryVariance" : 1.1, 
+                "BonusVariance" : 1.5
+            },
+            "MechTechCrews" : {
+                "Enabled" : true,
+                "MinContractLength": 90,
+                "MaxContractLength" : 180,
+                "SalaryMulti" : 30000,
+                "SalaryExponent" : 1.1,
+                "SalaryVariance" : 1.1, 
+                "BonusVariance" : 1.5
+            },
+            "MedTechCrews" : {
+                "Enabled" : true,
+                "MinContractLength": 90,
+                "MaxContractLength" : 180,
+                "SalaryMulti" : 30000,
+                "SalaryExponent" : 1.1,
+                "SalaryVariance" : 1.1, 
+                "BonusVariance" : 1.5
+            },
+            "MechWarriors" : {
+                "Enabled" : true,
+                "MinContractLength": 90,
+                "MaxContractLength" : 180,
+                "SalaryMulti" : 30000,
+                "SalaryExponent" : 1.1,
+                "SalaryVariance" : 1.1, 
+                "BonusVariance" : 1.5
+            },
+            "VehicleCrews" : {
+                "Enabled" : true,
+                "MinContractLength": 90,
+                "MaxContractLength" : 180,
+                "SalaryMulti" : 30000,
+                "SalaryExponent" : 1.1,
+                "SalaryVariance" : 1.1, 
+                "BonusVariance" : 1.5
             }
+        },
+        "Poaching" : {
+            "Enabled" : true,
+            "LifeStyleMods" :  [ 0.35, 0.2, -0.2, -0.35 ],
+            "PoachingChance" : [ 0.05, 0.1, 0.15, 0.3, 0.6 ]
         }
     }
 }

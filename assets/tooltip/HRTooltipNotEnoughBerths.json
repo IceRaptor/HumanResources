@@ -1,0 +1,6 @@
+{
+    "Id" : "HRTooltipNotEnoughBerths",
+    "Name" : "Not Enough Berths",
+    "Details" : "This crew cannot be hired because you do not have enough berths for them.",
+    "Icon" : ""
+}

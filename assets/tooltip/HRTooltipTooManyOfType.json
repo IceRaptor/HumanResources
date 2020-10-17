@@ -1,0 +1,6 @@
+{
+    "Id" : "HRTooltipTooManyOfType",
+    "Name" : "Too Many Crew of Same Type",
+    "Details" : "This crew cannot be hired because you already have too many crew of the same type.",
+    "Icon" : ""
+}
