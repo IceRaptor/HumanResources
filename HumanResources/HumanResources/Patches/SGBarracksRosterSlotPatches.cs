@@ -28,7 +28,8 @@ namespace HumanResources.Patches
             int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
             int availableBerths = ModState.SimGameState.GetMaxMechWarriors() - usedBerths;
             Mod.Log.Debug?.Write($"AvailableBerths: {availableBerths} = max: {ModState.SimGameState.GetMaxMechWarriors()} - used: {usedBerths}");
-            
+
+            // Check berths limitations
             if (details.Size > availableBerths)
             {
                 Mod.Log.Info?.Write($"Pilot {___pilot.Name} cannot be hired, not enough berths (needs {details.Size})");
@@ -38,6 +39,22 @@ namespace HumanResources.Patches
                 HBSTooltipStateData tooltipStateData = new HBSTooltipStateData();
                 tooltipStateData.SetContextString($"DM.BaseDescriptionDefs[{ModConsts.Tooltip_NotEnoughBerths}]");
                 ___cantBuyToolTip.SetDefaultStateData(tooltipStateData);
+            }
+
+            // Check type limitations
+            if (!PilotHelper.CanHireMoreCrewOfType(details))
+            {
+                Mod.Log.Info?.Write($"Pilot {___pilot.Name} cannot be hired, too many of type already employed.");
+
+                ___cantBuyMRBOverlay.SetActive(true);
+
+                HBSTooltipStateData tooltipStateData = new HBSTooltipStateData();
+                tooltipStateData.SetContextString($"DM.BaseDescriptionDefs[{ModConsts.Tooltip_TooManyOfType}]");
+                ___cantBuyToolTip.SetDefaultStateData(tooltipStateData);
+            }
+            else
+            {
+                Mod.Log.Debug?.Write($"Pilot {___pilot.Name} can be hired, no limiations on max.");
             }
 
             // Set the prices

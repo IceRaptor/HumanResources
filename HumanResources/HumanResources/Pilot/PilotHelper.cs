@@ -487,6 +487,40 @@ namespace HumanResources.Helper
 
             return used;
         }
+        public static bool CanHireMoreCrewOfType(CrewDetails details)
+        {
+            CrewOpts crewOpt = null;
+            Statistic crewStat = null;
+            if (details.IsAerospaceCrew)
+            {
+                crewOpt = Mod.Config.HiringHall.AerospaceWings;
+                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
+            }
+            if (details.IsMechTechCrew)
+            {
+                crewOpt = Mod.Config.HiringHall.MechTechCrews;
+                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
+            }
+            if (details.IsMechWarrior)
+            {
+                crewOpt = Mod.Config.HiringHall.MechWarriors;
+                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
+            }
+            if (details.IsMedTechCrew)
+            {
+                crewOpt = Mod.Config.HiringHall.MedTechCrews;
+                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
+            }
+            if (details.IsVehicleCrew)
+            {
+                crewOpt = Mod.Config.HiringHall.VehicleCrews;
+                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
+            }
 
+            int countOfType = crewStat == null ? 0 : crewStat.Value<int>();
+            Mod.Log.Debug?.Write($"Comparing countOfType: {countOfType} vs. limit: {crewOpt.MaxOfType}");
+
+            return crewOpt.MaxOfType == -1 || countOfType < crewOpt.MaxOfType;
+        }
     }
 }

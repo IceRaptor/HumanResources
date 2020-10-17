@@ -33,6 +33,23 @@ namespace HumanResources.Patches
             Mod.Log.Info?.Write("--  Done!");
 
             ModState.SimGameState = __instance;
+
+            // Initialize company stats if they aren't present
+            Statistic aeroSkillStat = __instance.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
+            if (aeroSkillStat == null) { __instance.CompanyStats.AddStatistic(ModStats.Aerospace_Skill, 0); }
+            Statistic companyRepStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Reputation);
+            if (companyRepStat == null) { __instance.CompanyStats.AddStatistic(ModStats.Company_Reputation, 0); }
+            
+            Statistic crewCountAerospaceStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
+            if (crewCountAerospaceStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_Aerospace, 0); }
+            Statistic crewCountMechWarriorsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
+            if (crewCountMechWarriorsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_MechWarriors, 0); }
+            Statistic crewCountMechTechsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
+            if (crewCountMechTechsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_MechTechs, 0); }
+            Statistic crewCountMedTechsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
+            if (crewCountMedTechsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_MedTechs, 0); }
+            Statistic crewCountVehicleCrewsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
+            if (crewCountVehicleCrewsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_VehicleCrews, 0); }
         }
     }
 
@@ -111,31 +128,87 @@ namespace HumanResources.Patches
             CrewDetails details = p.pilotDef.Evaluate();
 
             // Remove any mechtech, medtech, or aerospace points
-            if (details.IsMechTechCrew)
+            if (details.IsAerospaceCrew)
+            {
+                // Track our skill points
+                Statistic aerospaceSkill = __instance.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
+                if (aerospaceSkill == null)
+                    aerospaceSkill = __instance.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0);
+
+                if (aerospaceSkill.Value<int>() > 0)
+                    __instance.CompanyStats.ModifyStat<int>(null, -1,
+                            ModStats.Aerospace_Skill,
+                            StatCollection.StatOperation.Int_Subtract, details.AerospacePoints);
+
+                // Track the crew count
+                Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
+                if (crewCount == null)
+                    crewCount = __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_Aerospace, 0);
+
+                if (crewCount.Value<int>() > 0)
+                    __instance.CompanyStats.ModifyStat<int>(null, -1,
+                        ModStats.CrewCount_Aerospace,
+                        StatCollection.StatOperation.Int_Subtract, 1);
+            }
+            else if (details.IsMechTechCrew)
             {
                 __instance.CompanyStats.ModifyStat<int>(null, -1,
                     ModStats.HBS_Company_MechTech_Skill,
                     StatCollection.StatOperation.Int_Subtract, details.MechTechPoints);
+
+                // Track the crew count
+                Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
+                if (crewCount == null)
+                    crewCount = __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechTechs, 0);
+
+                if (crewCount.Value<int>() > 0)
+                    __instance.CompanyStats.ModifyStat<int>(null, -1,
+                        ModStats.CrewCount_MechTechs,
+                        StatCollection.StatOperation.Int_Subtract, 1);
+            }
+            else if (details.IsMechWarrior)
+            {
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.HBS_Company_MechTech_Skill,
+                    StatCollection.StatOperation.Int_Subtract, details.MechTechPoints);
+
+                // Track the crew count
+                Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
+                if (crewCount == null)
+                    crewCount = __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechWarriors, 0);
+
+                if (crewCount.Value<int>() > 0)
+                    __instance.CompanyStats.ModifyStat<int>(null, -1,
+                        ModStats.CrewCount_MechWarriors,
+                        StatCollection.StatOperation.Int_Subtract, 1);
             }
             else if (details.IsMedTechCrew)
             {
                 __instance.CompanyStats.ModifyStat<int>(null, -1,
                     ModStats.HBS_Company_MedTech_Skill,
                     StatCollection.StatOperation.Int_Subtract, details.MedTechPoints);
-            }
-            else if (details.IsAerospaceCrew)
-            {
-                Statistic aerospaceSkill = __instance.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
-                if (aerospaceSkill == null)
-                    __instance.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0);
 
-                __instance.CompanyStats.ModifyStat<int>(null, -1,
-                     ModStats.Aerospace_Skill,
-                     StatCollection.StatOperation.Int_Subtract, details.AerospacePoints);
+                // Track the crew count
+                Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
+                if (crewCount == null)
+                    crewCount = __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MedTechs, 0);
+
+                if (crewCount.Value<int>() > 0)
+                    __instance.CompanyStats.ModifyStat<int>(null, -1,
+                        ModStats.CrewCount_MedTechs,
+                        StatCollection.StatOperation.Int_Subtract, 1);
             }
             else if (details.IsVehicleCrew)
             {
+                // Track the crew count
+                Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
+                if (crewCount == null)
+                    crewCount = __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_VehicleCrews, 0);
 
+                if (crewCount.Value<int>() > 0)
+                    __instance.CompanyStats.ModifyStat<int>(null, -1,
+                        ModStats.CrewCount_VehicleCrews,
+                        StatCollection.StatOperation.Int_Subtract, 1);
             }
 
             __instance.RoomManager.RefreshTimeline(false);

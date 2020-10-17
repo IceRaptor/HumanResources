@@ -18,6 +18,7 @@ namespace HumanResources
         public const string GO_Crew_Size = "hr_crew_size_text";
 
         public const string Tooltip_NotEnoughBerths = "HRTooltipNotEnoughBerths";
+        public const string Tooltip_TooManyOfType = "HRTooltipTooManyOfType";
     }
 
     // All of these tags are pilot tags
@@ -59,7 +60,14 @@ namespace HumanResources
         public const string HBS_Company_MedTech_Skill = "MedTechSkill";
 
         public const string Aerospace_Skill = "HR_AerospaceSkill";
+        
         public const string Company_Reputation = "HR_CompanyRep";
+
+        public const string CrewCount_Aerospace = "HR_CrewCount_Aerospace";
+        public const string CrewCount_MechTechs = "HR_CrewCount_MechTechs";
+        public const string CrewCount_MechWarriors = "HR_CrewCount_MechWarriors";
+        public const string CrewCount_MedTechs = "HR_CrewCount_MedTechs";
+        public const string CrewCount_VehicleCrews = "HR_CrewCount_VehicleCrews";
     }
 
 }

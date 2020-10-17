@@ -20,10 +20,10 @@
         "Debug" : true,
         "Trace" : false,
         "Icons" : {
-            "CrewPortrait_MechTech" : "pc_auto-repair",
-            "CrewPortrait_MedTech" : "pc_hospital-cross",
-            "CrewPortrait_Vehicle" : "pc_apc",
-            "GroupPortrait" : "pc_three-friends"
+            "CrewPortrait_Aerospace" : "hr_jet-fighter",
+            "CrewPortrait_MechTech" : "hr_auto-repair",
+            "CrewPortrait_MedTech" : "hr_hospital-cross",
+            "CrewPortrait_Vehicle" : "hr_apc"
         },
         "Crew": {
             "MechTechCrewRGB" : [ 0.808, 0.71, 0.278 ],
@@ -32,7 +32,6 @@
             "MechwarriorRGB" : [ 0.376, 0.533, 0.604 ]
         },
         "HiringHall" : {
-
             "Scarcity" : {
                 "Enabled": true,
                 "Defaults" : { "MechWarriors" : 1, "VehicleCrews" : 2, "MechTechs" : 1, "MedTechs": 1 },
@@ -107,7 +106,8 @@
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
-                "BonusVariance" : 1.5
+                "BonusVariance" : 1.5,
+                "MaxOfType" : 1
             },
             "MechTechCrews" : {
                 "Enabled" : true,
@@ -116,7 +116,8 @@
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
-                "BonusVariance" : 1.5
+                "BonusVariance" : 1.5,
+                "MaxOfType" : -1
             },
             "MedTechCrews" : {
                 "Enabled" : true,
@@ -125,7 +126,8 @@
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
-                "BonusVariance" : 1.5
+                "BonusVariance" : 1.5,
+                "MaxOfType" : 2
             },
             "MechWarriors" : {
                 "Enabled" : true,
@@ -134,7 +136,8 @@
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
-                "BonusVariance" : 1.5
+                "BonusVariance" : 1.5,
+                "MaxOfType" : -1
             },
             "VehicleCrews" : {
                 "Enabled" : true,
@@ -143,7 +146,8 @@
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
-                "BonusVariance" : 1.5
+                "BonusVariance" : 1.5,
+                "MaxOfType" : -1
             }
         },
         "Poaching" : {

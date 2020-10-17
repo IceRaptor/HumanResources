@@ -4,8 +4,6 @@ using UnityEngine;
 namespace HumanResources
 {
 
-
-
     public class DistributionOpts
     {
         // Defines how broad the grouping is, which influences the height of the curve.
@@ -56,9 +54,9 @@ namespace HumanResources
         public Dictionary<string, CrewScarcity> PlanetTagModifiers = new Dictionary<string, CrewScarcity>()
         {
             {  "planet_civ_innersphere",
-                new CrewScarcity() { MechWarriors = 2, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
+                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 2, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
             {  "planet_civ_periphery",
-                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 4, MechTechs = 1, MedTechs = 1, Aerospace = 0 } },
+                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 1, MechTechs = 0, MedTechs = 0, Aerospace = 0 } },
             {  "planet_civ_primitive",
                 new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
         };
@@ -185,6 +183,9 @@ namespace HumanResources
 
     public class CrewCfg
     {
+        public float[] AerospaceRGB = { 0.376f, 0.533f, 0.604f };
+        public Color AerospaceColor = Color.cyan;
+
         public float[] MechTechCrewRGB = { 0.808f, 0.71f, 0.278f };
         public Color MechTechCrewColor = Color.yellow;
 
@@ -197,8 +198,6 @@ namespace HumanResources
         public float[] MechwarriorRGB = { 0.376f, 0.533f, 0.604f };
         public Color MechwarriorColor = Color.blue;
 
-        public float[] AerospaceRGB = { 0.376f, 0.533f, 0.604f };
-        public Color AerospaceColor = Color.cyan;
     }
 
     public class Icons
