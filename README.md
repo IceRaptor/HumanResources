@@ -38,7 +38,6 @@ You should disable or remove the above mods before activating this mod.
 * Add Aerospace Wings
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
-* Mechwarrior & Vehicle pilots costs differ from vanilla
 * Hiring limits by type (1 aerospace, 1 medtech, etc)
 * Firing events takes forever according to t-bone; profile when firing the event
 * skill distribution mu and sigma modified by planet tags
@@ -50,8 +49,9 @@ You should disable or remove the above mods before activating this mod.
   * Low morale decays their loyalty to your crew
   * Fighting against their faction has a slight reduction
   * Company reputation; go with options that make you hated and it becomes harder to hire
+  * After AAR report, will complain if you work against their faction
   * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do
-*  t-bone would like a company state indicating mechtechs / medtechs were hired
 * Max injuries should be hidden on hiring screen
-* Add exponential costs for mechwarriors, vehicle crews
+* BUG: Colors not updating when you first look at screen
+* BUG: Colors not updating for Mechs in list
 

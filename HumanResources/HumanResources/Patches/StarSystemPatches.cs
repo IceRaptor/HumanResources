@@ -74,7 +74,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(StarSystem), "GeneratePilots")]
     static class StarSystem_GeneratePilots
     {
-        static bool Prepare() => Mod.Config.HiringHall.EnableScarcity;
+        static bool Prepare() => Mod.Config.HiringHall.Scarcity.Enabled;
 
         // TODO: Manipulate # of pilots by planet tags
         // TODO: Manipulate # of ronin by planet tags
@@ -92,7 +92,7 @@ namespace HumanResources.Patches
 
             foreach (string tag in __instance.Tags)
             {
-                Mod.Config.HiringHall.ScarcityByPlanetTag.TryGetValue(tag, out CrewScarcity scarcity);
+                Mod.Config.HiringHall.Scarcity.PlanetTagModifiers.TryGetValue(tag, out CrewScarcity scarcity);
                 if (scarcity != null)
                 {
                     Mod.Log.Debug?.Write($" tag: {tag} has scarcity =>  " +

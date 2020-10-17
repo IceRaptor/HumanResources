@@ -1,34 +1,39 @@
 {
-    "Floaties" : {
-       
-    },
-
-    "Tooltips" : {
-   },
-
     "Labels" : {
-        "ATK_MOD_ACTUATOR_DAMAGE" : "ACTUATOR DAMAGE",
-        "ATK_MOD_ATTACKER_JUMPED" : "ATTACKER JUMPED",
-        "ATK_MOD_CHARGE_MOD" : "CHARGE MOD",
-        "ATK_MOD_COMPARATIVE_PILOTING" : "PILOTING DELTA",
-        "ATK_MOD_EASY_TO_KICK" : "EASY TO KICK",
-        "ATK_MOD_KICK_MOD" : "KICK MOD",
-        "ATK_MOD_PUNCH_MOD" : "PUNCH MOD",
-        "ATK_MOD_TARGET_PRONE" : "PRONE MELEE TARGET",
-        "ATK_MOD_PHYS_WEP_MOD" : "P.WEAP MOD",
+        "SKILL_LEVEL_1" : "Rookie" ,
+        "SKILL_LEVEL_2" : "Regular" ,
+        "SKILL_LEVEL_3" : "Veteran" ,
+        "SKILL_LEVEL_4" : "Elite" ,
+        "SKILL_LEVEL_5" : "Legendary" ,
 
-        "WEAPON_HOVER_DAMAGE" : "{0} dmg" ,
-        "WEAPON_HOVER_INSTABILITY" : "{0} stab" ,
-        "WEAPON_HOVER_HEAT" : "+{0} heat" ,
+        "SKILL_MECHTECH_POINTS" : "MechTech Points: +{0}" ,
+        "SKILL_MEDTECH_POINTS" : "MedTech Points: +{0}" ,
 
-        "MELEE_TYPE_CHARGE" : "CHARGE" ,
-        "MELEE_TYPE_DFA" : "DFA" ,
-        "MELEE_TYPE_KICK" : "KICK" ,
-        "MELEE_TYPE_PHYSICAL_WEAPON" : "PHY. WEAPON" ,
-        "MELEE_TYPE_PUNCH" : "PUNCH" ,
+        "CREW_SIZE_1" : "Tiny" ,
+        "CREW_SIZE_2" : "Small" ,
+        "CREW_SIZE_3" : "Medium" ,
+        "CREW_SIZE_4" : "Large" ,
+        "CREW_SIZE_5" : "Huge" ,
 
-        "WEAPON_PANEL_MELEE_WEAPON" : "MELEE - {0}",
-        "WEAPON_PANEL_MELEE_NO_ATTACK_TYPE" : "(w/p/k)",
-        "WEAPON_PANEL_MELEE_NO_ATTACK_TYPE_DAMAGE" : "{0} / {1} / {2}"
-    },
+        "CREW_SIZE_LABEL" : "{0} Crew ({1} berths)" ,
+        "CREW_BERTHS_USED" : "{0} / {1} Berths" ,
+
+        "CREW_HIRE_BUTTON" : "Hire for {0}?" ,
+        "CREW_HIRE_BONUS_LABEL" : "{0} Bonus" ,
+        "CREW_HIRE_SALARY_LABEL" : "{0} / Mo" ,
+
+        "CREW_CONTRACT_TERM" : "The contract term for this mercenary is {0} days. " ,
+
+        "CREW_NAME_FORMAT" : "{0} {1}" ,
+    
+        "CREW_DOSSIER_CONTRACT_TERM" : "Contract End" ,
+        "CREW_DOSSIER_DAYS_REMAINING" : "{0} days"
+        },
+        "PlanetStrings" : {
+            "PLANET_AEROSPACE_BOUNDS" : "<color=red>Hirable Aerospace Pilots</color> - {0} to {1}",
+            "PLANET_MECHWARRIOR_BOUNDS" : "<color=red>Hirable MechWarriors</color> - {0} to {1}",
+            "PLANET_MECH_TECH_BOUNDS" : "<color=red>Hirable MechTechs</color> - {0} to {1}",
+            "PLANET_MED_TECH_BOUNDS" : "<color=red>Hirable MedTechs</color> - {0} to {1}",
+            "PLANET_VEHICLE_CREW_BOUNDS" : "<color=red>Hirable Vehicle Crews</color> - {0} to {1}"
+        }
 }

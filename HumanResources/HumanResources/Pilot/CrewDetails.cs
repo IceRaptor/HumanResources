@@ -167,6 +167,8 @@ namespace HumanResources.Extensions
                     }
 
                     SalaryHelper.CalculateSalary(unitValue, config, out int salary, out int bonus);
+                    this.salary = salary;
+                    this.bonus = bonus;
                     pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
                     pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
                 }

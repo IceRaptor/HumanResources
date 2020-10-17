@@ -40,13 +40,14 @@ namespace HumanResources
         public const string Tag_Crew_ContractEndDay_Prefix = "HR_CREW_CONTRACT_END_DATE_";
         public const string Tag_Crew_ContractTerm_Prefix = "HR_CREW_CONTRACT_TERM_";
 
-        public const string Tag_Crew_LoyaltyLevel_Prefix = "HR_CREW_LOYALTY_LEVEL_";
-
         public const string Tag_Crew_Loyalty_Dedicated = "HR_CREW_LOYALTY_DEDICATED";
         public const string Tag_Crew_Loyalty_Comfortable = "HR_CREW_LOYALTY_COMFORTABLE";
         public const string Tag_Crew_Loyalty_Neutral = "HR_CREW_LOYALTY_NEUTRAL";
         public const string Tag_Crew_Loyalty_Unhappy = "HR_CREW_LOYALTY_UNHAPPY";
         public const string Tag_Crew_Loyalty_Hated = "HR_CREW_LOYALTY_HATED";
+
+        // Applied if you ignored their complains 
+        public const string Tag_Crew_Loyalty_Faction_Warning = "HR_CREW_LOYALTY_FACTION_WARNING";
 
         // CU Vehicles - pilot_vehicle_crew allow tank piloting, 
         // if also has pilot_nomech_crew than its tank only

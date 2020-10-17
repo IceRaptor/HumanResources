@@ -26,7 +26,7 @@ namespace HumanResources.Patches.UI
             StarSystem selectedSystem = ModState.SimGameState.Starmap.CurSelected.System;
             foreach (string tag in selectedSystem.Tags)
             {
-                Mod.Config.HiringHall.ScarcityByPlanetTag.TryGetValue(tag, out CrewScarcity scarcity);
+                Mod.Config.HiringHall.Scarcity.PlanetTagModifiers.TryGetValue(tag, out CrewScarcity scarcity);
                 if (scarcity != null)
                 {
                     Mod.Log.Debug?.Write($" tag: {tag} has scarcity =>  " +

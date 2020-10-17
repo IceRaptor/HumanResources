@@ -23,12 +23,11 @@ namespace HumanResources.Patches
 
             // Need to load each unique icon
             Mod.Log.Info?.Write("-- Loading HUD icons");
-            
+
+            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Aerospace, null);
             loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MechTech, null);
             loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MedTech, null);
             loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Vehicle, null);
-
-            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.GroupPortrait, null);
 
             loadRequest.ProcessRequests();
             Mod.Log.Info?.Write("--  Done!");
@@ -221,10 +220,8 @@ namespace HumanResources.Patches
     {
         static bool Prefix(SimGameState __instance, PilotDef def, ref int __result)
         {
-            int totalPoints = def.BaseGunnery + def.BaseGuts + def.BasePiloting + def.BaseTactics +
-                def.BonusGunnery + def.BonusGuts + def.BonusPiloting + def.BonusTactics;
-
-            __result = 0;
+            CrewDetails details = new CrewDetails(def);
+            __result = details.Salary;
 
             return false;
         }

@@ -32,6 +32,9 @@ namespace HumanResources
         public float SalaryVariance = 0.05f;
         // Bonus variance is always above the salary range; 10,000 salary will be between 10,000 and 13,000
         public float BonusVariance = 1.3f;
+
+        // -1 indicates no limit
+        public float MaxOfType = -1;
     }
 
     public class CrewScarcity
@@ -87,7 +90,8 @@ namespace HumanResources
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
-            BonusVariance = 1.5f
+            BonusVariance = 1.5f,
+            MaxOfType = 1
         };
 
         public CrewOpts MechTechCrews = new CrewOpts
@@ -98,7 +102,8 @@ namespace HumanResources
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
-            BonusVariance = 1.5f
+            BonusVariance = 1.5f,
+            MaxOfType = -1
         };
 
         public CrewOpts MedTechCrews = new CrewOpts
@@ -109,7 +114,8 @@ namespace HumanResources
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
-            BonusVariance = 1.5f
+            BonusVariance = 1.5f,
+            MaxOfType = 2
         };
 
         public CrewOpts MechWarriors = new CrewOpts
@@ -120,7 +126,8 @@ namespace HumanResources
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
-            BonusVariance = 1.5f
+            BonusVariance = 1.5f,
+            MaxOfType = -1
         };
 
         public CrewOpts VehicleCrews = new CrewOpts
@@ -131,7 +138,8 @@ namespace HumanResources
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
-            BonusVariance = 1.5f
+            BonusVariance = 1.5f,
+            MaxOfType = -1
         };
 
     }
@@ -195,11 +203,10 @@ namespace HumanResources
 
     public class Icons
     {
+        public string CrewPortrait_Aerospace = "pc_jet-fighter";
         public string CrewPortrait_MedTech = "pc_hospital-cross";
         public string CrewPortrait_MechTech = "pc_auto-repair";
         public string CrewPortrait_Vehicle = "pc_apc";
-
-        public string GroupPortrait = "pc_three-friends";
     }
 
     public class ModConfig
