@@ -18,7 +18,26 @@ All crews are available to be hired from the HiringHall. Mechwarriors are untouc
 
 * TODO: Add icon images
 
-Crew salary is driven by an exponential function $ab^x$ where a = `SalaryMulti`, b = `SalaryExponent` and x = the value of the pilot in particular. 
+A crew's base salary is driven by an exponential function `ab^x` where a = `SalaryMulti`, b = `SalaryExponent` and x = the value of the pilot, rounded down to the nearest integer value. A pilot's value is defined as the number of points they contribute (Aerospace, MedTech, MechTech) or the sum of all their skills (MechWarriors or Vehicle Crews). 
+
+> Example: For a SalaryMulti of 30,000 and SalaryExponent of 1.1:
+>
+> A MechWarrior with gunnery 2, guts 3, piloting 2, and tactics 2 would have a base salary of (30,000) x (1.1 ^ (2 + 3 + 2 + 2)) = 70,738.43 = 70,738.
+>
+> A Vehicle crew with gunnery 7, guts 8, piloting 9, and tactics 7 would have a base salary of (30,000) x (1.1 ^ (7 + 8 + 9 + 7)) = 575,830.274 = 575,830.
+>
+> A MedTech crew with MechTech points 12 would have a base salary of (30,000) x (1.1 ^ 12) = 94,152.85 = 94,152.
+
+Once the base salary is calculated, a variance is applied to randomize the amount. This is controlled by the `SalaryVariance` multiplier.  A random value between the base salary and the salary x `SalaryVariance` will be used as the final salary the mercenary asks for.
+
+Each mercenary asks for a hiring bonus when their contract is renewed. This bonus is calculated using the same formula as the salary, but used `BonusVariance` multiplier instead. 
+
+> Example: A mercenary with base salary 95,000 has `SalaryVariance` = 1.1 and `BonusVariance` = 1.5. 
+>
+> Their salary will be randomly chosen between 95,000 and 104,500 (i.e. 95,000 x 1.1)
+>
+> Their bonus will be randomly chosen between 95,000 and 142,500 (i.e. 95,000 x 1.5)
+
 
 
 ### AeroSpace Points
