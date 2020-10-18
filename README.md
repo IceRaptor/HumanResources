@@ -70,10 +70,11 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * skill distribution mu and sigma modified by planet tags
 * size distribution mu and sigma modified by planet tags
 * MechWarrior skill distribution to reflect our distribution
-* Contract durations rounded to 15/30 days?
 * Mercenary loyalty
   * Low morale decays their loyalty to your crew
   * Fighting against their faction has a slight reduction
+  * Pilot losses impact their loyalty
+  * Morale increases their loyalty slightly
   * Company reputation; go with options that make you hated and it becomes harder to hire
   * After AAR report, will complain if you work against their faction
   * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do

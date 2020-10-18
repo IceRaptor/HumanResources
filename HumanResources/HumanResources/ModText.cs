@@ -4,6 +4,7 @@ namespace HumanResources
 {
     public class ModCrewNames
     {
+        public List<string> Aerospace = new List<string>();
         public List<string> MechTech = new List<string>();
         public List<string> MedTech = new List<string>();
         public List<string> Vehicle = new List<string>();

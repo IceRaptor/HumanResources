@@ -19,8 +19,9 @@ namespace HumanResources
     {
         public bool Enabled = true;
 
-        public int MinContractLength = 90;
-        public int MaxContractLength = 180;
+        public int BaseContractDays = 15;
+        public int MinContractDaysMulti = 6;
+        public int MaxContractDaysMulti = 12;
 
         // ab^x where a = multiplier, b = exponent, x = skill level
         public int SalaryMulti = 30000;
@@ -33,6 +34,9 @@ namespace HumanResources
 
         // -1 indicates no limit
         public float MaxOfType = -1;
+
+        // Change that the mercenary has a specific factional loyalty
+        public float FactionLoyaltyChance = 0.3f;
     }
 
     public class CrewScarcity
@@ -83,61 +87,71 @@ namespace HumanResources
         public CrewOpts AerospaceWings = new CrewOpts
         {
             Enabled = true,
-            MinContractLength = 90,
-            MaxContractLength = 180,
+            BaseContractDays = 15,
+            MinContractDaysMulti = 6,
+            MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
-            MaxOfType = 1
+            MaxOfType = 1,
+            FactionLoyaltyChance = 0.3f
         };
 
         public CrewOpts MechTechCrews = new CrewOpts
         {
             Enabled = true,
-            MinContractLength = 90,
-            MaxContractLength = 180,
+            BaseContractDays = 15,
+            MinContractDaysMulti = 6,
+            MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
-            MaxOfType = -1
+            MaxOfType = -1,
+            FactionLoyaltyChance = 0.3f
         };
 
         public CrewOpts MedTechCrews = new CrewOpts
         {
             Enabled = true,
-            MinContractLength = 90,
-            MaxContractLength = 180,
+            BaseContractDays = 15,
+            MinContractDaysMulti = 6,
+            MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
-            MaxOfType = 2
+            MaxOfType = 2,
+            FactionLoyaltyChance = 0.3f
         };
 
         public CrewOpts MechWarriors = new CrewOpts
         {
             Enabled = true,
-            MinContractLength = 90,
-            MaxContractLength = 180,
+            BaseContractDays = 15,
+            MinContractDaysMulti = 6,
+            MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
-            MaxOfType = -1
+            MaxOfType = -1,
+            FactionLoyaltyChance = 0.3f
         };
 
         public CrewOpts VehicleCrews = new CrewOpts
         {
             Enabled = true,
-            MinContractLength = 90,
-            MaxContractLength = 180,
+            BaseContractDays = 15,
+            MinContractDaysMulti = 6,
+            MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
             SalaryExponent = 1.1f,
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
-            MaxOfType = -1
+            MaxOfType = -1,
+            FactionLoyaltyChance = 0.3f
         };
 
     }

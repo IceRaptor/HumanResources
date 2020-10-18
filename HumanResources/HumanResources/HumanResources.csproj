@@ -84,9 +84,9 @@
     <Compile Include="Patches\SGBarracksMWDetailPanelPatches.cs" />
     <Compile Include="Patches\SGCaptainsQuartersStatusScreen.cs" />
     <Compile Include="Pilot\CrewDetails.cs" />
-    <Compile Include="Pilot\PilotExtensions.cs" />
     <Compile Include="Helper\GuassianHelper.cs" />
-    <Compile Include="Pilot\PilotHelper.cs" />
+    <Compile Include="Pilot\PilotGenerators.cs" />
+    <Compile Include="Pilot\PilotStatics.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="ModConsts.cs" />
     <Compile Include="ModInit.cs" />

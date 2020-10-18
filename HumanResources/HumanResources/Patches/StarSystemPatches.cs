@@ -188,8 +188,7 @@ namespace HumanResources.Patches
                 foreach (PilotDef def in collection)
                 {
                     // Determine contract length
-                    int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MechWarriors.MinContractLength, 
-                        Mod.Config.HiringHall.MechWarriors.MaxContractLength);
+                    int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechWarriors);
                     def.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
                 }
                 
@@ -224,26 +223,31 @@ namespace HumanResources.Patches
                 }
             }
 
-            for (int i = 0; i < vehicleCrews; i++)
+            for (int i = 0; i < aerospace; i++)
             {
-                PilotDef pDef = PilotHelper.GenerateVehicleCrew(systemDiff);
-                pDef.PilotTags.Add(ModTags.Tag_Crew_Type_Vehicle);
+                PilotDef pDef = PilotGen.GenerateAerospaceCrew();
                 __instance.AvailablePilots.Add(pDef);
             }
 
             for (int i = 0; i < mechTechs; i++)
             {
-                PilotDef pDef = PilotHelper.GenerateTechs(3, true);
+                PilotDef pDef = PilotGen.GenerateMechTechCrew();
                 __instance.AvailablePilots.Add(pDef);
             }
 
             for (int i = 0; i < medTechs; i++)
             {
-                PilotDef pDef = PilotHelper.GenerateTechs(3, false);
+                PilotDef pDef = PilotGen.GenerateMedTechCrew();
                 __instance.AvailablePilots.Add(pDef);
             }
 
-            // TODO: Add aerospace
+            for (int i = 0; i < vehicleCrews; i++)
+            {
+                PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
+                pDef.PilotTags.Add(ModTags.Tag_Crew_Type_Vehicle);
+                __instance.AvailablePilots.Add(pDef);
+            }
+
 
             return false;
         }

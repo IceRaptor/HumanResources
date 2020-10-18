@@ -3,6 +3,7 @@ using BattleTech.Data;
 using BattleTech.UI;
 using Harmony;
 using HumanResources.Extensions;
+using HumanResources.Helper;
 using Localize;
 using SVGImporter;
 using System;
@@ -280,9 +281,7 @@ namespace HumanResources.Patches
                 if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
 
                 // Determine contract length
-                int contractLength = Mod.Random.Next(
-                    Mod.Config.HiringHall.MechWarriors.MinContractLength, 
-                    Mod.Config.HiringHall.MechWarriors.MaxContractLength);
+                int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechWarriors);
                 pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
             }
         }
