@@ -33,12 +33,12 @@ namespace HumanResources.Helper
                 }
             }
 
-            // Floor everything
-            aerospaceUpperBound = (float)Math.Floor(aerospaceUpperBound);
-            mechTechsUpperBound = (float)Math.Floor(mechTechsUpperBound);
-            mechWarriorsUpperBound = (float)Math.Floor(mechWarriorsUpperBound);
-            medTechsUpperBound = (float)Math.Floor(medTechsUpperBound);
-            vehicleCrewsUpperBound = (float)Math.Floor(vehicleCrewsUpperBound);
+            // Ceiling everything
+            aerospaceUpperBound = (float)Math.Ceiling(aerospaceUpperBound);
+            mechTechsUpperBound = (float)Math.Ceiling(mechTechsUpperBound);
+            mechWarriorsUpperBound = (float)Math.Ceiling(mechWarriorsUpperBound);
+            medTechsUpperBound = (float)Math.Ceiling(medTechsUpperBound);
+            vehicleCrewsUpperBound = (float)Math.Ceiling(vehicleCrewsUpperBound);
 
             PilotScarcity pilotScarcity = new PilotScarcity();
 

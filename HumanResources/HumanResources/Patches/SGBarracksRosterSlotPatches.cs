@@ -123,15 +123,15 @@ namespace HumanResources.Patches
 
             // Find the common GameObjects we need to manipulate
             GameObject portraitOverride = GetOrCreateProfileOverride(___portrait);
-            if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsVehicleCrew) portraitOverride.SetActive(true);
+            if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew || details.IsVehicleCrew) portraitOverride.SetActive(true);
             else portraitOverride.SetActive(false);
 
             GameObject crewBlock = GetOrCreateCrewBlock(___portrait.gameObject);
-            if (details.IsMechTechCrew || details.IsMedTechCrew) crewBlock.SetActive(true);
+            if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew) crewBlock.SetActive(true);
             else crewBlock.SetActive(false);
 
             GameObject mwStats = ___portrait.transform.parent.parent.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Stats_Block);
-            if (details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
+            if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
             else mwStats.SetActive(true);
 
             GameObject layoutTitleGO = __instance.GameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Layout_Title);
@@ -139,7 +139,7 @@ namespace HumanResources.Patches
 
             if (details.IsAerospaceCrew)
             {
-                layoutTitleImg.color = Mod.Config.Crew.MechTechCrewColor;
+                layoutTitleImg.color = Mod.Config.Crew.AerospaceColor;
 
                 ___portrait.gameObject.SetActive(false);
                 ___AbilitiesObject.SetActive(false);

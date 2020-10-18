@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HoudiniEngineUnity;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HumanResources
@@ -225,6 +226,8 @@ namespace HumanResources
     {
         public bool Debug = false;
         public bool Trace = false;
+
+        public bool DebugCommands = true;
 
         public Icons Icons = new Icons();
 

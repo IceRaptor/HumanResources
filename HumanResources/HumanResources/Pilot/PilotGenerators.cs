@@ -19,7 +19,7 @@ namespace HumanResources.Helper
 
             int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechTechCrews);
 
-            string description = $"{Environment.NewLine}MECH TECH CREW";
+            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MECH TECH";
 
             PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
 
@@ -35,7 +35,7 @@ namespace HumanResources.Helper
 
             int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MedTechCrews);
 
-            string description = $"{Environment.NewLine}MED TECH CREW";
+            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MED TECH";
 
             PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
 
@@ -51,7 +51,7 @@ namespace HumanResources.Helper
 
             int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.AerospaceWings);
 
-            string description = $"{Environment.NewLine}Aerospace CREW";
+            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS AEROSPACE";
 
             PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
 
