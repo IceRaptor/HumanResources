@@ -146,11 +146,11 @@ namespace HumanResources.Patches
             if (mechWarriors > 0)
             {
                 __instance.AvailablePilots.Clear();
-                List<PilotDef> roninList = new List<PilotDef>();
                 float roninChance = __instance.Def.UseSystemRoninHiringChance ? 
                     __instance.Def.RoninHiringChance : __instance.Sim.Constants.Story.DefaultRoninHiringChance;
+                List<PilotDef> roninList;
                 List<PilotDef> collection = 
-                    __instance.Sim.PilotGenerator.GeneratePilots(count, __instance.Def.GetDifficulty(__instance.Sim.SimGameMode), roninChance, out roninList);
+                    __instance.Sim.PilotGenerator.GeneratePilots(count, systemDiff, roninChance, out roninList);
 
                 // For each pilot, set a contract length (handled for crews elsewhere)
                 foreach (PilotDef def in collection)
@@ -213,6 +213,8 @@ namespace HumanResources.Patches
             {
                 PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
                 pDef.PilotTags.Add(ModTags.Tag_Crew_Type_Vehicle);
+                pDef.PilotTags.Add(ModTags.Tag_CU_NoMech_Crew);
+                pDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
                 __instance.AvailablePilots.Add(pDef);
             }
 

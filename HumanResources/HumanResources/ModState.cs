@@ -1,5 +1,6 @@
 ﻿
 using BattleTech;
+using HumanResources.Extensions;
 using System.Collections.Generic;
 using us.frostraptor.modUtils.Redzen;
 
@@ -24,12 +25,15 @@ namespace HumanResources
     {
         public static PilotCreateState PilotCreate = new PilotCreateState();
         public static SimGameState SimGameState = null;
+        public static Queue<(Pilot Pilot, CrewDetails Details)> ExpiredContracts = 
+            new Queue<(Pilot, CrewDetails)>();
 
         public static void Reset()
         {
             // Reinitialize state
             SimGameState = null;
             PilotCreate = new PilotCreateState();
+            ExpiredContracts.Clear();
         }
 
         // --- Methods manipulating CheckResults

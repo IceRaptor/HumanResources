@@ -23,7 +23,7 @@ namespace HumanResources.Helper
                 Mod.Config.HiringHall.Scarcity.PlanetTagModifiers.TryGetValue(tag, out CrewScarcity scarcity);
                 if (scarcity != null)
                 {
-                    Mod.Log.Debug?.Write($" tag: {tag} has scarcity =>  " +
+                    Mod.Log.Debug?.Write($"  tag: {tag} has scarcity =>  " +
                         $"aerospace: {scarcity.Aerospace}  mechTechs: {scarcity.MechTechs}  mechwarriors: {scarcity.MechWarriors}  medTechs: {scarcity.MedTechs}  vehicleCrews: {scarcity.VehicleCrews}");
                     aerospaceUpperBound += scarcity.Aerospace;
                     mechWarriorsUpperBound += scarcity.MechWarriors;
