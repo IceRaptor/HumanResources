@@ -38,13 +38,11 @@ You should disable or remove the above mods before activating this mod.
 * Add Aerospace Wings
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
-* Hiring limits by type (1 aerospace, 1 medtech, etc)
 * Firing events takes forever according to t-bone; profile when firing the event
 * skill distribution mu and sigma modified by planet tags
 * size distribution mu and sigma modified by planet tags
 * MechWarrior skill distribution to reflect our distribution
-* Contract time for each hirable
-  * Variable scale of contracts (180 - 270 days?)
+* Contract durations rounded to 15/30 days?
 * Mercenary loyalty
   * Low morale decays their loyalty to your crew
   * Fighting against their faction has a slight reduction
