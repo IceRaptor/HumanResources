@@ -85,20 +85,22 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Add Aerospace Wings
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
-* Hiring limits by type (1 aerospace, 1 medtech, etc)
 * Firing events takes forever according to t-bone; profile when firing the event
 * skill distribution mu and sigma modified by planet tags
 * size distribution mu and sigma modified by planet tags
 * MechWarrior skill distribution to reflect our distribution
-* Contract time for each hirable
-  * Variable scale of contracts (180 - 270 days?)
 * Mercenary loyalty
   * Low morale decays their loyalty to your crew
   * Fighting against their faction has a slight reduction
+  * Pilot losses impact their loyalty
+  * Morale increases their loyalty slightly
   * Company reputation; go with options that make you hated and it becomes harder to hire
   * After AAR report, will complain if you work against their faction
   * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do
 * Max injuries should be hidden on hiring screen
 * BUG: Colors not updating when you first look at screen
 * BUG: Colors not updating for Mechs in list
+* Contract expiration not decrementing company funds on renewal
+* Contract expiration descriptions are weird
+* Contract desc / pilot isn't getting reset between events
 

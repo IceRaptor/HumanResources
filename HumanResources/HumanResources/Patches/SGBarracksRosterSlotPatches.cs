@@ -123,20 +123,64 @@ namespace HumanResources.Patches
 
             // Find the common GameObjects we need to manipulate
             GameObject portraitOverride = GetOrCreateProfileOverride(___portrait);
-            if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsVehicleCrew) portraitOverride.SetActive(true);
+            if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew || details.IsVehicleCrew) portraitOverride.SetActive(true);
             else portraitOverride.SetActive(false);
 
             GameObject crewBlock = GetOrCreateCrewBlock(___portrait.gameObject);
-            if (details.IsMechTechCrew || details.IsMedTechCrew) crewBlock.SetActive(true);
+            if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew) crewBlock.SetActive(true);
             else crewBlock.SetActive(false);
 
             GameObject mwStats = ___portrait.transform.parent.parent.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Stats_Block);
-            if (details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
+            if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
             else mwStats.SetActive(true);
 
             GameObject layoutTitleGO = __instance.GameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Layout_Title);
             Image layoutTitleImg = layoutTitleGO.GetComponent<Image>();
-            if (details.IsMechTechCrew)
+
+            if (details.IsAerospaceCrew)
+            {
+                layoutTitleImg.color = Mod.Config.Crew.AerospaceColor;
+
+                ___portrait.gameObject.SetActive(false);
+                ___AbilitiesObject.SetActive(false);
+                ___roninIcon.gameObject.SetActive(false);
+                ___veteranIcon.gameObject.SetActive(false);
+
+                // Set the portrait icon
+                SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_Aerospace, BattleTechResourceType.SVGAsset);
+                if (icon == null) Mod.Log.Warn?.Write($"ERROR READING ICON: {Mod.Config.Icons.CrewPortrait_Aerospace}");
+                SVGImage image = portraitOverride.GetComponentInChildren<SVGImage>();
+                image.vectorGraphics = icon;
+
+                // Set the crew size
+                LocalizableText[] texts = crewBlock.GetComponentsInChildren<LocalizableText>();
+
+                LocalizableText lt1 = texts[0];
+                string sizeText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Size],
+                    new object[] { details.SizeLabel, details.Size }).ToString();
+                lt1.SetText(sizeText);
+
+                // Force the font size here, otherwise the right hand panel isn't correct
+                lt1.fontSize = 16f;
+                lt1.fontSizeMin = 16f;
+                lt1.fontSizeMax = 16f;
+
+                LocalizableText lt2 = texts[1];
+                string skillText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Skill_Aerospace_Points],
+                    new object[] { details.AerospacePoints }).ToString();
+                lt2.SetText(skillText);
+
+                // Force the font size here, otherwise the right hand panel isn't correct
+                lt2.fontSize = 16f;
+                lt2.fontSizeMin = 16f;
+                lt2.fontSizeMax = 16f;
+
+                // Set the expertise of the crew
+                ___expertise.color = Color.white;
+                ___expertise.SetText(details.SkillLabel);
+
+            }
+            else if (details.IsMechTechCrew)
             {
                 layoutTitleImg.color = Mod.Config.Crew.MechTechCrewColor;
 
@@ -242,7 +286,6 @@ namespace HumanResources.Patches
             {
                 ___portrait.gameObject.SetActive(true);
             }
-            // TODO: Aerospace
 
             Mod.Log.Debug?.Write($"LayoutTitleImg color set to: {layoutTitleImg.color}");
         }

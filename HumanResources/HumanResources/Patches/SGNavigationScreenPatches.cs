@@ -2,6 +2,7 @@
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
+using HumanResources.Helper;
 using Localize;
 using System;
 using System.Collections.Generic;
@@ -17,73 +18,57 @@ namespace HumanResources.Patches.UI
         static void Postfix(SGSystemViewPopulator __instance, List<LocalizableText> ___SystemDescriptionFields)
         {
             Mod.Log.Debug?.Write("Updating system description with scarcity");
-
-            int mechWarriorsUpperBound = 0;
-            int vehicleCrewsUpperBound = 0;
-            int mechTechsUpperBound = 0;
-            int medTechsUpperBound = 0;
-
+            
             StarSystem selectedSystem = ModState.SimGameState.Starmap.CurSelected.System;
-            foreach (string tag in selectedSystem.Tags)
-            {
-                Mod.Config.HiringHall.Scarcity.PlanetTagModifiers.TryGetValue(tag, out CrewScarcity scarcity);
-                if (scarcity != null)
-                {
-                    Mod.Log.Debug?.Write($" tag: {tag} has scarcity =>  " +
-                        $"mechwarriors: {scarcity.MechWarriors}  mechTechs: {scarcity.MechTechs}  medTechs: {scarcity.MedTechs}  vehicleCrews: {scarcity.VehicleCrews}");
-                    mechWarriorsUpperBound += scarcity.MechWarriors;
-                    mechTechsUpperBound += scarcity.MechTechs;
-                    medTechsUpperBound += scarcity.MedTechs;
-                    vehicleCrewsUpperBound += scarcity.VehicleCrews;
-                }
-            }
-            Mod.Log.Debug?.Write($"Final scarcity bound for planet {selectedSystem.Name} => " +
-                $"mechwarriors: {mechWarriorsUpperBound}  mechTechs: {mechTechsUpperBound}  medTechs: {medTechsUpperBound}  vehicleCrews: {vehicleCrewsUpperBound}");
+            PilotScarcity scarcity = PilotHelper.GetScarcityForPlanet(selectedSystem);
 
             StringBuilder sb = new StringBuilder(selectedSystem.Def.Description.Details);
             sb.Append("\n");
 
-            if (mechWarriorsUpperBound > 0)
+            if (scarcity.MechWarriors.Upper > 0)
             {
-                int mechWarriorsLowerBound = Math.Max(0, mechWarriorsUpperBound / 2);
-                Mod.Log.Debug?.Write($"  MechWarriors lowerBound: {mechWarriorsLowerBound}  upperBound: {mechWarriorsUpperBound}");
+                Mod.Log.Debug?.Write($"  MechWarriors lowerBound: {scarcity.MechWarriors.Lower}  upperBound: {scarcity.MechWarriors.Upper}");
                 string mechWarriorsBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_MW_BOUNDS],
-                    new object[] { mechWarriorsLowerBound, mechWarriorsUpperBound }).ToString();
+                    new object[] { scarcity.MechWarriors.Lower, scarcity.MechWarriors.Upper }).ToString();
                 sb.Append("\n");
                 sb.Append(mechWarriorsBoundsText);
             }
 
-            if (vehicleCrewsUpperBound > 0)
+            if (scarcity.Vehicles.Lower > 0)
             {
-                int vehicleCrewsLowerBound = Math.Max(0, vehicleCrewsUpperBound / 2);
-                Mod.Log.Debug?.Write($"  VehicleCrews lowerBound: {vehicleCrewsLowerBound}  upperBound: {vehicleCrewsUpperBound}");
+                Mod.Log.Debug?.Write($"  Vehicles lowerBound: {scarcity.Vehicles.Lower}  upperBound: {scarcity.Vehicles.Upper}");
                 string vehicleCrewBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_VEHICLE_BOUNDS],
-                    new object[] { vehicleCrewsLowerBound, vehicleCrewsUpperBound }).ToString();
+                    new object[] { scarcity.Vehicles.Lower, scarcity.Vehicles.Upper }).ToString();
                 sb.Append("\n");
                 sb.Append(vehicleCrewBoundsText);
             }
 
-            if (mechTechsUpperBound > 0)
+            if (scarcity.Aerospace.Lower > 0)
             {
-                int mechTechLowerBound = Math.Max(0, mechTechsUpperBound / 2);
-                Mod.Log.Debug?.Write($"  MechTechs lowerBound: {mechTechLowerBound}  upperBound: {mechTechsUpperBound}");
-                string mechTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_MECH_TECH_BOUNDS],
-                    new object[] { mechTechLowerBound, mechTechsUpperBound }).ToString();
+                Mod.Log.Debug?.Write($"  Aerospace lowerBound: {scarcity.Aerospace.Lower}  upperBound: {scarcity.Aerospace.Upper}");
+                string mechTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_AERO_BOUNDS],
+                    new object[] { scarcity.Aerospace.Lower, scarcity.Aerospace.Upper }).ToString();
                 sb.Append("\n");
                 sb.Append(mechTechBoundsText);
             }
 
-            if (medTechsUpperBound > 0)
+            if (scarcity.MechTechs.Lower > 0)
             {
-                int medTechsLowerBound = Math.Max(0, medTechsUpperBound / 2);
-                Mod.Log.Debug?.Write($"  MedTechs lowerBound: {medTechsLowerBound}  upperBound: {medTechsUpperBound}");
+                Mod.Log.Debug?.Write($"  MechTechs lowerBound: {scarcity.MechTechs.Lower}  upperBound: {scarcity.MechTechs.Upper}");
+                string mechTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_MECH_TECH_BOUNDS],
+                    new object[] { scarcity.MechTechs.Lower, scarcity.MechTechs.Upper }).ToString();
+                sb.Append("\n");
+                sb.Append(mechTechBoundsText);
+            }
+
+            if (scarcity.MedTechs.Lower > 0)
+            {
+                Mod.Log.Debug?.Write($"  MedTechs lowerBound: {scarcity.MedTechs.Lower}  upperBound: {scarcity.MedTechs.Upper}");
                 string medTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_MED_TECH_BOUNDS],
-                    new object[] { medTechsLowerBound, medTechsUpperBound }).ToString();
+                    new object[] { scarcity.MedTechs.Lower, scarcity.MedTechs.Upper }).ToString();
                 sb.Append("\n");
                 sb.Append(medTechBoundsText);
             }
-
-            // TODO: Add aerospace
 
             __instance.SetField(___SystemDescriptionFields, sb.ToString());
 

@@ -124,53 +124,21 @@ namespace HumanResources.Patches
             int systemDiff = __instance.Def.GetDifficulty(SimGameState.SimGameType.CAREER);
             Mod.Log.Info?.Write($"Generating pilots for system: {__instance.Name} with difficulty: {systemDiff}");
 
-            int mechWarriorsUpperBound = 0;
-            int vehicleCrewsUpperBound = 0;
-            int mechTechsUpperBound = 0;
-            int medTechsUpperBound = 0;
-            int aerospaceUpperBound = 0;
+            PilotScarcity scarcity = PilotHelper.GetScarcityForPlanet(__instance);
 
-            foreach (string tag in __instance.Tags)
-            {
-                Mod.Config.HiringHall.Scarcity.PlanetTagModifiers.TryGetValue(tag, out CrewScarcity scarcity);
-                if (scarcity != null)
-                {
-                    Mod.Log.Debug?.Write($" tag: {tag} has scarcity =>  " +
-                        $"mechwarriors: {scarcity.MechWarriors}  mechTechs: {scarcity.MechTechs}  medTechs: {scarcity.MedTechs}  vehicleCrews: {scarcity.VehicleCrews}");
-                    mechWarriorsUpperBound += scarcity.MechWarriors;
-                    mechTechsUpperBound += scarcity.MechTechs;
-                    medTechsUpperBound += scarcity.MedTechs;
-                    vehicleCrewsUpperBound += scarcity.VehicleCrews;
-                    aerospaceUpperBound += scarcity.Aerospace;
-                }
-            }
-            Mod.Log.Debug?.Write($"Final scarcity for planet {__instance.Name} => " +
-                $"mechwarriors: {mechWarriorsUpperBound}  mechTechs: {mechTechsUpperBound}  medTechs: {medTechsUpperBound}  vehicleCrews: {vehicleCrewsUpperBound}");
+            int aerospace = scarcity.Aerospace.Upper > 0 ?
+                Math.Max(0, Mod.Random.Next(scarcity.Aerospace.Lower, scarcity.Aerospace.Upper)) : 0;
+            int mechTechs = scarcity.MechTechs.Upper > 0 ?
+                Math.Max(0, Mod.Random.Next(scarcity.MechTechs.Lower, scarcity.MechTechs.Upper)) : 0;
+            int mechWarriors = scarcity.MechWarriors.Upper > 0 ? 
+                Math.Max(0, Mod.Random.Next(scarcity.MechWarriors.Lower, scarcity.MechWarriors.Upper)) : 0;
+            int medTechs = scarcity.MedTechs.Upper > 0 ?
+                Math.Max(0, Mod.Random.Next(scarcity.MedTechs.Lower, scarcity.MedTechs.Upper)) : 0;
+            int vehicleCrews = scarcity.Vehicles.Upper > 0 ?
+                Math.Max(0, Mod.Random.Next(scarcity.Vehicles.Lower, scarcity.Vehicles.Upper)) : 0;
 
-            int mechWarriorsLowerBound = Math.Max(0, mechWarriorsUpperBound / 2);
-            Mod.Log.Debug?.Write($"  MechWarriors lowerBound: {mechWarriorsLowerBound}  upperBound: {mechWarriorsUpperBound}");
-            int vehicleCrewsLowerBound = Math.Max(0, vehicleCrewsUpperBound / 2);
-            Mod.Log.Debug?.Write($"  VehicleCrews lowerBound: {vehicleCrewsLowerBound}  upperBound: {vehicleCrewsUpperBound}");
-            int mechTechLowerBound = Math.Max(0, mechTechsUpperBound / 2);
-            Mod.Log.Debug?.Write($"  MechTechs lowerBound: {mechTechLowerBound}  upperBound: {mechTechsUpperBound}");
-            int medTechsLowerBound = Math.Max(0, medTechsUpperBound / 2);
-            Mod.Log.Debug?.Write($"  MedTechs lowerBound: {medTechsLowerBound}  upperBound: {medTechsUpperBound}");
-            int aerospaceLowerBound = Math.Max(0, aerospaceUpperBound / 2);
-            Mod.Log.Debug?.Write($"  Aerospace lowerBound: {aerospaceLowerBound}  upperBound: {aerospaceUpperBound}");
-
-            int mechWarriors = mechWarriorsUpperBound > 0 ? 
-                Math.Max(0, Mod.Random.Next(mechWarriorsLowerBound, mechWarriorsUpperBound)) : 0;
-            int vehicleCrews = vehicleCrewsUpperBound > 0 ? 
-                Math.Max(0, Mod.Random.Next(vehicleCrewsLowerBound, vehicleCrewsUpperBound)) : 0;
-            int mechTechs = mechTechsUpperBound > 0 ? 
-                Math.Max(0, Mod.Random.Next(mechTechLowerBound, mechTechsUpperBound)) : 0;
-            int medTechs = medTechsUpperBound > 0 ? 
-                Math.Max(0, Mod.Random.Next(medTechsLowerBound, medTechsUpperBound)) : 0;
-            int aerospace = aerospaceUpperBound > 0 ?
-                Math.Max(0, Mod.Random.Next(aerospaceLowerBound, aerospaceUpperBound)) : 0;
-
-            Mod.Log.Debug?.Write($"Generated  {mechWarriors} mechWarriors  {vehicleCrews} vehicleCrews  " +
-                $"{mechTechs} mechTechs  {medTechs} medTechs  {aerospace} aerospace");
+            Mod.Log.Debug?.Write($"Generated mechwarriors: {mechWarriors}  vehicleCrews: {vehicleCrews}  " +
+                $"mechTechs: {mechTechs}  medTechs: {medTechs}  aerospace: {aerospace}");
 
             // Generate pilots and crews
 
@@ -178,18 +146,17 @@ namespace HumanResources.Patches
             if (mechWarriors > 0)
             {
                 __instance.AvailablePilots.Clear();
-                List<PilotDef> roninList = new List<PilotDef>();
                 float roninChance = __instance.Def.UseSystemRoninHiringChance ? 
                     __instance.Def.RoninHiringChance : __instance.Sim.Constants.Story.DefaultRoninHiringChance;
+                List<PilotDef> roninList;
                 List<PilotDef> collection = 
-                    __instance.Sim.PilotGenerator.GeneratePilots(count, __instance.Def.GetDifficulty(__instance.Sim.SimGameMode), roninChance, out roninList);
+                    __instance.Sim.PilotGenerator.GeneratePilots(count, systemDiff, roninChance, out roninList);
 
                 // For each pilot, set a contract length (handled for crews elsewhere)
                 foreach (PilotDef def in collection)
                 {
                     // Determine contract length
-                    int contractLength = Mod.Random.Next(Mod.Config.HiringHall.MechWarriors.MinContractLength, 
-                        Mod.Config.HiringHall.MechWarriors.MaxContractLength);
+                    int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechWarriors);
                     def.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
                 }
                 
@@ -224,26 +191,33 @@ namespace HumanResources.Patches
                 }
             }
 
-            for (int i = 0; i < vehicleCrews; i++)
+            for (int i = 0; i < aerospace; i++)
             {
-                PilotDef pDef = PilotHelper.GenerateVehicleCrew(systemDiff);
-                pDef.PilotTags.Add(ModTags.Tag_Crew_Type_Vehicle);
+                PilotDef pDef = PilotGen.GenerateAerospaceCrew();
                 __instance.AvailablePilots.Add(pDef);
             }
 
             for (int i = 0; i < mechTechs; i++)
             {
-                PilotDef pDef = PilotHelper.GenerateTechs(3, true);
+                PilotDef pDef = PilotGen.GenerateMechTechCrew();
                 __instance.AvailablePilots.Add(pDef);
             }
 
             for (int i = 0; i < medTechs; i++)
             {
-                PilotDef pDef = PilotHelper.GenerateTechs(3, false);
+                PilotDef pDef = PilotGen.GenerateMedTechCrew();
                 __instance.AvailablePilots.Add(pDef);
             }
 
-            // TODO: Add aerospace
+            for (int i = 0; i < vehicleCrews; i++)
+            {
+                PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
+                pDef.PilotTags.Add(ModTags.Tag_Crew_Type_Vehicle);
+                pDef.PilotTags.Add(ModTags.Tag_CU_NoMech_Crew);
+                pDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
+                __instance.AvailablePilots.Add(pDef);
+            }
+
 
             return false;
         }

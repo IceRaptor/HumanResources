@@ -1,7 +1,6 @@
 ﻿using BattleTech;
 using BattleTech.Portraits;
 using HBS.Collections;
-using HumanResources.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,28 +9,72 @@ using UnityEngine;
 namespace HumanResources.Helper
 {
 
-    public static class PilotHelper
+    public static class PilotGen
     {
 
-        public static PilotDef GenerateTechs(int systemDifficulty, bool isMechTech)
+        public static PilotDef GenerateMechTechCrew()
         {
+            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count);
+            string newCallsign = Mod.CrewNames.MechTech[callsignIdx];
 
-            int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
+            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechTechCrews);
+
+            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MECH TECH";
+
+            PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
+
+            def.PilotTags.Add(ModTags.Tag_Crew_Type_MechTech);
+
+            return def;
+        }
+
+        public static PilotDef GenerateMedTechCrew()
+        {
+            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count);
+            string newCallsign = Mod.CrewNames.MedTech[callsignIdx];
+
+            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MedTechCrews);
+
+            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MED TECH";
+
+            PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
+
+            def.PilotTags.Add(ModTags.Tag_Crew_Type_MedTech);
+
+            return def;
+        }
+
+        public static PilotDef GenerateAerospaceCrew()
+        {
+            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.Aerospace.Count);
+            string newCallsign = Mod.CrewNames.Aerospace[callsignIdx];
+
+            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.AerospaceWings);
+
+            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS AEROSPACE";
+
+            PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
+
+            def.PilotTags.Add(ModTags.Tag_Crew_Type_Aerospace);
+
+            return def;
+        }
+
+        public static PilotDef GenerateSupportCrew(string callsign, int contractLength, string backgroundDesc)
+        {
+            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}  contractLength: {contractLength}  backgroundDesc: {backgroundDesc}");
+
+            int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + 
+                ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
 
             Gender newGender = RandomGender();
             string newFirstName = ModState.PilotCreate.NameGenerator.GetFirstName(newGender);
             string newLastName = ModState.PilotCreate.NameGenerator.GetLastName();
-            //string newCallsign = RandomUnusedCallsign();
-            int callsignIdx = isMechTech ? Mod.Random.Next(0, Mod.CrewNames.MechTech.Count) : Mod.Random.Next(0, Mod.CrewNames.MedTech.Count);
-            string newCallsign = isMechTech ? Mod.CrewNames.MechTech[callsignIdx] : Mod.CrewNames.MedTech[callsignIdx];
-            Mod.Log.Debug?.Write($"Generating mechTech: {isMechTech} with callsign: {newCallsign}");
 
             int currentAge = Mod.Random.Next(initialAge, 70);
             PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
             
             TagSet tagSet = new TagSet();
-            if (isMechTech) tagSet.Add(ModTags.Tag_Crew_Type_MechTech);
-            else tagSet.Add(ModTags.Tag_Crew_Type_MedTech);
 
             // Determine crew size
             string sizeTag = GaussianHelper.GetCrewSizeTag(0, 0);
@@ -44,18 +87,17 @@ namespace HumanResources.Helper
             tagSet.Add(skillTag);
 
             // Determine contract length
-            int contractLength = isMechTech ?
-                Mod.Random.Next(Mod.Config.HiringHall.MechTechCrews.MinContractLength, Mod.Config.HiringHall.MechTechCrews.MaxContractLength) :
-                Mod.Random.Next(Mod.Config.HiringHall.MedTechCrews.MinContractLength, Mod.Config.HiringHall.MedTechCrews.MaxContractLength);
             tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
-            // TODO: Randomize N factions
+            // TODO: Randomize N factions - include blacklist / filter
+            List<string> employerFactions = ModState.SimGameState.CurSystem.Def.ContractEmployerIDList;
+
             // TODO: Build jibberish history
             // TODO: Add crew size, loyalty, etc to description
             StringBuilder lifepathDescParagraphs = new StringBuilder();
 
             // DETAILS string is EXTREMELY picky, see HumanDescriptionDef.GetLocalizedDetails
-            lifepathDescParagraphs.Append($"{Environment.NewLine}<b>Crew:</b>CREW IS MECHTECH: {isMechTech}\n\n");
+            lifepathDescParagraphs.Append(backgroundDesc);
 
             string id = GenerateID();
             Gender voiceGender = newGender;
@@ -64,7 +106,8 @@ namespace HumanResources.Helper
                 voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
             }
             string voice = RandomUnusedVoice(voiceGender);
-            HumanDescriptionDef description = new HumanDescriptionDef(id, newCallsign, newFirstName, newLastName, newCallsign, newGender, FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
+            HumanDescriptionDef description = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender, 
+                FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
 
             StatCollection statCollection = pilotDef.GetStats();
             int spentXPPilot = GetSpentXPPilot(statCollection);
@@ -115,9 +158,7 @@ namespace HumanResources.Helper
             GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
 
             // Determine contract length
-            int contractLength = Mod.Random.Next(
-                Mod.Config.HiringHall.VehicleCrews.MinContractLength, 
-                Mod.Config.HiringHall.VehicleCrews.MaxContractLength);
+            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.VehicleCrews);
             tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
             string id = GenerateID();
@@ -475,52 +516,6 @@ namespace HumanResources.Helper
             }
         }
 
-        public static int UsedBerths(IEnumerable<Pilot> pilots)
-        {
-            int used = 0;
-
-            foreach (Pilot pilot in pilots)
-            {
-                CrewDetails details = pilot.pilotDef.Evaluate();
-                used += details.Size;
-            }
-
-            return used;
-        }
-        public static bool CanHireMoreCrewOfType(CrewDetails details)
-        {
-            CrewOpts crewOpt = null;
-            Statistic crewStat = null;
-            if (details.IsAerospaceCrew)
-            {
-                crewOpt = Mod.Config.HiringHall.AerospaceWings;
-                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
-            }
-            if (details.IsMechTechCrew)
-            {
-                crewOpt = Mod.Config.HiringHall.MechTechCrews;
-                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
-            }
-            if (details.IsMechWarrior)
-            {
-                crewOpt = Mod.Config.HiringHall.MechWarriors;
-                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
-            }
-            if (details.IsMedTechCrew)
-            {
-                crewOpt = Mod.Config.HiringHall.MedTechCrews;
-                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
-            }
-            if (details.IsVehicleCrew)
-            {
-                crewOpt = Mod.Config.HiringHall.VehicleCrews;
-                crewStat = ModState.SimGameState.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
-            }
-
-            int countOfType = crewStat == null ? 0 : crewStat.Value<int>();
-            Mod.Log.Debug?.Write($"Comparing countOfType: {countOfType} vs. limit: {crewOpt.MaxOfType}");
-
-            return crewOpt.MaxOfType == -1 || countOfType < crewOpt.MaxOfType;
-        }
+       
     }
 }

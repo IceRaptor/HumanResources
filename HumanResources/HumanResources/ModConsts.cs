@@ -19,6 +19,8 @@ namespace HumanResources
 
         public const string Tooltip_NotEnoughBerths = "HRTooltipNotEnoughBerths";
         public const string Tooltip_TooManyOfType = "HRTooltipTooManyOfType";
+
+        public const string Event_ContractExpired = "event_hr_mw_contractExpired";
     }
 
     // All of these tags are pilot tags
@@ -50,8 +52,9 @@ namespace HumanResources
         // Applied if you ignored their complains 
         public const string Tag_Crew_Loyalty_Faction_Warning = "HR_CREW_LOYALTY_FACTION_WARNING";
 
-        // CU Vehicles - pilot_vehicle_crew allow tank piloting, 
-        // if also has pilot_nomech_crew than its tank only
+        // CU Vehicles - pilot_vehicle_crew allow tank piloting,
+        public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
+        public const string Tag_CU_NoMech_Crew = "pilot_nomech_crew";
     }
 
     public static class ModStats

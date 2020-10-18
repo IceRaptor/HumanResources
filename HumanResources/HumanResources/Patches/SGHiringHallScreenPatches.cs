@@ -5,6 +5,7 @@ using BattleTech.UI.Tooltips;
 using Harmony;
 using HBS;
 using HumanResources.Extensions;
+using HumanResources.Helper;
 using Localize;
 using System;
 using UnityEngine;
@@ -111,17 +112,20 @@ namespace HumanResources.Patches
     {
         static void Postfix(SG_HiringHall_MWSelectedPanel __instance, Pilot p, LocalizableText ___BaseSalaryText)
         {
-            Mod.Log.Debug?.Write("Updating MWSelectedPanel");
+            if (p != null && ___BaseSalaryText != null)
+            {
+                Mod.Log.Debug?.Write($"Updating MWSelectedPanel for pilot: {p.Name}");
 
-            // Account for the salary 
-            CrewDetails details = p.pilotDef.Evaluate();
-            int modifiedSalary = (int)Mathf.RoundToInt(details.AdjustedSalary);
-            string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Salary_Label],
-                new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedSalary)) })
-                .ToString();
-            Mod.Log.Debug?.Write($"  -- salary will be: {salaryS}");
+                // Account for the salary 
+                CrewDetails details = p.pilotDef.Evaluate();
+                int modifiedSalary = (int)Mathf.RoundToInt(details.AdjustedSalary);
+                string modifiedSalaryS = SimGameState.GetCBillString(modifiedSalary);
+                Mod.Log.Debug?.Write($"  -- salary will be: {modifiedSalaryS}");
 
-            ___BaseSalaryText.SetText(salaryS);
+                string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Salary_Label], new string[] { modifiedSalaryS })
+                    .ToString();
+                ___BaseSalaryText.SetText(salaryS);
+            }
         }
     }
 

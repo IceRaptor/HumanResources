@@ -6,6 +6,7 @@
         "SKILL_LEVEL_4" : "Elite" ,
         "SKILL_LEVEL_5" : "Legendary" ,
 
+        "SKILL_AEROSPACE_POINTS" : "Aerospace Points: +{0}" ,
         "SKILL_MECHTECH_POINTS" : "MechTech Points: +{0}" ,
         "SKILL_MEDTECH_POINTS" : "MedTech Points: +{0}" ,
 

@@ -1,11 +1,16 @@
 ﻿using BattleTech;
 using BattleTech.Data;
 using BattleTech.UI;
+using BattleTech.UI.TMProWrapper;
 using Harmony;
+using HBS;
 using HumanResources.Extensions;
+using HumanResources.Helper;
 using Localize;
 using SVGImporter;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -36,20 +41,25 @@ namespace HumanResources.Patches
 
             // Initialize company stats if they aren't present
             Statistic aeroSkillStat = __instance.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
-            if (aeroSkillStat == null) { __instance.CompanyStats.AddStatistic(ModStats.Aerospace_Skill, 0); }
+            if (aeroSkillStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0); }
+
             Statistic companyRepStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Reputation);
-            if (companyRepStat == null) { __instance.CompanyStats.AddStatistic(ModStats.Company_Reputation, 0); }
+            if (companyRepStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.Company_Reputation, 0); }
             
             Statistic crewCountAerospaceStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
-            if (crewCountAerospaceStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_Aerospace, 0); }
+            if (crewCountAerospaceStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_Aerospace, 0); }
+            
             Statistic crewCountMechWarriorsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
-            if (crewCountMechWarriorsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_MechWarriors, 0); }
+            if (crewCountMechWarriorsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechWarriors, 0); }
+            
             Statistic crewCountMechTechsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
-            if (crewCountMechTechsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_MechTechs, 0); }
+            if (crewCountMechTechsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechTechs, 0); }
+            
             Statistic crewCountMedTechsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
-            if (crewCountMedTechsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_MedTechs, 0); }
+            if (crewCountMedTechsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MedTechs, 0); }
+            
             Statistic crewCountVehicleCrewsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
-            if (crewCountVehicleCrewsStat == null) { __instance.CompanyStats.AddStatistic(ModStats.CrewCount_VehicleCrews, 0); }
+            if (crewCountVehicleCrewsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_VehicleCrews, 0); }
         }
     }
 
@@ -79,38 +89,45 @@ namespace HumanResources.Patches
                         Mod.Log.Debug?.Write($" -- {tag}");
                     }
 
+                    // TODO: This is inefficient, can we allocate pilots into a dictionary and just check if the dictionary keys match?
                     CrewDetails details = new CrewDetails(pilot.pilotDef);
                     if (details.ContractEndDay <= __instance.DaysPassed)
                     {
                         Mod.Log.Debug?.Write($"CONTRACT FOR PILOT: {pilot.Name} HAS ELAPSED, FIRING EVENT");
+                        ModState.ExpiredContracts.Enqueue((pilot, details));
 
-                        __instance.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, pilot);
-                        SimGameEventDef crewEventDef = __instance.DataManager.SimGameEventDefs.Get("event_hr_mw_contractExpired");
-                        BaseDescriptionDef baseDescDef = crewEventDef.Description;
-                        
-                        StringBuilder sb = new StringBuilder(baseDescDef.Details);
-                        sb.Append("\n");
-                        sb.Append("<margin=5em>\n");
-                        sb.Append($" Hiring Bonus: {SimGameState.GetCBillString(details.AdjustedBonus)}\n\n");
-                        sb.Append($" Monthly Salary: {SimGameState.GetCBillString(details.AdjustedSalary)}\n\n");
-                        sb.Append("</margin>\n");
-
-                        Mod.Log.Debug?.Write($"Setting baseDefDesc to: {sb}");
-
-                        Traverse baseDescDefDetailsSetT = Traverse.Create(baseDescDef).Property("Details");
-                        baseDescDefDetailsSetT.SetValue(sb.ToString());
-
-                        Traverse crewEventDescT = Traverse.Create(crewEventDef).Property("Description");
-                        crewEventDescT.SetValue(baseDescDef);
-
-                        ___mechWarriorEventTracker.ActivateEvent(crewEventDef);
 
                     }
+                }
+
+                // Fire the first event, if there are more they will be fired from OnEventDismissed
+                if (ModState.ExpiredContracts.Count > 0)
+                {
+                    SimGameEventDef crewEventDef = __instance.DataManager.SimGameEventDefs.Get(ModConsts.Event_ContractExpired);
+                    __instance.OnEventTriggered(crewEventDef, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                    Mod.Log.Debug?.Write($"Event activated");
                 }
             }
             else
             {
                 Mod.Log.Debug?.Write("EVENT CONDITIONALS FAILED");
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(SimGameState), "OnEventDismissed")]
+    static class SimGameState_OnEventDismissed
+    {
+        static void Postfix(SimGameEventTracker ___mechWarriorEventTracker)
+        {
+
+            // If there are any other events to fire, fire them here.
+            if (ModState.ExpiredContracts.Count > 0)
+            {
+                Mod.Log.Debug?.Write($"ACTIVATING CONTRACT EXPIRED EVENT");
+                SimGameEventDef crewEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_ContractExpired);
+                Mod.Log.Debug?.Write($"CREW EVENT NOT NULL");
+                ModState.SimGameState.OnEventTriggered(crewEventDef, EventScope.MechWarrior, ___mechWarriorEventTracker);
             }
         }
     }
@@ -280,9 +297,7 @@ namespace HumanResources.Patches
                 if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
 
                 // Determine contract length
-                int contractLength = Mod.Random.Next(
-                    Mod.Config.HiringHall.MechWarriors.MinContractLength, 
-                    Mod.Config.HiringHall.MechWarriors.MaxContractLength);
+                int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechWarriors);
                 pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
             }
         }
@@ -297,6 +312,75 @@ namespace HumanResources.Patches
             __result = details.Salary;
 
             return false;
+        }
+    }
+
+
+
+    //[HarmonyPatch(typeof(SimGameState), "ApplySimGameEventResult")]
+    //[HarmonyPatch(new Type[] { typeof(SimGameEventResult), typeof(List<object>), typeof(SimGameEventTracker) })]
+    //static class SimGameState_ApplySimGameEventResult
+    //{
+    //    static void Postfix(SimGameEventTracker ___mechWarriorEventTracker)
+    //    {
+
+    //        // If there are any other events to fire, fire them here.
+    //        if (ModState.ExpiredContracts.Count > 0)
+    //        {
+    //            Mod.Log.Debug?.Write($"ACTIVATING CONTRACT EXPIRED EVENT");
+    //            SimGameEventDef crewEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_ContractExpired);
+    //            Mod.Log.Debug?.Write($"CREW EVENT NOT NULL");
+    //            ModState.SimGameState.OnEventTriggered(crewEventDef, EventScope.MechWarrior, ___mechWarriorEventTracker);
+    //        }
+    //    }
+    //}
+
+    // Select an expired pilot and populate the fields with their data
+    [HarmonyPatch(typeof(SGEventPanel), "SetEvent")]
+    static class SGEventPanel_SetEvent
+    {
+        // Populate the target mechwarrior before the event
+        static void Prefix(SGEventPanel __instance, SimGameEventDef evt)
+        {
+            Mod.Log.Debug?.Write("SGEP:SetEvent:PRE");
+            if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id) && ModState.ExpiredContracts.Count > 0)
+            {
+                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                Mod.Log.Debug?.Write($"SGEventPanel details setting targetMechwarrior: {expired.Pilot.Name}");
+                ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, expired.Pilot);
+            }
+
+        }
+
+        // Update the eventDescription after the fact
+        static void Postfix(SGEventPanel __instance, SimGameEventDef evt, LocalizableText ___eventDescription)
+        {
+            Mod.Log.Debug?.Write("SGEP:SetEvent:Post");
+            if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id))
+            {
+                // Select an expired pilot and populate the fields with their data
+                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Dequeue();
+
+                StringBuilder sb = new StringBuilder(___eventDescription.text);
+                sb.Append("\n");
+                sb.Append("<margin=5em>\n");
+                sb.Append($" Hiring Bonus: {SimGameState.GetCBillString(expired.Details.AdjustedBonus)}\n\n");
+                sb.Append($" Monthly Salary: {SimGameState.GetCBillString(expired.Details.AdjustedSalary)}\n\n");
+                sb.Append("</margin>\n");
+
+                Mod.Log.Debug?.Write($"SGEventPanel details for pilot: {expired.Pilot.Name} has details: {sb}");
+
+                IEnumerator coroutine = UpdateText(___eventDescription, sb.ToString());
+                SceneSingletonBehavior<UnityGameInstance>.Instance.StartCoroutine(coroutine);
+            }
+        }
+
+        // SetEvent invokes a coroutine to do a ForceRefresh immediate, so this coroutine waits until that one is done
+        //   to update the text again, otherwise the update is lost.
+        private static IEnumerator UpdateText(LocalizableText target, string text)
+        {
+            yield return new WaitForEndOfFrame();
+            target.SetText(text);
         }
     }
 }
