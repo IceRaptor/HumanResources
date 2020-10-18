@@ -19,7 +19,7 @@ namespace HumanResources
     {
         public bool Enabled = true;
 
-        public int BaseContractDays = 15;
+        public int BaseDaysInContract = 15;
         public int MinContractDaysMulti = 6;
         public int MaxContractDaysMulti = 12;
 
@@ -41,12 +41,11 @@ namespace HumanResources
 
     public class CrewScarcity
     {
-        // TODO: These probably need to be floats, so the addition is less granular. 
-        public int MechWarriors = 0;
-        public int VehicleCrews = 0;
-        public int MechTechs = 0;
-        public int MedTechs = 0;
-        public int Aerospace = 0;
+        public float Aerospace = 0f;
+        public float MechTechs = 0f;
+        public float MechWarriors = 0f;
+        public float MedTechs = 0f;
+        public float VehicleCrews = 0f;
     }
 
     public class ScarcityOps
@@ -58,11 +57,11 @@ namespace HumanResources
         public Dictionary<string, CrewScarcity> PlanetTagModifiers = new Dictionary<string, CrewScarcity>()
         {
             {  "planet_civ_innersphere",
-                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 2, MechTechs = 1, MedTechs = 1, Aerospace = 1 } },
+                new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 2f, MechTechs = 1f, MedTechs = 1f, Aerospace = 1f } },
             {  "planet_civ_periphery",
-                new CrewScarcity() { MechWarriors = 1, VehicleCrews = 1, MechTechs = 0, MedTechs = 0, Aerospace = 0 } },
+                new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 1f, MechTechs = 0f, MedTechs = 0f, Aerospace = 1f } },
             {  "planet_civ_primitive",
-                new CrewScarcity() { MechWarriors = -2, VehicleCrews = 1, MechTechs = -2, MedTechs = -4, Aerospace = -4 } }
+                new CrewScarcity() { MechWarriors = -2f, VehicleCrews = 1f, MechTechs = -2f, MedTechs = -4f, Aerospace = -4f } }
         };
     }
 
@@ -87,7 +86,7 @@ namespace HumanResources
         public CrewOpts AerospaceWings = new CrewOpts
         {
             Enabled = true,
-            BaseContractDays = 15,
+            BaseDaysInContract = 15,
             MinContractDaysMulti = 6,
             MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
@@ -101,7 +100,7 @@ namespace HumanResources
         public CrewOpts MechTechCrews = new CrewOpts
         {
             Enabled = true,
-            BaseContractDays = 15,
+            BaseDaysInContract = 15,
             MinContractDaysMulti = 6,
             MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
@@ -115,7 +114,7 @@ namespace HumanResources
         public CrewOpts MedTechCrews = new CrewOpts
         {
             Enabled = true,
-            BaseContractDays = 15,
+            BaseDaysInContract = 15,
             MinContractDaysMulti = 6,
             MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
@@ -129,7 +128,7 @@ namespace HumanResources
         public CrewOpts MechWarriors = new CrewOpts
         {
             Enabled = true,
-            BaseContractDays = 15,
+            BaseDaysInContract = 15,
             MinContractDaysMulti = 6,
             MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
@@ -143,7 +142,7 @@ namespace HumanResources
         public CrewOpts VehicleCrews = new CrewOpts
         {
             Enabled = true,
-            BaseContractDays = 15,
+            BaseDaysInContract = 15,
             MinContractDaysMulti = 6,
             MaxContractDaysMulti = 12,
             SalaryMulti = 30000,
@@ -216,10 +215,10 @@ namespace HumanResources
 
     public class Icons
     {
-        public string CrewPortrait_Aerospace = "pc_jet-fighter";
-        public string CrewPortrait_MedTech = "pc_hospital-cross";
-        public string CrewPortrait_MechTech = "pc_auto-repair";
-        public string CrewPortrait_Vehicle = "pc_apc";
+        public string CrewPortrait_Aerospace = "hr_jet-fighter";
+        public string CrewPortrait_MedTech = "hr_hospital-cross";
+        public string CrewPortrait_MechTech = "hr_auto-repair";
+        public string CrewPortrait_Vehicle = "hr_apc";
     }
 
     public class ModConfig

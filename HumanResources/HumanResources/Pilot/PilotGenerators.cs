@@ -12,14 +12,14 @@ namespace HumanResources.Helper
     public static class PilotGen
     {
 
-        public static PilotDef GenerateMedTechCrew()
+        public static PilotDef GenerateMechTechCrew()
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count);
             string newCallsign = Mod.CrewNames.MechTech[callsignIdx];
 
             int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechTechCrews);
 
-            string description = $"{Environment.NewLine}MECHTECH CREW";
+            string description = $"{Environment.NewLine}MECH TECH CREW";
 
             PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
 
@@ -28,14 +28,14 @@ namespace HumanResources.Helper
             return def;
         }
 
-        public static PilotDef GenerateMechTechCrew()
+        public static PilotDef GenerateMedTechCrew()
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count);
             string newCallsign = Mod.CrewNames.MedTech[callsignIdx];
 
             int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MedTechCrews);
 
-            string description = $"{Environment.NewLine}MEDTECH CREW";
+            string description = $"{Environment.NewLine}MED TECH CREW";
 
             PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
 
