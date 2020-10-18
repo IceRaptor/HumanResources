@@ -1,15 +1,29 @@
 # Human Resources
-This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life into the crews onboard the Argo. MechTech, MedTech, and Vehicle crews can be hired as 'pilots' in the Hiring Hall. These crew are harder to manage, require a monthly salary, and have their own loyalty that's influenced by your actions. They are also mercenaries, and can leave at end of a contract or when someone else makes them a better offer! You'll always have Wang, Sumire and the rest - but otherwise you'll need to keep an eye on the people that form the backbone of your mercenary company.
+This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life into the crews onboard the Argo. Aerospace pilots, MechTech crews, MedTech crews, and Vehicle crews can be acquired from the Hiring Hall. These crew require a hiring bonus in addition to their monthly salary, offer contracts of varying lengths, and will have their own loyalties to manage. These crews are mercenaries and will leave at the end of their contract, or when someone makes them a better offer. You'll always have Wang, Sumire and the rest - but otherwise you'll need to keep an eye on the people that form the backbone of your mercenary company.
 
-You should disable or remove the above mods before activating this mod.
+**Features**
 
-## Feature Overview
+ * Hirable Aerospace, MechTech, MedTech, and Vehicle crews in the Hiring Hall
+ * Fully customizable salary and hiring bonus calculations based upon an exponential formula
+ * Scarcity of all hirable crews based upon planetary tags
+ * Scarcity of all hirable crews driven by a gaussian distribution
+ * Crews have a customizable contract length
+ * (Optional) Crews can be poached by other employers when the conditions are right
 
- * Hirable MechTech, MedTech, and Vehicle crews in the Hiring Hall
+This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
+
+# Hiring 
+
+All crews are available to be hired from the HiringHall. Mechwarriors are untouched, but all other crews are represented with different icons:
+
+* TODO: Add icon images
+
+Crew salary is driven by an exponential function $ab^x$ where a = `SalaryMulti`, b = `SalaryExponent` and x = the value of the pilot in particular. 
 
 
+### AeroSpace Points
 
-### MechTech Points
+Aerospace points are applied to the statistic `HR_AerospaceSkill`. It's not used directly by any mechanic in the HBS game, but may be used by other mods.
 
 | Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
 | --------- | ------ | ------- | ------- | ----- | --------- |
@@ -19,7 +33,21 @@ You should disable or remove the above mods before activating this mod.
 | Large     | 4      | 8       | 12      | 20    | 32        |
 | Huge      | 5      | 10      | 15      | 25    | 40        |
 
-### Medtech Points
+### MechTech Points
+
+MechTech points are applied to the CompanyStat `MechTechSkill`. This value determines how quickly the Mech workqueue is resolved. 
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+### MedTech Points
+
+MedTech points are applied to the CompanyStat `MedTechSkill`. This value determines how quickly the injuries work queue is resolved.
 
 | Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
 | --------- | ------ | ------- | ------- | ----- | --------- |
