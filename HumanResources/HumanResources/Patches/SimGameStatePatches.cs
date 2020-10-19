@@ -115,17 +115,16 @@ namespace HumanResources.Patches
                     {
                         Mod.Log.Debug?.Write($"CONTRACT FOR PILOT: {pilot.Name} HAS ELAPSED, FIRING EVENT");
                         ModState.ExpiredContracts.Enqueue((pilot, details));
-
-
                     }
                 }
 
                 // Fire the first event, if there are more they will be fired from OnEventDismissed
                 if (ModState.ExpiredContracts.Count > 0)
                 {
-                    SimGameEventDef crewEventDef = __instance.DataManager.SimGameEventDefs.Get(ModConsts.Event_ContractExpired);
-                    __instance.OnEventTriggered(crewEventDef, EventScope.MechWarrior, ___mechWarriorEventTracker);
-                    Mod.Log.Debug?.Write($"Event activated");
+                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                    SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
+                    Mod.Log.Info?.Write($"Contract expiration event fired.");
+                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
                 }
             }
             else
@@ -148,10 +147,10 @@ namespace HumanResources.Patches
             // If there are any other events left after that, fire them here.
             if (ModState.ExpiredContracts.Count > 0)
             {
-                Mod.Log.Debug?.Write($"ACTIVATING CONTRACT EXPIRED EVENT");
-                SimGameEventDef crewEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_ContractExpired);
-                Mod.Log.Debug?.Write($"CREW EVENT NOT NULL");
-                ModState.SimGameState.OnEventTriggered(crewEventDef, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
+                Mod.Log.Info?.Write($"Contract expiration event fired.");
+                ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
             }
         }
     }
@@ -378,52 +377,44 @@ namespace HumanResources.Patches
                 {
                     Mod.Log.Debug?.Write($"BONUS");
                 }
-                else if (ModConsts.Event_ContractExpired_Option_Fire.Equals(option.Description.Id))
-                {
-                    Mod.Log.Debug?.Write($"FIRE");
-                }
-                else if (ModConsts.Event_ContractExpired_Option_Fire_Hated.Equals(option.Description.Id))
-                {
-                    Mod.Log.Debug?.Write($"FIRE HATED");
-                }
             }
 
             isExpiredContractEvent = false;
         }
     }
 
-    // Select an expired pilot and populate the fields with their data
-    [HarmonyPatch(typeof(SGEventPanel), "SetResult")]
-    static class SGEventPanel_SetResult
-    {
-        // Populate the target mechwarrior before the event
-        static void Prefix(SGEventPanel __instance, SimGameEventResultSet set)
-        {
-            if (SimGameState_OnOptionSelected.isExpiredContractEvent)
-            {
-                // Inject the bonus into set
-                foreach (SimGameEventResult sgeResult in set.Results)
-                {
-                    if (sgeResult.Stats != null && sgeResult.Stats.Length > 0)
-                    {
-                        for (int i = 0; i < sgeResult.Stats.Length; i++)
-                        {
-                            SimGameStat stat = sgeResult.Stats[i];
-                            if (ModStats.HBS_Company_Funds.Equals(stat.name))
-                            {
-                                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                                Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to {expired.Details?.AdjustedBonus}");
-                                stat.value = $"-{expired.Details.AdjustedBonus}";
-                            }
+    //// Select an expired pilot and populate the fields with their data
+    //[HarmonyPatch(typeof(SGEventPanel), "SetResult")]
+    //static class SGEventPanel_SetResult
+    //{
+    //    // Populate the target mechwarrior before the event
+    //    static void Prefix(SGEventPanel __instance, SimGameEventResultSet set)
+    //    {
+    //        if (SimGameState_OnOptionSelected.isExpiredContractEvent)
+    //        {
+    //            // Inject the bonus into set
+    //            foreach (SimGameEventResult sgeResult in set.Results)
+    //            {
+    //                if (sgeResult.Stats != null && sgeResult.Stats.Length > 0)
+    //                {
+    //                    for (int i = 0; i < sgeResult.Stats.Length; i++)
+    //                    {
+    //                        SimGameStat stat = sgeResult.Stats[i];
+    //                        if (ModStats.HBS_Company_Funds.Equals(stat.name))
+    //                        {
+    //                            (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+    //                            Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to {expired.Details?.AdjustedBonus}");
+    //                            stat.value = $"-{expired.Details.AdjustedBonus}";
+    //                        }
 
-                            sgeResult.Stats[i] = stat;
-                        }
-                    }
-                }
-            }
-        }
+    //                        sgeResult.Stats[i] = stat;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
 
-    }
+    //}
 
     // Select an expired pilot and populate the fields with their data
     [HarmonyPatch(typeof(SGEventPanel), "SetEvent")]
@@ -442,35 +433,35 @@ namespace HumanResources.Patches
 
         }
 
-        // Update the eventDescription after the fact
-        static void Postfix(SGEventPanel __instance, SimGameEventDef evt, LocalizableText ___eventDescription)
-        {
-            Mod.Log.Debug?.Write("SGEP:SetEvent:Post");
-            if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id))
-            {
-                // Select an expired pilot and populate the fields with their data
-                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+        //// Update the eventDescription after the fact
+        //static void Postfix(SGEventPanel __instance, SimGameEventDef evt, LocalizableText ___eventDescription)
+        //{
+        //    Mod.Log.Debug?.Write("SGEP:SetEvent:Post");
+        //    if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id))
+        //    {
+        //        // Select an expired pilot and populate the fields with their data
+        //        (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
 
-                StringBuilder sb = new StringBuilder(___eventDescription.text);
-                sb.Append("\n");
-                sb.Append("<margin=5em>\n");
-                sb.Append($" Hiring Bonus: {SimGameState.GetCBillString(expired.Details.AdjustedBonus)}\n\n");
-                sb.Append($" Monthly Salary: {SimGameState.GetCBillString(expired.Details.AdjustedSalary)}\n\n");
-                sb.Append("</margin>\n");
+        //        StringBuilder sb = new StringBuilder(___eventDescription.text);
+        //        sb.Append("\n");
+        //        sb.Append("<margin=5em>\n");
+        //        sb.Append($" Hiring Bonus: {SimGameState.GetCBillString(expired.Details.AdjustedBonus)}\n\n");
+        //        sb.Append($" Monthly Salary: {SimGameState.GetCBillString(expired.Details.AdjustedSalary)}\n\n");
+        //        sb.Append("</margin>\n");
 
-                Mod.Log.Trace?.Write($"SGEventPanel details for pilot: {expired.Pilot.Name} has details: {sb}");
+        //        Mod.Log.Trace?.Write($"SGEventPanel details for pilot: {expired.Pilot.Name} has details: {sb}");
 
-                IEnumerator coroutine = UpdateText(___eventDescription, sb.ToString());
-                SceneSingletonBehavior<UnityGameInstance>.Instance.StartCoroutine(coroutine);
-            }
-        }
+        //        IEnumerator coroutine = UpdateText(___eventDescription, sb.ToString());
+        //        SceneSingletonBehavior<UnityGameInstance>.Instance.StartCoroutine(coroutine);
+        //    }
+        //}
 
-        // SetEvent invokes a coroutine to do a ForceRefresh immediate, so this coroutine waits until that one is done
-        //   to update the text again, otherwise the update is lost.
-        private static IEnumerator UpdateText(LocalizableText target, string text)
-        {
-            yield return new WaitForEndOfFrame();
-            target.SetText(text);
-        }
+        //// SetEvent invokes a coroutine to do a ForceRefresh immediate, so this coroutine waits until that one is done
+        ////   to update the text again, otherwise the update is lost.
+        //private static IEnumerator UpdateText(LocalizableText target, string text)
+        //{
+        //    yield return new WaitForEndOfFrame();
+        //    target.SetText(text);
+        //}
     }
 }

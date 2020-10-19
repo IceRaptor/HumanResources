@@ -23,8 +23,6 @@ namespace HumanResources
         public const string Event_ContractExpired = "event_hr_mw_contractExpired";
         public const string Event_ContractExpired_Option_Hire_NoBonus = "outcome_0";
         public const string Event_ContractExpired_Option_Hire_Bonus = "outcome_1";
-        public const string Event_ContractExpired_Option_Fire = "outcome_2";
-        public const string Event_ContractExpired_Option_Fire_Hated = "outcome_3";
     }
 
     // All of these tags are pilot tags
