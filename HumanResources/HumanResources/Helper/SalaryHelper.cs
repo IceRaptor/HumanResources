@@ -6,7 +6,7 @@ namespace HumanResources.Helper
     {
         public static void CalculateSalary(int value, CrewOpts config, out int salary, out int bonus)
         {
-            float salaryByValue = config.SalaryMulti * (float)Math.Pow(config.SalaryExponent, value);
+            int salaryByValue = (int)Math.Floor(config.SalaryMulti * (float)Math.Pow(config.SalaryExponent, value));
             Mod.Log.Debug?.Write($" -- salaryByValue: {salaryByValue}");
 
             // Determine the final salary by adding variance
