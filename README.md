@@ -129,7 +129,6 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
   * Background
   * Attributes
   * Faction loyalty
-* Add Aerospace Wings
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
 * Firing events takes forever according to t-bone; profile when firing the event
