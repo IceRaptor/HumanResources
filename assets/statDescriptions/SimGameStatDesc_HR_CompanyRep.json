@@ -1,0 +1,17 @@
+{
+    "Description" : {
+        "Id" : "SimGameStatDesc_HR_CompanyRep",
+        "Name" : "Company Reputation",
+        "Details" : "The company's reputation as a fair employer",
+        "Icon" : null
+    },
+    "setResult" : "",
+    "positiveResult" : "You gain reputation as a fair employer (+{RES_VALUE.ToString} rep) ",
+    "negativeResult" : "You lose reputation as a fair employer (+{RES_VALUE.ToString} rep)",
+    "temporalSetResult" : "",
+    "temporalPositiveResult" : "",
+    "temporalNegativeResult" : "",
+    "infinitiveSetResult" : "A high company reputation makes it easier to retain good talent, more likely that mercenaries will ignore poaching offers, and make them more likely to stay with you when they are loyal",
+    "infinitivePositiveResult" : "",
+    "infinitiveNegativeResult" : ""
+}

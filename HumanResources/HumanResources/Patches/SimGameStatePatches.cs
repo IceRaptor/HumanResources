@@ -21,45 +21,64 @@ namespace HumanResources.Patches
     {
         static void Postfix(SimGameState __instance, GameInstance game, SimGameDifficulty difficulty)
         {
-            if (Mod.Log.IsTrace) Mod.Log.Trace?.Write("SGS:_OI entered.");
+            if (!ModState.HasLoadedAssets)
+            {
+                DataManager dm = UnityGameInstance.BattleTechGame.DataManager;
+                LoadRequest loadRequest = dm.CreateLoadRequest();
 
-            DataManager dm = UnityGameInstance.BattleTechGame.DataManager;
-            LoadRequest loadRequest = dm.CreateLoadRequest();
+                // Need to load each unique icon
+                Mod.Log.Info?.Write("-- Loading HUD icons");
 
-            // Need to load each unique icon
-            Mod.Log.Info?.Write("-- Loading HUD icons");
+                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Aerospace, null);
+                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MechTech, null);
+                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MedTech, null);
+                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Vehicle, null);
 
-            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Aerospace, null);
-            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MechTech, null);
-            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MedTech, null);
-            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Vehicle, null);
+                loadRequest.ProcessRequests();
+                ModState.HasLoadedAssets = true;
+                Mod.Log.Info?.Write("--  Done!");
+            }
 
-            loadRequest.ProcessRequests();
-            Mod.Log.Info?.Write("--  Done!");
-
+            // Reinitialize state
+            ModState.Reset();
             ModState.SimGameState = __instance;
+        }
+    }
 
+    [HarmonyPatch(typeof(SimGameState), "InitCompanyStatValidators")]
+    static class SimGameState_InitCompanyStatValidators
+    {
+        static void Postfix(SimGameState __instance)
+        {
             // Initialize company stats if they aren't present
             Statistic aeroSkillStat = __instance.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
             if (aeroSkillStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0); }
 
             Statistic companyRepStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Reputation);
             if (companyRepStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.Company_Reputation, 0); }
-            
+
             Statistic crewCountAerospaceStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
             if (crewCountAerospaceStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_Aerospace, 0); }
-            
+
             Statistic crewCountMechWarriorsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
             if (crewCountMechWarriorsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechWarriors, 0); }
-            
+
             Statistic crewCountMechTechsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
             if (crewCountMechTechsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechTechs, 0); }
-            
+
             Statistic crewCountMedTechsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
             if (crewCountMedTechsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MedTechs, 0); }
-            
+
             Statistic crewCountVehicleCrewsStat = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
             if (crewCountVehicleCrewsStat == null) { __instance.CompanyStats.AddStatistic<int>(ModStats.CrewCount_VehicleCrews, 0); }
+
+            // DEBUG
+            Mod.Log.Debug?.Write("ITERATING COMPANY STATS");
+            foreach (KeyValuePair<string, Statistic> kvp in __instance.CompanyStats)
+            {
+                Mod.Log.Debug?.Write($" -- {kvp.Key}");
+            }
+            Mod.Log.Debug?.Write(" -- DONE");
         }
     }
 
@@ -79,6 +98,7 @@ namespace HumanResources.Patches
                 //SimGameEventDef companyEventDef = __instance.DataManager.SimGameEventDefs.Get("event_hr_co_smearCampaign");
                 //___companyEventTracker.ActivateEvent(companyEventDef, null);
 
+                // TODO: Only do check if not traveling and not at planet with no_population tag
                 foreach (Pilot pilot in __instance.PilotRoster)
                 {
 
@@ -115,13 +135,17 @@ namespace HumanResources.Patches
         }
     }
 
+    // Check for any other events that need to be fired.
     [HarmonyPatch(typeof(SimGameState), "OnEventDismissed")]
     static class SimGameState_OnEventDismissed
     {
         static void Postfix(SimGameEventTracker ___mechWarriorEventTracker)
         {
+            // First, dequeue to remove any existing pilot
+            if (ModState.ExpiredContracts.Count > 0)
+                ModState.ExpiredContracts.Dequeue();
 
-            // If there are any other events to fire, fire them here.
+            // If there are any other events left after that, fire them here.
             if (ModState.ExpiredContracts.Count > 0)
             {
                 Mod.Log.Debug?.Write($"ACTIVATING CONTRACT EXPIRED EVENT");
@@ -315,25 +339,91 @@ namespace HumanResources.Patches
         }
     }
 
+    [HarmonyPatch(typeof(SGEventPanel), "OnOptionSelected")]
+    static class SimGameState_OnOptionSelected
+    {
+        public static bool isExpiredContractEvent = false;
 
+        // Prefix here to set stat values for money?
+        static void Prefix(SGEventPanel __instance, SimGameEventOption option,
+            SimGameInterruptManager.EventPopupEntry ___thisEntry)
+        {
+            if (___thisEntry != null && ___thisEntry.parameters != null &&
+                ___thisEntry.parameters[0] is SimGameEventDef eventDef &&
+                ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
+            {
+                isExpiredContractEvent = true;
+            }
+            else
+            {
+                isExpiredContractEvent = false;
+            }
+        }
 
-    //[HarmonyPatch(typeof(SimGameState), "ApplySimGameEventResult")]
-    //[HarmonyPatch(new Type[] { typeof(SimGameEventResult), typeof(List<object>), typeof(SimGameEventTracker) })]
-    //static class SimGameState_ApplySimGameEventResult
-    //{
-    //    static void Postfix(SimGameEventTracker ___mechWarriorEventTracker)
-    //    {
+        static void Postfix(SGEventPanel __instance, SimGameEventOption option, 
+            SimGameInterruptManager.EventPopupEntry ___thisEntry)
+        {
 
-    //        // If there are any other events to fire, fire them here.
-    //        if (ModState.ExpiredContracts.Count > 0)
-    //        {
-    //            Mod.Log.Debug?.Write($"ACTIVATING CONTRACT EXPIRED EVENT");
-    //            SimGameEventDef crewEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_ContractExpired);
-    //            Mod.Log.Debug?.Write($"CREW EVENT NOT NULL");
-    //            ModState.SimGameState.OnEventTriggered(crewEventDef, EventScope.MechWarrior, ___mechWarriorEventTracker);
-    //        }
-    //    }
-    //}
+            if (___thisEntry != null && ___thisEntry.parameters != null &&
+                ___thisEntry.parameters[0] is SimGameEventDef eventDef &&
+                ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
+            {
+
+                // Handle updating the contract length 
+                if (ModConsts.Event_ContractExpired_Option_Hire_NoBonus.Equals(option.Description.Id))
+                {
+                    Mod.Log.Debug?.Write($"NO BONUS");
+                }
+                else if (ModConsts.Event_ContractExpired_Option_Hire_Bonus.Equals(option.Description.Id))
+                {
+                    Mod.Log.Debug?.Write($"BONUS");
+                }
+                else if (ModConsts.Event_ContractExpired_Option_Fire.Equals(option.Description.Id))
+                {
+                    Mod.Log.Debug?.Write($"FIRE");
+                }
+                else if (ModConsts.Event_ContractExpired_Option_Fire_Hated.Equals(option.Description.Id))
+                {
+                    Mod.Log.Debug?.Write($"FIRE HATED");
+                }
+            }
+
+            isExpiredContractEvent = false;
+        }
+    }
+
+    // Select an expired pilot and populate the fields with their data
+    [HarmonyPatch(typeof(SGEventPanel), "SetResult")]
+    static class SGEventPanel_SetResult
+    {
+        // Populate the target mechwarrior before the event
+        static void Prefix(SGEventPanel __instance, SimGameEventResultSet set)
+        {
+            if (SimGameState_OnOptionSelected.isExpiredContractEvent)
+            {
+                // Inject the bonus into set
+                foreach (SimGameEventResult sgeResult in set.Results)
+                {
+                    if (sgeResult.Stats != null && sgeResult.Stats.Length > 0)
+                    {
+                        for (int i = 0; i < sgeResult.Stats.Length; i++)
+                        {
+                            SimGameStat stat = sgeResult.Stats[i];
+                            if (ModStats.HBS_Company_Funds.Equals(stat.name))
+                            {
+                                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                                Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to {expired.Details?.AdjustedBonus}");
+                                stat.value = $"-{expired.Details.AdjustedBonus}";
+                            }
+
+                            sgeResult.Stats[i] = stat;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 
     // Select an expired pilot and populate the fields with their data
     [HarmonyPatch(typeof(SGEventPanel), "SetEvent")]
@@ -346,7 +436,7 @@ namespace HumanResources.Patches
             if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id) && ModState.ExpiredContracts.Count > 0)
             {
                 (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                Mod.Log.Debug?.Write($"SGEventPanel details setting targetMechwarrior: {expired.Pilot.Name}");
+                Mod.Log.Trace?.Write($"SGEventPanel details setting targetMechwarrior: {expired.Pilot.Name}");
                 ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, expired.Pilot);
             }
 
@@ -359,7 +449,7 @@ namespace HumanResources.Patches
             if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id))
             {
                 // Select an expired pilot and populate the fields with their data
-                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Dequeue();
+                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
 
                 StringBuilder sb = new StringBuilder(___eventDescription.text);
                 sb.Append("\n");
@@ -368,7 +458,7 @@ namespace HumanResources.Patches
                 sb.Append($" Monthly Salary: {SimGameState.GetCBillString(expired.Details.AdjustedSalary)}\n\n");
                 sb.Append("</margin>\n");
 
-                Mod.Log.Debug?.Write($"SGEventPanel details for pilot: {expired.Pilot.Name} has details: {sb}");
+                Mod.Log.Trace?.Write($"SGEventPanel details for pilot: {expired.Pilot.Name} has details: {sb}");
 
                 IEnumerator coroutine = UpdateText(___eventDescription, sb.ToString());
                 SceneSingletonBehavior<UnityGameInstance>.Instance.StartCoroutine(coroutine);

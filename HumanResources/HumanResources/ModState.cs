@@ -23,6 +23,8 @@ namespace HumanResources
 
     public static class ModState
     {
+        public static bool HasLoadedAssets = false;
+
         public static PilotCreateState PilotCreate = new PilotCreateState();
         public static SimGameState SimGameState = null;
         public static Queue<(Pilot Pilot, CrewDetails Details)> ExpiredContracts = 
@@ -31,6 +33,7 @@ namespace HumanResources
         public static void Reset()
         {
             // Reinitialize state
+            Mod.Log.Info?.Write("CLEARING ALL MOD STATE DATA");
             SimGameState = null;
             PilotCreate = new PilotCreateState();
             ExpiredContracts.Clear();

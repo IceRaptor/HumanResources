@@ -84,4 +84,5 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Contract expiration not decrementing company funds on renewal
 * Contract expiration descriptions are weird
 * Contract desc / pilot isn't getting reset between events
+* Loyalty shouldn't ensure a no-hire bonus, only make it easier
 

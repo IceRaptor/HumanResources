@@ -21,6 +21,10 @@ namespace HumanResources
         public const string Tooltip_TooManyOfType = "HRTooltipTooManyOfType";
 
         public const string Event_ContractExpired = "event_hr_mw_contractExpired";
+        public const string Event_ContractExpired_Option_Hire_NoBonus = "outcome_0";
+        public const string Event_ContractExpired_Option_Hire_Bonus = "outcome_1";
+        public const string Event_ContractExpired_Option_Fire = "outcome_2";
+        public const string Event_ContractExpired_Option_Fire_Hated = "outcome_3";
     }
 
     // All of these tags are pilot tags
@@ -61,6 +65,7 @@ namespace HumanResources
     {
         public const string HBS_Company_MechTech_Skill = "MechTechSkill";
         public const string HBS_Company_MedTech_Skill = "MedTechSkill";
+        public const string HBS_Company_Funds = "Funds";
 
         public const string Aerospace_Skill = "HR_AerospaceSkill";
         
