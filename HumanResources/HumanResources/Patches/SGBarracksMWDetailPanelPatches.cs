@@ -97,8 +97,7 @@ namespace HumanResources.Patches
             GameObject lastNameGO = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Dossier_LastName);
             GameObject layoutLabelGO = lastNameGO.transform.parent.GetChild(0).GetChild(0).gameObject; // should be text_lastName -> parent -> layout-label -> label
             LocalizableText lastNameLabel = layoutLabelGO.GetComponentInChildren<LocalizableText>();
-            string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Contract_Term])
-                .ToString();
+            string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Contract_Term]).ToString();
             lastNameLabel.SetText(contractTermS);
 
             string contractTermRemaining = "------";

@@ -5,7 +5,6 @@ using BattleTech.UI.Tooltips;
 using Harmony;
 using HBS;
 using HumanResources.Extensions;
-using HumanResources.Helper;
 using Localize;
 using System;
 using UnityEngine;
