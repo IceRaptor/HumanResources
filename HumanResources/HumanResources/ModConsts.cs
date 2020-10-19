@@ -28,28 +28,33 @@ namespace HumanResources
     // All of these tags are pilot tags
     public static class ModTags
     {
-        public const string Tag_Crew_Type_Aerospace = "HR_CREW_AEROSPACE";
-        public const string Tag_Crew_Type_MedTech = "HR_CREW_MED_TECH";
-        public const string Tag_Crew_Type_MechTech = "HR_CREW_MECH_TECH";
-        public const string Tag_Crew_Type_Vehicle = "HR_CREW_VEHICLE";
 
-        public const string Tag_Crew_Size_Template = "HR_CREW_SIZE_{0}";
-        public const string Tag_Crew_Size_Prefix = "HR_CREW_SIZE_";
+        // A unique GUID for me to use to associate CompanyStats to specific pilots
+        public const string Tag_GUID = "HR_GUID_";
 
-        public const string Tag_Crew_Skill_Template = "HR_CREW_SKILL_{0}";
-        public const string Tag_Crew_Skill_Prefix = "HR_CREW_SKILL_";
+        //public const string Tag_Crew_Type_Aerospace = "HR_CREW_AEROSPACE";
+        //public const string Tag_Crew_Type_MedTech = "HR_CREW_MED_TECH";
+        //public const string Tag_Crew_Type_MechTech = "HR_CREW_MECH_TECH";
+        //public const string Tag_Crew_Type_Vehicle = "HR_CREW_VEHICLE";
 
-        public const string Tag_Crew_Bonus_Prefix = "HR_CREW_BONUS_";
-        public const string Tag_Crew_Salary_Prefix = "HR_CREW_SALARY_";
+        //public const string Tag_Crew_Size_Template = "HR_CREW_SIZE_{0}";
+        //public const string Tag_Crew_Size_Prefix = "HR_CREW_SIZE_";
 
-        public const string Tag_Crew_ContractEndDay_Prefix = "HR_CREW_CONTRACT_END_DATE_";
-        public const string Tag_Crew_ContractTerm_Prefix = "HR_CREW_CONTRACT_TERM_";
+        //public const string Tag_Crew_Skill_Template = "HR_CREW_SKILL_{0}";
+        //public const string Tag_Crew_Skill_Prefix = "HR_CREW_SKILL_";
+
+        //public const string Tag_Crew_Bonus_Prefix = "HR_CREW_BONUS_";
+        //public const string Tag_Crew_Salary_Prefix = "HR_CREW_SALARY_";
+
+        //public const string Tag_Crew_ContractEndDay_Prefix = "HR_CREW_CONTRACT_END_DATE_";
+        //public const string Tag_Crew_ContractTerm_Prefix = "HR_CREW_CONTRACT_TERM_";
 
         public const string Tag_Crew_Loyalty_Dedicated = "HR_CREW_LOYALTY_DEDICATED";
         public const string Tag_Crew_Loyalty_Comfortable = "HR_CREW_LOYALTY_COMFORTABLE";
         public const string Tag_Crew_Loyalty_Neutral = "HR_CREW_LOYALTY_NEUTRAL";
         public const string Tag_Crew_Loyalty_Unhappy = "HR_CREW_LOYALTY_UNHAPPY";
         public const string Tag_Crew_Loyalty_Hated = "HR_CREW_LOYALTY_HATED";
+
 
         // Applied if you ignored their complains 
         public const string Tag_Crew_Loyalty_Faction_Warning = "HR_CREW_LOYALTY_FACTION_WARNING";
@@ -68,6 +73,7 @@ namespace HumanResources
         public const string Aerospace_Skill = "HR_AerospaceSkill";
         
         public const string Company_Reputation = "HR_CompanyRep";
+        public const string Company_CrewDetail_Prefix = "HR_CrewDetail_";
 
         public const string CrewCount_Aerospace = "HR_CrewCount_Aerospace";
         public const string CrewCount_MechTechs = "HR_CrewCount_MechTechs";

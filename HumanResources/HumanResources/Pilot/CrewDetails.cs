@@ -1,262 +1,44 @@
 ﻿using BattleTech;
 using HumanResources.Helper;
+using Newtonsoft.Json;
 using System;
 using UnityEngine;
 
 namespace HumanResources.Extensions
 {
+
+    public enum CrewType
+    {
+        MechWarrior = 0,
+        VehicleCrew = 1,
+        AerospaceWing = 2,
+        MechTechCrew = 3,
+        MedTechCrew = 4
+    }
+
+    [JsonObject(MemberSerialization.OptOut)]
     public class CrewDetails
     {
-        private readonly bool hasCrewFlagMechTech = false;
-        private readonly bool hasCrewFlagMedTech = false;
-        private readonly bool hasCrewFlagVehicle = false;
-        private readonly bool hasCrewFlagAerospace = false;
+        // Immutable properties
+        public string GUID { get; protected set; }
+        public CrewType Type { get; protected set; }
+        public int Size { get; protected set; }
+        public int Skill { get; protected set; }
+        public int Value { get; protected set; }
+        public int HiringBonus { get; protected set; }
+        public int Salary { get; protected set; }
+        public int ContractTerm { get; protected set; }
 
-        private readonly int size = 1;
-        private readonly string sizeLabel = "UNKNOWN";
+        // Mutable properties
+        public int Loyalty { get; set; }
+        public int ExpirationDay { get; set; }
 
-        private readonly int skill = 1;
-        private readonly string skillLabel = "UNKNOWN";
-
-        private readonly int bonus = 0;
-        private readonly int salary = 0;
-
-        private readonly int contractTerm = 0;
-        private readonly int contractEndDay = 0;
-
-        public CrewDetails(PilotDef pilotDef)
-        {
-            if (pilotDef != null && pilotDef.PilotTags != null)
-            {
-                //Mod.Log.Debug?.Write($"Evaluating tags on pilot: {pilot.Name}");
-                foreach (string tag in pilotDef.PilotTags)
-                {
-                    //Mod.Log.Debug?.Write($" -- tag: {tag}");
-
-                    // Type
-                    if (ModTags.Tag_Crew_Type_Aerospace.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        hasCrewFlagAerospace = true;
-                    }
-                    if (ModTags.Tag_Crew_Type_MechTech.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        hasCrewFlagMechTech = true;
-                    }
-                    if (ModTags.Tag_Crew_Type_MedTech.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        hasCrewFlagMedTech = true;
-                    }
-                    if (ModTags.Tag_Crew_Type_Vehicle.Equals(tag, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        hasCrewFlagVehicle = true;
-                    }
-
-                    if (tag.StartsWith(ModTags.Tag_Crew_Size_Prefix))
-                    {
-                        string value = tag.Substring(ModTags.Tag_Crew_Size_Prefix.Length);
-                        int size = Int32.Parse(value);
-                        switch (size)
-                        {
-                            case 5:
-                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_5];
-                                break;
-                            case 4:
-                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_4];
-                                break;
-                            case 3:
-                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_3];
-                                break;
-                            case 2:
-                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_2];
-                                break;
-                            default:
-                                sizeLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_1];
-                                break;
-                        }
-
-                    }
-
-                    if (tag.StartsWith(ModTags.Tag_Crew_Skill_Prefix))
-                    {
-                        string value = tag.Substring(ModTags.Tag_Crew_Skill_Prefix.Length);
-                        int skill = Int32.Parse(value);
-                        switch (skill)
-                        {
-                            case 5:
-                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_5];
-                                break;
-                            case 4:
-                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_4];
-                                break;
-                            case 3:
-                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_3];
-                                break;
-                            case 2:
-                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_2];
-                                break;
-                            default:
-                                skillLabel = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_Level_1];
-                                break;
-                        }
-                    }
-
-                    if (tag.StartsWith(ModTags.Tag_Crew_Bonus_Prefix))
-                    {
-                        string value = tag.Substring(ModTags.Tag_Crew_Bonus_Prefix.Length);
-                        bonus = Int32.Parse(value);
-                    }
-
-                    if (tag.StartsWith(ModTags.Tag_Crew_Salary_Prefix))
-                    {
-                        string value = tag.Substring(ModTags.Tag_Crew_Salary_Prefix.Length);
-                        salary = Int32.Parse(value);
-                    }
-
-                    if (tag.StartsWith(ModTags.Tag_Crew_ContractEndDay_Prefix))
-                    {
-                        string value = tag.Substring(ModTags.Tag_Crew_ContractEndDay_Prefix.Length);
-                        contractEndDay = Int32.Parse(value);
-                    }
-
-                    if (tag.StartsWith(ModTags.Tag_Crew_ContractTerm_Prefix))
-                    {
-                        string value = tag.Substring(ModTags.Tag_Crew_ContractTerm_Prefix.Length);
-                        contractTerm = Int32.Parse(value);
-                    }
-                }
-
-                // If the unit is a mechwarrior or vehicle, set their skill equal to the sum of their stats
-                if (IsMechWarrior || IsVehicleCrew)
-                {
-                    skill = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
-                        pilotDef.BasePiloting + pilotDef.BonusPiloting +
-                        pilotDef.BaseGuts + pilotDef.BonusGuts +
-                        pilotDef.BaseTactics + pilotDef.BonusTactics;
-                }
-
-                // If no bonus was found, set it
-                if (bonus == 0 || salary == 0)
-                {
-
-                    int unitValue = 0;
-                    CrewOpts config = null;
-                    if (IsAerospaceCrew)
-                    {
-                        unitValue = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[skill][size];
-                        config = Mod.Config.HiringHall.AerospaceWings;
-                    }
-                    else if (IsMechTechCrew)
-                    {
-                        unitValue = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[skill][size];
-                        config = Mod.Config.HiringHall.MechTechCrews;
-                    }
-                    else if (IsMedTechCrew)
-                    {
-                        unitValue = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[skill][size];
-                        config = Mod.Config.HiringHall.MedTechCrews;
-                    }
-                    else if (IsMechWarrior)
-                    {
-                        unitValue = skill;
-                        config = Mod.Config.HiringHall.MechWarriors;
-                    }
-                    else if (IsVehicleCrew)
-                    {
-                        unitValue = skill;
-                        config = Mod.Config.HiringHall.VehicleCrews;
-                    }
-
-                    SalaryHelper.CalculateSalary(unitValue, config, out int salary, out int bonus);
-                    this.salary = salary;
-                    this.bonus = bonus;
-                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Bonus_Prefix}{bonus}");
-                    pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_Salary_Prefix}{salary}");
-                }
-            }
-        }
-
-        public bool IsAerospaceCrew { get { return hasCrewFlagAerospace; } }
-        public bool IsMechTechCrew { get { return hasCrewFlagMechTech; } }
-        public bool IsMedTechCrew { get { return hasCrewFlagMedTech; } }
-        public bool IsVehicleCrew { get { return hasCrewFlagVehicle; } }
-        public bool IsMechWarrior { get { return !hasCrewFlagAerospace && !hasCrewFlagMechTech && !hasCrewFlagMedTech && !hasCrewFlagVehicle; } }
-
-        public int Size { get { return size; } }
-        public string SizeLabel { get { return sizeLabel; } }
-
-        public int Skill { get { return skill; } }
-        public string SkillLabel { get { return skillLabel; } }
-
-        public int Bonus { get { return bonus; } }
-        public int Salary { get { return salary; } }
-
-        public int ContractTerm { get { return contractTerm; } }
-        public int ContractEndDay { get { return contractEndDay; } }
-
-        public int MechTechPoints
-        {
-            get
-            {
-                if (!IsMechTechCrew) return 0;
-
-                int points = 0;
-                try
-                {
-                    points = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[Skill][Size];
-                }
-                catch (Exception e)
-                {
-                    Mod.Log.Error?.Write(e, $"Failed to read mechTech points matrix for skill: {Skill} and size: {Size}." +
-                        $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
-                }
-                return points;
-            }
-        }
-
-        public int MedTechPoints
-        {
-            get
-            {
-                if (!IsMedTechCrew) return 0;
-
-                int points = 0;
-                try
-                {
-                    points = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[Skill][Size];
-                }
-                catch (Exception e)
-                {
-                    Mod.Log.Error?.Write(e, $"Failed to read medTech points matrix for skill: {Skill} and size: {Size}." +
-                        $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
-                }
-                return points;
-            }
-        }
-
-        public int AerospacePoints
-        {
-            get
-            {
-                if (!IsAerospaceCrew) return 0;
-                int points = 0;
-                try
-                {
-                    points = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[Skill][Size];
-                }
-                catch (Exception e)
-                {
-                    Mod.Log.Error?.Write(e, $"Failed to read aerospace points matrix for skill: {Skill} and size: {Size}." +
-                        $"This should not happen, check mod.config HiringHall.MechTechPointsBySkillAndSize values!");
-                }
-                return points;
-            }
-        }
-
+        // Dyanmic properties
         public int AdjustedBonus
         {
             get
             {
-                float adjustedForMorale = Bonus *
+                float adjustedForMorale = HiringBonus *
                     ModState.SimGameState.GetExpenditureCostModifier(ModState.SimGameState.ExpenditureLevel);
                 int rounded = (int)Mathf.RoundToInt(adjustedForMorale);
                 return rounded;
@@ -274,8 +56,132 @@ namespace HumanResources.Extensions
             }
         }
 
+        public CrewDetails(PilotDef pilotDef, CrewType type, int size = 0, int skill = 0)
+        {
+            this.Type = type;
+            this.GUID = Guid.NewGuid().ToString();
+            this.Size = size;
+            this.Skill = skill;
+
+            this.Loyalty = 0;
+            this.ExpirationDay = 999999;
+
+            // Calculate value and set required tags
+            CrewOpts config = null;
+            if (IsAerospaceCrew)
+            {
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[skill][size];
+                config = Mod.Config.HiringHall.AerospaceWings;
+            }
+            else if (IsMechTechCrew)
+            {
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[skill][size];
+                config = Mod.Config.HiringHall.MechTechCrews;
+            }
+            else if (IsMedTechCrew)
+            {
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[skill][size];
+                config = Mod.Config.HiringHall.MedTechCrews;
+            }
+            else if (IsMechWarrior)
+            {
+                Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
+                        pilotDef.BasePiloting + pilotDef.BonusPiloting +
+                        pilotDef.BaseGuts + pilotDef.BonusGuts +
+                        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                config = Mod.Config.HiringHall.MechWarriors;
+            }
+            else if (IsVehicleCrew)
+            {
+                Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
+                        pilotDef.BasePiloting + pilotDef.BonusPiloting +
+                        pilotDef.BaseGuts + pilotDef.BonusGuts +
+                        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                config = Mod.Config.HiringHall.VehicleCrews;
+
+                // Required tags
+                pilotDef.PilotTags.Add(ModTags.Tag_CU_NoMech_Crew);
+                pilotDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
+            }
+            // Add GUID tag
+            pilotDef.PilotTags.Add($"{ModTags.Tag_GUID}{GUID}");
+
+            // Calculate salary and bonus
+            SalaryHelper.CalculateSalary(Value, config, out int salary, out int bonus);
+            this.Salary = salary;
+            this.HiringBonus = bonus;
+
+            // Determine contract length
+            ContractTerm = PilotHelper.RandomContractLength(config);
+
+        }
+
+        public bool IsAerospaceCrew { get { return Type == CrewType.AerospaceWing; } }
+        public bool IsMechTechCrew { get { return Type == CrewType.MechTechCrew; } }
+        public bool IsMechWarrior { get { return Type == CrewType.MechWarrior; } }
+        public bool IsMedTechCrew { get { return Type == CrewType.MedTechCrew; } }
+        public bool IsVehicleCrew { get { return Type == CrewType.VehicleCrew; } }
+
+        public string SizeLabel
+        {
+            get
+            {
+                string label = "UNKNOWN";
+                switch (Size)
+                {
+                    case 5:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_5];
+                        break;
+                    case 4:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_4];
+                        break;
+                    case 3:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_3];
+                        break;
+                    case 2:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_2];
+                        break;
+                    default:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Size_1];
+                        break;
+                }
+                return label;
+            }
+        }
+
+        public string SkillLabel
+        {
+            get
+            {
+                string label = "UNKNOWN";
+                switch (Skill)
+                {
+                    case 5:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_5];
+                        break;
+                    case 4:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_4];
+                        break;
+                    case 3:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_3];
+                        break;
+                    case 2:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_2];
+                        break;
+                    default:
+                        label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_1];
+                        break;
+                }
+                return label;
+            }
+        }
+
+        // -- COMPARISON FUNCTIONS --
+
         // Evaluation is highest skills == lowest
-        public static int CompareBySkill(CrewDetails details1, CrewDetails details2)
+
+        // Value represents either all combined skills -or- the support points generated 
+        public static int CompareByValue(CrewDetails details1, CrewDetails details2)
         {
             // Check nullity
             if (details1 == null && details2 == null) return 0;
@@ -283,8 +189,8 @@ namespace HumanResources.Extensions
             else if (details1 == null && details2 != null) return -1;
 
             // Check skill
-            if (details1.Skill > details2.Skill) return -1;
-            else if (details2.Skill > details1.Skill) return 1;
+            if (details1.Value > details2.Value) return -1;
+            else if (details2.Value > details1.Value) return 1;
 
             return 0;
         }

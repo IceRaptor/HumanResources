@@ -38,7 +38,7 @@ namespace HumanResources
             }
             Mod.Config.Init(); // Initialize color conversion
 
-            Log = new DeferringLogger(modDirectory, LogName, Mod.Config.Debug, Mod.Config.Trace);
+            Log = new DeferringLogger(modDirectory, LogName, "HR", Mod.Config.Debug, Mod.Config.Trace);
 
             Assembly asm = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(asm.Location);

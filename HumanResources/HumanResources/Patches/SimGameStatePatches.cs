@@ -1,9 +1,7 @@
 ﻿using BattleTech;
 using BattleTech.Data;
 using BattleTech.UI;
-using BattleTech.UI.TMProWrapper;
 using Harmony;
-using HBS;
 using HumanResources.Extensions;
 using HumanResources.Helper;
 using Localize;
@@ -99,9 +97,8 @@ namespace HumanResources.Patches
                         Mod.Log.Debug?.Write($" -- {tag}");
                     }
 
-                    // TODO: This is inefficient, can we allocate pilots into a dictionary and just check if the dictionary keys match?
-                    CrewDetails details = new CrewDetails(pilot.pilotDef);
-                    if (details.ContractEndDay <= __instance.DaysPassed)
+                    CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+                    if (details.ExpirationDay <= __instance.DaysPassed)
                     {
                         Mod.Log.Debug?.Write($"CONTRACT FOR PILOT: {pilot.Name} HAS ELAPSED, FIRING EVENT");
                         ModState.ExpiredContracts.Enqueue((pilot, details));
@@ -152,7 +149,7 @@ namespace HumanResources.Patches
 
             Mod.Log.Debug?.Write($"Removing pilot: {p.Name} from company.");
 
-            CrewDetails details = p.pilotDef.Evaluate();
+            CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
             // Remove any mechtech, medtech, or aerospace points
             if (details.IsAerospaceCrew)
@@ -165,7 +162,7 @@ namespace HumanResources.Patches
                 if (aerospaceSkill.Value<int>() > 0)
                     __instance.CompanyStats.ModifyStat<int>(null, -1,
                             ModStats.Aerospace_Skill,
-                            StatCollection.StatOperation.Int_Subtract, details.AerospacePoints);
+                            StatCollection.StatOperation.Int_Subtract, details.Value);
 
                 // Track the crew count
                 Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
@@ -181,7 +178,7 @@ namespace HumanResources.Patches
             {
                 __instance.CompanyStats.ModifyStat<int>(null, -1,
                     ModStats.HBS_Company_MechTech_Skill,
-                    StatCollection.StatOperation.Int_Subtract, details.MechTechPoints);
+                    StatCollection.StatOperation.Int_Subtract, details.Value);
 
                 // Track the crew count
                 Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
@@ -195,10 +192,6 @@ namespace HumanResources.Patches
             }
             else if (details.IsMechWarrior)
             {
-                __instance.CompanyStats.ModifyStat<int>(null, -1,
-                    ModStats.HBS_Company_MechTech_Skill,
-                    StatCollection.StatOperation.Int_Subtract, details.MechTechPoints);
-
                 // Track the crew count
                 Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
                 if (crewCount == null)
@@ -213,7 +206,7 @@ namespace HumanResources.Patches
             {
                 __instance.CompanyStats.ModifyStat<int>(null, -1,
                     ModStats.HBS_Company_MedTech_Skill,
-                    StatCollection.StatOperation.Int_Subtract, details.MedTechPoints);
+                    StatCollection.StatOperation.Int_Subtract, details.Value);
 
                 // Track the crew count
                 Statistic crewCount = __instance.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
@@ -251,7 +244,7 @@ namespace HumanResources.Patches
             string salaryLabel = "------";
             if (!def.IsFree)
             {
-                CrewDetails details = new CrewDetails(def);
+                CrewDetails details = ModState.GetCrewDetails(def);
                 string cbillString = SimGameState.GetCBillString(Mathf.RoundToInt(details.AdjustedSalary));
                 salaryLabel = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Salary_Label],
                     new object[] { cbillString })
@@ -280,7 +273,7 @@ namespace HumanResources.Patches
                 PilotDef def = __instance.PilotRoster[i].pilotDef;
                 vanillaCosts += __instance.GetMechWarriorValue(def);
 
-                CrewDetails details = new CrewDetails(def);
+                CrewDetails details = ModState.GetCrewDetails(def);
                 newCosts += details.AdjustedSalary;
             }
 
@@ -306,9 +299,9 @@ namespace HumanResources.Patches
             {
                 if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
 
-                // Determine contract length
-                int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechWarriors);
-                pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
+                // Initialize new details for the pre-generated pilots
+                CrewDetails details = new CrewDetails(pilot.pilotDef, CrewType.MechWarrior);
+                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
             }
         }
     }
@@ -318,8 +311,8 @@ namespace HumanResources.Patches
     {
         static bool Prefix(SimGameState __instance, PilotDef def, ref int __result)
         {
-            CrewDetails details = new CrewDetails(def);
-            __result = details.Salary;
+            CrewDetails details = ModState.GetCrewDetails(def);
+            __result = details != null ? details.Salary : 0;
 
             return false;
         }

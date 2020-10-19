@@ -30,7 +30,7 @@ namespace HumanResources.Patches
                 def.SetDayOfHire(__instance.Sim.DaysPassed);
                 __instance.Sim.AddPilotToRoster(def, true, false);
 
-                CrewDetails details = def.Evaluate();
+                CrewDetails details = ModState.GetCrewDetails(def);
 
                 // Apply their hiring bonus
                 __instance.Sim.AddFunds(-details.AdjustedBonus, null, true, true);
@@ -44,7 +44,7 @@ namespace HumanResources.Patches
 
                     __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
                          ModStats.Aerospace_Skill,
-                         StatCollection.StatOperation.Int_Add, details.AerospacePoints);
+                         StatCollection.StatOperation.Int_Add, details.Value);
 
                     // Track the crew count
                     Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
@@ -58,7 +58,7 @@ namespace HumanResources.Patches
                 {
                     __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
                         ModStats.HBS_Company_MechTech_Skill,
-                        StatCollection.StatOperation.Int_Add, details.MechTechPoints);
+                        StatCollection.StatOperation.Int_Add, details.Value);
 
                     // Track the crew count
                     Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
@@ -82,7 +82,7 @@ namespace HumanResources.Patches
                 {
                     __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
                         ModStats.HBS_Company_MedTech_Skill,
-                        StatCollection.StatOperation.Int_Add, details.MedTechPoints);
+                        StatCollection.StatOperation.Int_Add, details.Value);
 
                     // Track the crew count
                     Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
@@ -156,8 +156,8 @@ namespace HumanResources.Patches
                 foreach (PilotDef def in collection)
                 {
                     // Determine contract length
-                    int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechWarriors);
-                    def.PilotTags.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
+                    CrewDetails details = new CrewDetails(def, CrewType.MechWarrior);
+                    ModState.UpdateOrCreateCrewDetails(def, details);
                 }
                 
                 // Remove Ronins that have already been used
@@ -212,12 +212,8 @@ namespace HumanResources.Patches
             for (int i = 0; i < vehicleCrews; i++)
             {
                 PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
-                pDef.PilotTags.Add(ModTags.Tag_Crew_Type_Vehicle);
-                pDef.PilotTags.Add(ModTags.Tag_CU_NoMech_Crew);
-                pDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
                 __instance.AvailablePilots.Add(pDef);
             }
-
 
             return false;
         }

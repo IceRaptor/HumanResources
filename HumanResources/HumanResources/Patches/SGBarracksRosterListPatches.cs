@@ -36,10 +36,10 @@ namespace HumanResources.Patches
                 slot.AddToRadioSet(__instance.listRadioSet);
 
                 // Update the pilot's contract end date
-                CrewDetails details = new CrewDetails(pilot.pilotDef);
-                int contractEndDay = ModState.SimGameState.DaysPassed + details.ContractTerm;
-                Mod.Log.Debug?.Write($"  - pilot's contract ends on day: {contractEndDay}");
-                pilot.pilotDef.PilotTags.Add($"{ModTags.Tag_Crew_ContractEndDay_Prefix}{contractEndDay}");
+                CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+                details.ExpirationDay = ModState.SimGameState.DaysPassed + details.ContractTerm;
+                Mod.Log.Debug?.Write($"  - pilot's contract ends on day: {details.ExpirationDay}");
+                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
 
                 // Performance tweak; skip
                 //ForceRefreshImmediate();
@@ -60,7 +60,7 @@ namespace HumanResources.Patches
             Mod.Log.Info?.Write($"Sorting {inventory?.Count} pilot slots");
 
             List<SGBarracksRosterSlot> sortedSlots = new List<SGBarracksRosterSlot>(inventory);
-            sortedSlots.Sort(SGBarracksRosterSlotComparisons.CompareByCrewDetailTypeAndExperience);
+            sortedSlots.Sort(SGBarracksRosterSlotComparisons.CompareByCrewTypeAndValue);
 
             int index = 0;
             foreach (SGBarracksRosterSlot slot in sortedSlots)

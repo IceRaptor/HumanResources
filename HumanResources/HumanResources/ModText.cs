@@ -12,11 +12,11 @@ namespace HumanResources
 
     public class ModText
     {
-        public const string LT_Crew_Skill_Level_1 = "SKILL_LEVEL_1";
-        public const string LT_Crew_Skill_Level_2 = "SKILL_LEVEL_2";
-        public const string LT_Crew_Skill_Level_3 = "SKILL_LEVEL_3";
-        public const string LT_Crew_Skill_Level_4 = "SKILL_LEVEL_4";
-        public const string LT_Crew_Skill_Level_5 = "SKILL_LEVEL_5";
+        public const string LT_Crew_Skill_1 = "SKILL_LEVEL_1";
+        public const string LT_Crew_Skill_2 = "SKILL_LEVEL_2";
+        public const string LT_Crew_Skill_3 = "SKILL_LEVEL_3";
+        public const string LT_Crew_Skill_4 = "SKILL_LEVEL_4";
+        public const string LT_Crew_Skill_5 = "SKILL_LEVEL_5";
 
         public const string LT_Skill_Aerospace_Points = "SKILL_AEROSPACE_POINTS";
         public const string LT_Skill_MechTech_Points = "SKILL_MECHTECH_POINTS";
@@ -43,11 +43,11 @@ namespace HumanResources
 
         public Dictionary<string, string> Labels = new Dictionary<string, string>
         {
-            { LT_Crew_Skill_Level_1, "Rookie" },
-            { LT_Crew_Skill_Level_2, "Regular" },
-            { LT_Crew_Skill_Level_3, "Veteran" },
-            { LT_Crew_Skill_Level_4, "Elite" },
-            { LT_Crew_Skill_Level_5, "Legendary" },
+            { LT_Crew_Skill_1, "Rookie" },
+            { LT_Crew_Skill_2, "Regular" },
+            { LT_Crew_Skill_3, "Veteran" },
+            { LT_Crew_Skill_4, "Elite" },
+            { LT_Crew_Skill_5, "Legendary" },
 
             { LT_Skill_Aerospace_Points, "Aerospace Points: +{0}" },
             { LT_Skill_MechTech_Points, "MechTech Points: +{0}" },

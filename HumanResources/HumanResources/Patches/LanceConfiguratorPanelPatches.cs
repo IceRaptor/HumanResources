@@ -16,7 +16,7 @@ namespace HumanResources.Patches
             List<Pilot> selectablePilots = new List<Pilot>();
             foreach (Pilot p in pilots)
             {
-                CrewDetails details = new CrewDetails(p.pilotDef);
+                CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
                 if (details.IsMechWarrior || details.IsVehicleCrew)
                 {
                     Mod.Log.Debug?.Write($"Pilot {p.Name} is a mechwarrior or vehicle crew, adding as option");

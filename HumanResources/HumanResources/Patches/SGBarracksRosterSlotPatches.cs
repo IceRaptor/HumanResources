@@ -22,7 +22,7 @@ namespace HumanResources.Patches
             Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
             
             // TODO: This may need to be improved, as it's used inside a loop. Maybe write to company stats?
-            CrewDetails details = ___pilot.pilotDef.Evaluate();
+            CrewDetails details = ModState.GetCrewDetails(___pilot.pilotDef);
             Mod.Log.Debug?.Write($"  -- pilot requires: {details.Size} berths");
 
             int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
@@ -67,10 +67,10 @@ namespace HumanResources.Patches
             //  - any faction alignment for units
             //  - any reputation modifiers
 
-            ___costText.SetText(SimGameState.GetCBillString(details.Bonus));
+            ___costText.SetText(SimGameState.GetCBillString(details.HiringBonus));
 
             UIColor costColor = UIColor.Red;
-            if (details.Bonus <= ModState.SimGameState.Funds) costColor = UIColor.White;
+            if (details.HiringBonus <= ModState.SimGameState.Funds) costColor = UIColor.White;
             ___costTextColor.SetUIColor(costColor);
         }
     }
@@ -119,7 +119,7 @@ namespace HumanResources.Patches
             if (___pilot == null) return;
             Mod.Log.Debug?.Write($"POST Calling refresh for pilot: {___pilot.Name}");
 
-            CrewDetails details = ___pilot.pilotDef.Evaluate();
+            CrewDetails details = ModState.GetCrewDetails(___pilot.pilotDef);
 
             // Find the common GameObjects we need to manipulate
             GameObject portraitOverride = GetOrCreateProfileOverride(___portrait);
@@ -167,7 +167,7 @@ namespace HumanResources.Patches
 
                 LocalizableText lt2 = texts[1];
                 string skillText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Skill_Aerospace_Points],
-                    new object[] { details.AerospacePoints }).ToString();
+                    new object[] { details.Value }).ToString();
                 lt2.SetText(skillText);
 
                 // Force the font size here, otherwise the right hand panel isn't correct
@@ -210,7 +210,7 @@ namespace HumanResources.Patches
 
                 LocalizableText lt2 = texts[1];
                 string skillText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Skill_MechTech_Points],
-                    new object[] { details.MechTechPoints }).ToString();
+                    new object[] { details.Value }).ToString();
                 lt2.SetText(skillText);
 
                 // Force the font size here, otherwise the right hand panel isn't correct
@@ -253,7 +253,7 @@ namespace HumanResources.Patches
 
                 LocalizableText lt2 = texts[1];
                 string skillText = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Skill_MedTech_Points],
-                    new object[] { details.MedTechPoints }).ToString();
+                    new object[] { details.Value }).ToString();
                 lt2.SetText(skillText);
 
                 // Force the font size here, otherwise the right hand panel isn't correct

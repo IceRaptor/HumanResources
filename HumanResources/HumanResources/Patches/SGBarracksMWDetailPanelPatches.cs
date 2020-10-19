@@ -20,7 +20,7 @@ namespace HumanResources.Patches
             HBSDOTweenButton ___customizeButton)
         {
             if (p == null) return;
-            CrewDetails details = new CrewDetails(p.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
             {
@@ -42,7 +42,7 @@ namespace HumanResources.Patches
         {
             if (___curPilot == null) return;
 
-            CrewDetails details = new CrewDetails(___curPilot.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(___curPilot.pilotDef);
 
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
             {
@@ -58,7 +58,7 @@ namespace HumanResources.Patches
         {
             if (p == null) return;
 
-            CrewDetails details = new CrewDetails(p.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
             GameObject battleStats = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_ServicePanel_BattleStats);
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
@@ -78,7 +78,7 @@ namespace HumanResources.Patches
             if (p == null) return;
 
             Mod.Log.Debug?.Write($"Updating Dossier for pilot: {p.Name}");
-            CrewDetails details = new CrewDetails(p.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
             {
@@ -102,13 +102,13 @@ namespace HumanResources.Patches
             lastNameLabel.SetText(contractTermS);
 
             string contractTermRemaining = "------";
-            if (details.ContractEndDay != 0)
+            if (details.ExpirationDay != 0)
             {
-                int daysRemaining = details.ContractEndDay - ModState.SimGameState.DaysPassed;
+                int daysRemaining = details.ExpirationDay - ModState.SimGameState.DaysPassed;
                 if (daysRemaining < 0) daysRemaining = 0;
                 contractTermRemaining = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Days_Remaining],
                     new object[] { daysRemaining }).ToString();
-                Mod.Log.Debug?.Write($" {daysRemaining} daysRemaining = {ModState.SimGameState.DaysPassed} daysPassed - {details.ContractEndDay} endDay");
+                Mod.Log.Debug?.Write($" {daysRemaining} daysRemaining = {ModState.SimGameState.DaysPassed} daysPassed - {details.ExpirationDay} endDay");
             }
             
             ___lastName.SetText(contractTermRemaining);

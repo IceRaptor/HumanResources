@@ -1,6 +1,7 @@
 ﻿using BattleTech;
 using BattleTech.Portraits;
 using HBS.Collections;
+using HumanResources.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,13 +18,13 @@ namespace HumanResources.Helper
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count);
             string newCallsign = Mod.CrewNames.MechTech[callsignIdx];
 
-            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MechTechCrews);
-
             string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MECH TECH";
 
-            PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
+            PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
 
-            def.PilotTags.Add(ModTags.Tag_Crew_Type_MechTech);
+            // Before returning, initialize the cache value
+            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
+            ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
         }
@@ -33,13 +34,13 @@ namespace HumanResources.Helper
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count);
             string newCallsign = Mod.CrewNames.MedTech[callsignIdx];
 
-            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.MedTechCrews);
-
             string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MED TECH";
 
-            PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
+            PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
 
-            def.PilotTags.Add(ModTags.Tag_Crew_Type_MedTech);
+            // Before returning, initialize the cache value
+            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
+            ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
         }
@@ -49,20 +50,21 @@ namespace HumanResources.Helper
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.Aerospace.Count);
             string newCallsign = Mod.CrewNames.Aerospace[callsignIdx];
 
-            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.AerospaceWings);
-
             string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS AEROSPACE";
 
-            PilotDef def = GenerateSupportCrew(newCallsign, contractLength, description);
+            PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
 
-            def.PilotTags.Add(ModTags.Tag_Crew_Type_Aerospace);
+            // Before returning, initialize the cache value
+            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
+            ModState.UpdateOrCreateCrewDetails(def, details);
+
 
             return def;
         }
 
-        public static PilotDef GenerateSupportCrew(string callsign, int contractLength, string backgroundDesc)
+        public static PilotDef GenerateSupportCrew(string callsign, string backgroundDesc, out int crewSize, out int crewSkill)
         {
-            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}  contractLength: {contractLength}  backgroundDesc: {backgroundDesc}");
+            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}  backgroundDesc: {backgroundDesc}");
 
             int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + 
                 ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
@@ -76,18 +78,9 @@ namespace HumanResources.Helper
             
             TagSet tagSet = new TagSet();
 
-            // Determine crew size
-            string sizeTag = GaussianHelper.GetCrewSizeTag(0, 0);
-            Mod.Log.Info?.Write($" Adding sizeTag: {sizeTag}");
-            tagSet.Add(sizeTag);
-
-            // Determine crew skill
-            string skillTag = GaussianHelper.GetCrewSkillTag(0, 0);
-            Mod.Log.Info?.Write($" Adding skillTag: {skillTag}");
-            tagSet.Add(skillTag);
-
-            // Determine contract length
-            tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
+            // Determine crew size and skill
+            crewSize  = GaussianHelper.RandomCrewSize(0, 0);
+            crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
 
             // TODO: Randomize N factions - include blacklist / filter
             List<string> employerFactions = ModState.SimGameState.CurSystem.Def.ContractEmployerIDList;
@@ -134,6 +127,7 @@ namespace HumanResources.Helper
             };
             pilotDef2.ForceRefreshAbilityDefs();
             ModState.SimGameState.pilotGenCallsignDiscardPile.Add(pilotDef2.Description.Callsign);
+
             return pilotDef2;
         }
 
@@ -156,10 +150,6 @@ namespace HumanResources.Helper
             TagSet tagSet;
             StringBuilder lifepathDescParagraphs;
             GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
-
-            // Determine contract length
-            int contractLength = PilotHelper.RandomContractLength(Mod.Config.HiringHall.VehicleCrews);
-            tagSet.Add($"{ModTags.Tag_Crew_ContractTerm_Prefix}{contractLength}");
 
             string id = GenerateID();
             Gender voiceGender = newGender;

@@ -32,7 +32,7 @@ namespace HumanResources.Patches
             {
                 string key = item.pilotDef.Description.DisplayName;
                 
-                CrewDetails details = new CrewDetails(item.pilotDef);
+                CrewDetails details = ModState.GetCrewDetails(item.pilotDef);
                 //oldCosts += Mathf.CeilToInt(expenditureCostModifier * (float)___simState.GetMechWarriorValue(item.pilotDef));
 
                 Mod.Log.Debug?.Write($" Pilot: {item.Name} has salary: {details.AdjustedSalary}");

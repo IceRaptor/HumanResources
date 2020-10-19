@@ -88,7 +88,7 @@ namespace HumanResources.Helper
 
             foreach (Pilot pilot in pilots)
             {
-                CrewDetails details = pilot.pilotDef.Evaluate();
+                CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
                 used += details.Size;
             }
 
@@ -151,12 +151,4 @@ namespace HumanResources.Helper
         public (int Lower, int Upper) Vehicles = (0, 0);
     }
 
-
-    public static class PilotExtensions
-    {
-        public static CrewDetails Evaluate(this PilotDef pilotDef)
-        {
-            return new CrewDetails(pilotDef);
-        }
-    }
 }

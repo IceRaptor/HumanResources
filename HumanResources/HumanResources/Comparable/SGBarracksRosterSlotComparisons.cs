@@ -5,7 +5,7 @@ namespace HumanResources.Comparable
 {
     public class SGBarracksRosterSlotComparisons
     {
-        public static int CompareByCrewDetailTypeAndExperience(SGBarracksRosterSlot slot1, SGBarracksRosterSlot slot2)
+        public static int CompareByCrewTypeAndValue(SGBarracksRosterSlot slot1, SGBarracksRosterSlot slot2)
         {
             // Check nullity
             if (slot1 == null && slot2 == null) return 0;
@@ -23,16 +23,16 @@ namespace HumanResources.Comparable
             else if (slot1.Pilot.pilotDef == null && slot2.Pilot.pilotDef != null) return -1;
 
             // Check details
-            CrewDetails cd1 = new CrewDetails(slot1.Pilot.pilotDef);
-            CrewDetails cd2 = new CrewDetails(slot2.Pilot.pilotDef);
+            CrewDetails cd1 = ModState.GetCrewDetails(slot1.Pilot.pilotDef);
+            CrewDetails cd2 = ModState.GetCrewDetails(slot2.Pilot.pilotDef);
 
             // Compare by type
             int typeComparison = CrewDetails.CompareByType(cd1, cd2);
             if (typeComparison != 0) return typeComparison;
 
             // Compare by skill
-            int skillComparison = CrewDetails.CompareBySkill(cd1, cd2);
-            if (skillComparison != 0) return skillComparison;
+            int valueComparison = CrewDetails.CompareByValue(cd1, cd2);
+            if (valueComparison != 0) return valueComparison;
 
             return 0;
         }

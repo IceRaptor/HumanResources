@@ -47,7 +47,7 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write(" -- pilot is selected");
 
                 // Account for the salary 
-                CrewDetails details = ___selectedPilot.pilotDef.Evaluate();
+                CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
                 int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
                 string bonus = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Bonus_Label],
                     new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
@@ -86,7 +86,7 @@ namespace HumanResources.Patches
             {
                 Mod.Log.Debug?.Write(" -- pilot is selected");
 
-                CrewDetails details = ___selectedPilot.pilotDef.Evaluate();
+                CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
                 int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
                 string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hire_Button], 
                     new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
@@ -117,7 +117,7 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write($"Updating MWSelectedPanel for pilot: {p.Name}");
 
                 // Account for the salary 
-                CrewDetails details = p.pilotDef.Evaluate();
+                CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
                 int modifiedSalary = (int)Mathf.RoundToInt(details.AdjustedSalary);
                 string modifiedSalaryS = SimGameState.GetCBillString(modifiedSalary);
                 Mod.Log.Debug?.Write($"  -- salary will be: {modifiedSalaryS}");
@@ -143,7 +143,7 @@ namespace HumanResources.Patches
             {
                 ___WarningAreaObject.SetActive(true);
 
-                CrewDetails details = new CrewDetails(___selectedPilot.pilotDef);
+                CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
 
                 string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Contract_Term],
                     new object[] { details.ContractTerm }

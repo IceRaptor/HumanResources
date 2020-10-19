@@ -4,7 +4,7 @@ namespace HumanResources.Helper
 {
     public static class GaussianHelper
     {
-        public static string GetCrewSkillTag(double muMod, double sigmaMod)
+        public static int RandomCrewSkill(double muMod, double sigmaMod)
         {
             float[] breakpoints = Mod.Config.HiringHall.SkillDistribution.Breakpoints;
 
@@ -14,11 +14,10 @@ namespace HumanResources.Helper
             double baseSigma = Mod.Config.HiringHall.SkillDistribution.Sigma;
             double sigma = baseSigma + sigmaMod;
 
-            int size = GetIndex(mu, sigma, breakpoints);
-            return String.Format(ModTags.Tag_Crew_Skill_Template, new object[] { size });
+            return GetIndex(mu, sigma, breakpoints);
         }
 
-        public static string GetCrewSizeTag(double muMod, double sigmaMod)
+        public static int RandomCrewSize(double muMod, double sigmaMod)
         {
             float[] breakpoints = Mod.Config.HiringHall.SizeDistribution.Breakpoints;
 
@@ -28,8 +27,7 @@ namespace HumanResources.Helper
             double baseSigma = Mod.Config.HiringHall.SizeDistribution.Sigma;
             double sigma = baseSigma + sigmaMod;
 
-            int size = GetIndex(mu, sigma, breakpoints);
-            return String.Format(ModTags.Tag_Crew_Size_Template, new object[] { size });
+            return GetIndex(mu, sigma, breakpoints);
         }
 
         private static int GetIndex(double mean, double stdDev, float[] breakpoints)
