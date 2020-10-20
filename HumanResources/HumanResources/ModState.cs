@@ -25,8 +25,6 @@ namespace HumanResources
 
     public static class ModState
     {
-        public static bool HasLoadedAssets = false;
-
         public static PilotCreateState PilotCreate = new PilotCreateState();
         public static SimGameState SimGameState = null;
         public static Queue<(Pilot Pilot, CrewDetails Details)> ExpiredContracts = 
@@ -66,7 +64,6 @@ namespace HumanResources
                 if (tag.StartsWith(ModTags.Tag_GUID))
                 {
                     guid = tag.Substring(ModTags.Tag_GUID.Length);
-                    Mod.Log.Debug?.Write($"Found GUID: {guid} in pilot tags.");
                     break;
                 }
             }
@@ -114,7 +111,6 @@ namespace HumanResources
                 if (tag.StartsWith(ModTags.Tag_GUID))
                 {
                     guid = tag.Substring(ModTags.Tag_GUID.Length);
-                    Mod.Log.Debug?.Write($"Found GUID: {guid} in pilot tags.");
                     break;
                 }
             }

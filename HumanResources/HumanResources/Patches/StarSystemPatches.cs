@@ -191,30 +191,47 @@ namespace HumanResources.Patches
                 }
             }
 
-            for (int i = 0; i < aerospace; i++)
+            if (Mod.Config.HiringHall.AerospaceWings.Enabled)
             {
-                PilotDef pDef = PilotGen.GenerateAerospaceCrew();
-                __instance.AvailablePilots.Add(pDef);
+                for (int i = 0; i < aerospace; i++)
+                {
+                    PilotDef pDef = PilotGen.GenerateAerospaceCrew();
+                    __instance.AvailablePilots.Add(pDef);
+                }
             }
 
-            for (int i = 0; i < mechTechs; i++)
+            if (Mod.Config.HiringHall.MechTechCrews.Enabled)
             {
-                PilotDef pDef = PilotGen.GenerateMechTechCrew();
-                __instance.AvailablePilots.Add(pDef);
+                for (int i = 0; i < mechTechs; i++)
+                {
+                    PilotDef pDef = PilotGen.GenerateMechTechCrew();
+                    __instance.AvailablePilots.Add(pDef);
+                }
             }
 
-            for (int i = 0; i < medTechs; i++)
+            if (Mod.Config.HiringHall.MedTechCrews.Enabled)
             {
-                PilotDef pDef = PilotGen.GenerateMedTechCrew();
-                __instance.AvailablePilots.Add(pDef);
+                for (int i = 0; i < medTechs; i++)
+                {
+                    PilotDef pDef = PilotGen.GenerateMedTechCrew();
+                    __instance.AvailablePilots.Add(pDef);
+                }
             }
 
-            for (int i = 0; i < vehicleCrews; i++)
+            if (Mod.Config.HiringHall.VehicleCrews.Enabled)
             {
-                PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
-                __instance.AvailablePilots.Add(pDef);
-            }
+                for (int i = 0; i < vehicleCrews; i++)
+                {
+                    PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
 
+                    Mod.Log.Debug?.Write($"CREATED VEHICLE CREW");
+                    // Before returning, initialize the cache value
+                    CrewDetails details = new CrewDetails(pDef, CrewType.VehicleCrew);
+                    ModState.UpdateOrCreateCrewDetails(pDef, details);
+
+                    __instance.AvailablePilots.Add(pDef);
+                }
+            }
             return false;
         }
     }

@@ -75,33 +75,33 @@ namespace HumanResources.Patches
         }
     }
 
-    [HarmonyPatch(typeof(SGBarracksRosterSlot), "Init")]
-    static class SGBarracksRosterSlot_Init
-    {
-        static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
-        {
-            Mod.Log.Debug?.Write($"Initing with pilot: {___pilot?.Name}");
-        }
-    }
+    //[HarmonyPatch(typeof(SGBarracksRosterSlot), "Init")]
+    //static class SGBarracksRosterSlot_Init
+    //{
+    //    static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
+    //    {
+    //        Mod.Log.Debug?.Write($"Initing with pilot: {___pilot?.Name}");
+    //    }
+    //}
 
-    [HarmonyPatch(typeof(SGBarracksRosterSlot), "InitNoDrag")]
-    static class SGBarracksRosterSlot_InitNoDrag
-    {
-        static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
-        {
-            Mod.Log.Debug?.Write($"InitNoDrag with pilot: {___pilot?.Name}");
-        }
-    }
+    //[HarmonyPatch(typeof(SGBarracksRosterSlot), "InitNoDrag")]
+    //static class SGBarracksRosterSlot_InitNoDrag
+    //{
+    //    static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
+    //    {
+    //        Mod.Log.Debug?.Write($"InitNoDrag with pilot: {___pilot?.Name}");
+    //    }
+    //}
 
 
-    [HarmonyPatch(typeof(SGBarracksRosterSlot), "InitNoInteract")]
-    static class SGBarracksRosterSlot_InitNoInteract
-    {
-        static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
-        {
-            Mod.Log.Debug?.Write($"InitNoInteract with pilot: {___pilot?.Name}");
-        }
-    }
+    //[HarmonyPatch(typeof(SGBarracksRosterSlot), "InitNoInteract")]
+    //static class SGBarracksRosterSlot_InitNoInteract
+    //{
+    //    static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
+    //    {
+    //        Mod.Log.Debug?.Write($"InitNoInteract with pilot: {___pilot?.Name}");
+    //    }
+    //}
 
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "Refresh")]
     static class SGBarracksRosterSlot_Refresh

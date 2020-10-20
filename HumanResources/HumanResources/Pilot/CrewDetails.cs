@@ -22,6 +22,8 @@ namespace HumanResources.Extensions
         // Immutable properties
         public string GUID { get; protected set; }
         public CrewType Type { get; protected set; }
+        public bool IsPlayer { get; protected set; }
+
         public int Size { get; protected set; }
         public int Skill { get; protected set; }
         public int Value { get; protected set; }
@@ -64,7 +66,6 @@ namespace HumanResources.Extensions
             this.Skill = skill;
 
             this.Loyalty = 0;
-            this.ExpirationDay = 999999;
 
             // Calculate value and set required tags
             CrewOpts config = null;
@@ -112,7 +113,21 @@ namespace HumanResources.Extensions
             this.HiringBonus = bonus;
 
             // Determine contract length
-            ContractTerm = PilotHelper.RandomContractLength(config);
+            if (pilotDef.IsFree && pilotDef.IsImmortal)
+            {
+                IsPlayer = true;
+                Mod.Log.Debug?.Write("Setting expiration and contract term to 0 for player character.");
+                this.ContractTerm = 0; // Free and Immortal = player character
+                this.ExpirationDay = 0;
+            }
+            else
+            {
+                IsPlayer = false;
+                Mod.Log.Debug?.Write("Generating contract length, initializating expiration day");
+                this.ContractTerm = PilotHelper.RandomContractLength(config);
+                this.ExpirationDay = 999999;
+            }
+
 
         }
 
@@ -220,9 +235,9 @@ namespace HumanResources.Extensions
             if (IsMechWarrior) priority = 0;
             else if (IsVehicleCrew) priority = 1;
             else if (IsVehicleCrew) priority = 2;
-            else if (IsAerospaceCrew) priority = 3;
-            else if (IsMechTechCrew) priority = 4;
-            else if (IsMedTechCrew) priority = 5;
+            else if (IsMechTechCrew) priority = 3;
+            else if (IsMedTechCrew) priority = 4;
+            else if (IsAerospaceCrew) priority = 5;
 
             return priority;
         }

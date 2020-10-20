@@ -16,23 +16,19 @@ namespace HumanResources.Patches
     {
         static void Postfix(SimGameState __instance, GameInstance game, SimGameDifficulty difficulty)
         {
-            if (!ModState.HasLoadedAssets)
-            {
-                DataManager dm = UnityGameInstance.BattleTechGame.DataManager;
-                LoadRequest loadRequest = dm.CreateLoadRequest();
+            DataManager dm = UnityGameInstance.BattleTechGame.DataManager;
+            LoadRequest loadRequest = dm.CreateLoadRequest();
 
-                // Need to load each unique icon
-                Mod.Log.Info?.Write("-- Loading HUD icons");
+            // Need to load each unique icon
+            Mod.Log.Info?.Write("-- Loading HUD icons");
 
-                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Aerospace, null);
-                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MechTech, null);
-                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MedTech, null);
-                loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Vehicle, null);
+            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Aerospace, null);
+            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MechTech, null);
+            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_MedTech, null);
+            loadRequest.AddLoadRequest<SVGAsset>(BattleTechResourceType.SVGAsset, Mod.Config.Icons.CrewPortrait_Vehicle, null);
 
-                loadRequest.ProcessRequests();
-                ModState.HasLoadedAssets = true;
-                Mod.Log.Info?.Write("--  Done!");
-            }
+            loadRequest.ProcessRequests();
+            Mod.Log.Info?.Write("--  Done!");
 
             // Reinitialize state
             ModState.Reset();
