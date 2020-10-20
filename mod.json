@@ -14,11 +14,13 @@
     "Manifest": [ 
         { "Type": "BaseDescriptionDef", "Path": "tooltip/" },
         { "Type": "SimGameEventDef", "Path": "events/" },
+        { "Type": "SimGameStatDescDef", "Path": "statDescriptions/" },
         { "Type": "SVGAsset", "Path": "icons/"} 
     ],
     "Settings": {
         "Debug" : true,
         "Trace" : false,
+        "DebugCommands" : true,
         "Icons" : {
             "CrewPortrait_Aerospace" : "hr_jet-fighter",
             "CrewPortrait_MechTech" : "hr_auto-repair",
@@ -37,7 +39,7 @@
                 "Defaults" : { "MechWarriors" : 0.0, "VehicleCrews" : 0.0, "MechTechs" : 0.0, "MedTechs": 0.0 },
                 "PlanetTagModifiers" : {
                     "planet_civ_innersphere" :                  { "MechWarriors" : 1.0, "VehicleCrews" : 2.0, "MechTechs" : 1.0, "MedTechs" : 1.0, "Aerospace" : 1.0 },
-                    "planet_civ_periphery" :                     { "MechWarriors" : 1.0, "VehicleCrews" : 1.5, "MechTechs" : 0.5, "MedTechs" : 0.5, "Aerospace" : 1.0 },
+                    "planet_civ_periphery" :                     { "MechWarriors" : 0.5, "VehicleCrews" : 1.0, "MechTechs" : 0.5, "MedTechs" : 1.5, "Aerospace" : 1.0 },
                     "planet_civ_primitive" :                      { "MechWarriors" : -2.0, "VehicleCrews" : 0.5, "MechTechs" : -2, "MedTechs" : -4.0, "Aerospace" : 1.0 },
 
                     "planet_other_capital" :                     { "MechWarriors" : 2.0, "VehicleCrews" : 2.0, "MechTechs" : 2.0, "MedTechs" : 2.0, "Aerospace" : 2.0  },

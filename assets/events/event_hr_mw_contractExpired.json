@@ -129,7 +129,7 @@
     {
       "Description": {
         "Id": "outcome_1",
-        "Name": "{TGT_MW.Callsign} Signs a new contract with the same terms.",
+        "Name": "{TGT_MW.Callsign} signs a new contract with the same terms.",
         "Details": "Renew the Contract",
         "Icon": null
       },
