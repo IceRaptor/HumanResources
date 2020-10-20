@@ -146,8 +146,6 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Max injuries should be hidden on hiring screen
 * BUG: Colors not updating when you first look at screen
 * BUG: Colors not updating for Mechs in list
-* Contract expiration not decrementing company funds on renewal
-* Contract expiration descriptions are weird
 * Contract desc / pilot isn't getting reset between events
 * Loyalty shouldn't ensure a no-hire bonus, only make it easier
 
