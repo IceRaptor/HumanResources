@@ -139,6 +139,7 @@ namespace HumanResources.Patches
 
             if (details.IsAerospaceCrew)
             {
+                Mod.Log.Debug?.Write($"  -- pilot is Aerospace crew");
                 layoutTitleImg.color = Mod.Config.Crew.AerospaceColor;
 
                 ___portrait.gameObject.SetActive(false);
@@ -182,6 +183,7 @@ namespace HumanResources.Patches
             }
             else if (details.IsMechTechCrew)
             {
+                Mod.Log.Debug?.Write($"  -- pilot is Mechtech crew");
                 layoutTitleImg.color = Mod.Config.Crew.MechTechCrewColor;
 
                 ___portrait.gameObject.SetActive(false);
@@ -225,6 +227,7 @@ namespace HumanResources.Patches
             }
             else if (details.IsMedTechCrew)
             {
+                Mod.Log.Debug?.Write($"  -- pilot is Medtech crew");
                 layoutTitleImg.color = Mod.Config.Crew.MedTechCrewColor;
 
                 ___portrait.gameObject.SetActive(false);
@@ -267,6 +270,7 @@ namespace HumanResources.Patches
             }
             else if (details.IsVehicleCrew)
             {
+                Mod.Log.Debug?.Write($"  -- pilot is Vehicle crew");
                 layoutTitleImg.color = Mod.Config.Crew.VehicleCrewColor;
 
                 ___portrait.gameObject.SetActive(false);
@@ -284,6 +288,7 @@ namespace HumanResources.Patches
             }
             else
             {
+                Mod.Log.Debug?.Write($"  -- pilot is Mechwarrior");
                 ___portrait.gameObject.SetActive(true);
             }
 

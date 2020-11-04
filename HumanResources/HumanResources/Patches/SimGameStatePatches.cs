@@ -135,6 +135,90 @@ namespace HumanResources.Patches
         }
     }
 
+
+    [HarmonyPatch(typeof(SimGameState), "AddPilotToRoster")]
+    [HarmonyPatch(new Type[] { typeof(PilotDef), typeof(bool), typeof(bool) })]
+    static class SimGameState_AddPilotToRoster
+    {
+        static void Postfix(SimGameState __instance, PilotDef def, bool updatePilotDiscardPile, bool initialHiringDontSpawnMessage)
+        {
+
+            Mod.Log.Info?.Write($"Adding new pilot def: {def} to roster.");
+            CrewDetails details = ModState.GetCrewDetails(def);
+
+            // Add any mechtech, medtech, or aerospace points
+            if (details.IsAerospaceCrew)
+            {
+                // Track our skill points
+                Mod.Log.Info?.Write($"  -- crew is aerospace, adding: {details.Value} aerospace skill");
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                     ModStats.Aerospace_Skill,
+                     StatCollection.StatOperation.Int_Add, details.Value);
+
+                // Track the crew count
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.CrewCount_Aerospace,
+                    StatCollection.StatOperation.Int_Add, 1);
+            }
+            else if (details.IsMechTechCrew)
+            {
+                Mod.Log.Info?.Write($"  -- crew is mechtech, adding: {details.Value} mechtech skill");
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.HBS_Company_MechTech_Skill,
+                    StatCollection.StatOperation.Int_Add, details.Value);
+
+                // Track the crew count
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.CrewCount_MechTechs,
+                    StatCollection.StatOperation.Int_Add, 1);
+            }
+            else if (details.IsMechWarrior)
+            {
+                // Track the crew count
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.CrewCount_MechWarriors,
+                    StatCollection.StatOperation.Int_Add, 1);
+            }
+            else if (details.IsMedTechCrew)
+            {
+                Mod.Log.Info?.Write($"  -- crew is medtech, adding: {details.Value} medtech skill");
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.HBS_Company_MedTech_Skill,
+                    StatCollection.StatOperation.Int_Add, details.Value);
+
+                // Track the crew count
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.CrewCount_MedTechs,
+                    StatCollection.StatOperation.Int_Add, 1);
+            }
+            else if (details.IsVehicleCrew)
+            {
+                // Track the crew count
+                __instance.CompanyStats.ModifyStat<int>(null, -1,
+                    ModStats.CrewCount_VehicleCrews,
+                    StatCollection.StatOperation.Int_Add, 1);
+            }
+
+            if (ModState.IsHiringFlow)
+            {
+                // We are a real hire, not from initial spawn
+                Mod.Log.Debug?.Write("  -- performing hiring checks.");
+
+                // An actual hire versus start-of-game initialization. Revert the costs previously applied in HirePilot
+                int purchaseCostAfterReputationModifier = __instance.CurSystem.GetPurchaseCostAfterReputationModifier(__instance.GetMechWarriorHiringCost(def));
+                __instance.AddFunds(purchaseCostAfterReputationModifier, null, true, true);
+
+                // Apply their hiring bonus
+                Mod.Log.Info?.Write($"Hiring crew for bonus: {details.AdjustedBonus}");
+                __instance.AddFunds(-details.AdjustedBonus, null, true, true);
+
+                // Only refresh if we're actually in game
+                __instance.RoomManager.RefreshTimeline(false);
+                __instance.RoomManager.RefreshDisplay();
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(SimGameState), "DismissPilot")]
     [HarmonyPatch(new Type[] { typeof(Pilot) })]
     static class SimGameState_DismissPilot

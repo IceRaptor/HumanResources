@@ -100,7 +100,8 @@ namespace HumanResources.Helper
             int rand = Mod.Random.Next(opts.MinContractDaysMulti, opts.MaxContractDaysMulti);
             int length = rand * opts.BaseDaysInContract;
 
-            Mod.Log.Debug?.Write($"Generated random contract length of: {length} days.");
+            Mod.Log.Debug?.Write($"Generated random contract length of: {length} days from baseDays: {opts.BaseDaysInContract} " +
+                $"x rand: {rand} from low: {opts.MinContractDaysMulti} to high: {opts.MaxContractDaysMulti}");
 
             return length;
         }

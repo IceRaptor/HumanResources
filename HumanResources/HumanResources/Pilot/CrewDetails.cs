@@ -58,6 +58,12 @@ namespace HumanResources.Extensions
             }
         }
 
+        // ONly for serialization?
+        public CrewDetails()
+        {
+
+        }
+
         public CrewDetails(PilotDef pilotDef, CrewType type, int size = 0, int skill = 0)
         {
             this.Type = type;

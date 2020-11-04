@@ -101,7 +101,7 @@ namespace HumanResources.Patches
             lastNameLabel.SetText(contractTermS);
 
             string contractTermRemaining = "------";
-            if (!details.IsPlayer && details.ExpirationDay != 0)
+            if (!details.IsPlayer && details.ContractTerm != 0)
             {
                 int daysRemaining = details.ExpirationDay - ModState.SimGameState.DaysPassed;
                 if (daysRemaining < 0) daysRemaining = 0;

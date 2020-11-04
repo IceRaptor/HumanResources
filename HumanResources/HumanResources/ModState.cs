@@ -29,6 +29,7 @@ namespace HumanResources
         public static SimGameState SimGameState = null;
         public static Queue<(Pilot Pilot, CrewDetails Details)> ExpiredContracts = 
             new Queue<(Pilot, CrewDetails)>();
+        public static bool IsHiringFlow = false;
 
         private static Dictionary<string, CrewDetails> crewDetailsCache = new Dictionary<string, CrewDetails>();
 
@@ -39,6 +40,7 @@ namespace HumanResources
             SimGameState = null;
             PilotCreate = new PilotCreateState();
             ExpiredContracts.Clear();
+            IsHiringFlow = false;
         }
 
         // --- Methods manipulating CheckResults
@@ -83,8 +85,9 @@ namespace HumanResources
             {
                 // Doesn't exist in cache, read from the company stat
                 string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
-                Statistic detailsCompanyStat = ModState.SimGameState.CompanyStats.GetStatistic(companyStatName);
+                Mod.Log.Debug?.Write($"Trying to read companyStatName: {companyStatName}");
 
+                Statistic detailsCompanyStat = ModState.SimGameState.CompanyStats.GetStatistic(companyStatName);
                 if (detailsCompanyStat == null)
                 {
                     Mod.Log.Warn?.Write($"Failed to read GUID {guid} from companyStat: {companyStatName}. This should never happen!");
@@ -92,6 +95,8 @@ namespace HumanResources
                 }
 
                 string statVal = detailsCompanyStat.Value<string>();
+                Mod.Log.Debug?.Write($"Read companyStat value as: {statVal}");
+
                 details = JsonConvert.DeserializeObject<CrewDetails>(statVal);
                 Mod.Log.Debug?.Write("Fetched details from companyStats serialization.");
             }

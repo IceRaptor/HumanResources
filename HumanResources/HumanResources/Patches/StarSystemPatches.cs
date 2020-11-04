@@ -10,104 +10,20 @@ namespace HumanResources.Patches
 {
 
     [HarmonyPatch(typeof(StarSystem), "HirePilot")]
-    [HarmonyBefore("io.github.mpstark.AbilityRealizer")]
-    static class StartSystem_HirePilot
+    [HarmonyBefore(new string[] { "io.github.mpstark.AbilityRealizer" })]
+    static class StarSystem_HirePilot
     {
-        // Contains a duplicate of https://github.com/BattletechModders/AbilityRealizer/blob/5fdbb5aa1576f18056d2b2a6236891f41fe44c26/AbilityRealizer/Patches/StarSystem.cs#L14
-        //   plus extensions 
-        static bool Prefix(StarSystem __instance, PilotDef def)
+
+        static void Prefix()
         {
+            Mod.Log.Debug?.Write("ENABLING HIRING FLOW FLAG");
+            ModState.IsHiringFlow = false;
+        }
 
-            //		if (!__instance.AvailablePilots.Contains(def))
-            if (__instance.AvailablePilots.Any(x => x.Description.Id == def.Description.Id))
-            {
-                __instance.AvailablePilots.Remove(def);
-                if (__instance.PermanentRonin.Contains(def))
-                {
-                    __instance.PermanentRonin.Remove(def);
-                    __instance.Sim.UsedRoninIDs.Add(def.Description.Id);
-                }
-                def.SetDayOfHire(__instance.Sim.DaysPassed);
-                __instance.Sim.AddPilotToRoster(def, true, false);
-
-                CrewDetails details = ModState.GetCrewDetails(def);
-
-                // Apply their hiring bonus
-                __instance.Sim.AddFunds(-details.AdjustedBonus, null, true, true);
-
-                // Add any mechtech, medtech, or aerospace points
-                if (details.IsAerospaceCrew)
-                {
-                    // Track our skill points
-                    Statistic aerospaceSkill = __instance.Sim.CompanyStats.GetStatistic(ModStats.Aerospace_Skill);
-                        __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.Aerospace_Skill, 0);
-
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                         ModStats.Aerospace_Skill,
-                         StatCollection.StatOperation.Int_Add, details.Value);
-
-                    // Track the crew count
-                    Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_Aerospace);
-                    __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.CrewCount_Aerospace, 0);
-
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.CrewCount_Aerospace,
-                        StatCollection.StatOperation.Int_Add, 1);
-                }
-                if (details.IsMechTechCrew)
-                {
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.HBS_Company_MechTech_Skill,
-                        StatCollection.StatOperation.Int_Add, details.Value);
-
-                    // Track the crew count
-                    Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_MechTechs);
-                    __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechTechs, 0);
-
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.CrewCount_MechTechs,
-                        StatCollection.StatOperation.Int_Add, 1);
-                }
-                else if (details.IsMechWarrior)
-                {
-                    // Track the crew count
-                    Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_MechWarriors);
-                    __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MechWarriors, 0);
-
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.CrewCount_MechWarriors,
-                        StatCollection.StatOperation.Int_Add, 1);
-                }
-                else if (details.IsMedTechCrew)
-                {
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.HBS_Company_MedTech_Skill,
-                        StatCollection.StatOperation.Int_Add, details.Value);
-
-                    // Track the crew count
-                    Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_MedTechs);
-                    __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.CrewCount_MedTechs, 0);
-
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.CrewCount_MedTechs,
-                        StatCollection.StatOperation.Int_Add, 1);
-                }
-                else if (details.IsVehicleCrew)
-                {
-                    // Track the crew count
-                    Statistic crewCount = __instance.Sim.CompanyStats.GetStatistic(ModStats.CrewCount_VehicleCrews);
-                    __instance.Sim.CompanyStats.AddStatistic<int>(ModStats.CrewCount_VehicleCrews, 0);
-
-                    __instance.Sim.CompanyStats.ModifyStat<int>(null, -1,
-                        ModStats.CrewCount_VehicleCrews,
-                        StatCollection.StatOperation.Int_Add, 1);
-                }
-
-                __instance.Sim.RoomManager.RefreshTimeline(false);
-                __instance.Sim.RoomManager.RefreshDisplay();
-            }
-
-            return false;
+        static void Postfix()
+        {
+            Mod.Log.Debug?.Write("DISABLING HIRING FLOW FLAG");
+            ModState.IsHiringFlow = false;
         }
     }
 

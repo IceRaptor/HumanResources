@@ -23,7 +23,7 @@ namespace HumanResources.Helper
             PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
-            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
+            CrewDetails details = new CrewDetails(def, CrewType.MechTechCrew, crewSize, crewSkill);
             ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
@@ -55,7 +55,7 @@ namespace HumanResources.Helper
             PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
-            CrewDetails details = new CrewDetails(def, CrewType.MechTechCrew, crewSize, crewSkill);
+            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
             ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
