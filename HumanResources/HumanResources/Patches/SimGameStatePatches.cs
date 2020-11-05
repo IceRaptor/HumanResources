@@ -138,9 +138,10 @@ namespace HumanResources.Patches
 
     [HarmonyPatch(typeof(SimGameState), "AddPilotToRoster")]
     [HarmonyPatch(new Type[] { typeof(PilotDef), typeof(bool), typeof(bool) })]
+    [HarmonyAfter(new string[] { "us.tbone.TisButAScratch" })]
     static class SimGameState_AddPilotToRoster
     {
-        static void Postfix(SimGameState __instance, PilotDef def, bool updatePilotDiscardPile, bool initialHiringDontSpawnMessage)
+        static void Postfix(SimGameState __instance, PilotDef def)
         {
 
             Mod.Log.Info?.Write($"Adding new pilot def: {def} to roster.");
@@ -216,6 +217,14 @@ namespace HumanResources.Patches
                 __instance.RoomManager.RefreshTimeline(false);
                 __instance.RoomManager.RefreshDisplay();
             }
+
+            // DEBUG
+            Mod.Log.Debug?.Write($"ITERATING TAGS ON DEF");
+            foreach (string tag in def.PilotTags)
+            {
+                Mod.Log.Debug?.Write($" -- tag: {tag}");
+            }
+
         }
     }
 

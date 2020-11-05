@@ -15,7 +15,7 @@ namespace HumanResources.Helper
 
         public static PilotDef GenerateMechTechCrew()
         {
-            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count);
+            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count - 1);
             string newCallsign = Mod.CrewNames.MechTech[callsignIdx];
 
             string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MECH TECH";
@@ -31,7 +31,7 @@ namespace HumanResources.Helper
 
         public static PilotDef GenerateMedTechCrew()
         {
-            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count);
+            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count - 1);
             string newCallsign = Mod.CrewNames.MedTech[callsignIdx];
 
             string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MED TECH";
@@ -47,7 +47,7 @@ namespace HumanResources.Helper
 
         public static PilotDef GenerateAerospaceCrew()
         {
-            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.Aerospace.Count);
+            int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.Aerospace.Count - 1);
             string newCallsign = Mod.CrewNames.Aerospace[callsignIdx];
 
             string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS AEROSPACE";

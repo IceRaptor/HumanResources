@@ -238,12 +238,13 @@ namespace HumanResources.Extensions
         {
             int priority = 0;
 
-            if (IsMechWarrior) priority = 0;
-            else if (IsVehicleCrew) priority = 1;
+            if (IsPlayer) priority = 0;
+            if (IsMechWarrior) priority = 1;
             else if (IsVehicleCrew) priority = 2;
-            else if (IsMechTechCrew) priority = 3;
-            else if (IsMedTechCrew) priority = 4;
-            else if (IsAerospaceCrew) priority = 5;
+            else if (IsVehicleCrew) priority = 3;
+            else if (IsMechTechCrew) priority = 4;
+            else if (IsMedTechCrew) priority = 5;
+            else if (IsAerospaceCrew) priority = 6;
 
             return priority;
         }
