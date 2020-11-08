@@ -111,7 +111,8 @@ namespace HumanResources.Patches
             }
             
             ___lastName.SetText(contractTermRemaining);
-     
+            Mod.Log.Debug?.Write($"  -- done updating dossier for pilot: {p.Name}");
+
         }
     }
 

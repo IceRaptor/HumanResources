@@ -20,16 +20,16 @@ namespace HumanResources.Extensions
     public class CrewDetails
     {
         // Immutable properties
-        public string GUID { get; protected set; }
-        public CrewType Type { get; protected set; }
-        public bool IsPlayer { get; protected set; }
+        public string GUID { get; set; }
+        public CrewType Type { get; set; }
+        public bool IsPlayer { get; set; }
 
-        public int Size { get; protected set; }
-        public int Skill { get; protected set; }
-        public int Value { get; protected set; }
-        public int HiringBonus { get; protected set; }
-        public int Salary { get; protected set; }
-        public int ContractTerm { get; protected set; }
+        public int Size { get; set; }
+        public int Skill { get; set; }
+        public int Value { get; set; }
+        public int HiringBonus { get; set; }
+        public int Salary { get; set; }
+        public int ContractTerm { get; set; }
 
         // Mutable properties
         public int Loyalty { get; set; }
@@ -58,7 +58,14 @@ namespace HumanResources.Extensions
             }
         }
 
-        // ONly for serialization?
+        public override string ToString()
+        {
+            return $"GUID:{GUID}  Type: {Type}  IsPlayer: {IsPlayer}  Size: {Size}  Skill: {Skill}  Value: {Value}  HiringBonus: {HiringBonus}" +
+                $"  Salary: {Salary}  ContractTerm: {ContractTerm}  Loyalty: {Loyalty}  ExpirationDay: {ExpirationDay}" +
+                $"  AdjustedBonus: {AdjustedBonus}  AdjustedSalary: {AdjustedSalary}";
+        }
+
+        // Empty constructor for serialization
         public CrewDetails()
         {
 

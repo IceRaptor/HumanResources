@@ -27,6 +27,12 @@ namespace HumanResources.Patches
                 {
                     slot.InitNoDrag(pilot, ModState.SimGameState, pilotSelectedOnClick, showTheCost: true);
                     slot.SetDraggable(isDraggable: false);
+
+                    // Update the pilot's contract end date
+                    CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+                    details.ExpirationDay = ModState.SimGameState.DaysPassed + details.ContractTerm;
+                    Mod.Log.Debug?.Write($"  - pilot's contract ends on day: {details.ExpirationDay}");
+                    ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
                 }
                 else
                 {
@@ -34,12 +40,6 @@ namespace HumanResources.Patches
                 }
                 ___currentRoster.Add(pilot.GUID, slot);
                 slot.AddToRadioSet(__instance.listRadioSet);
-
-                // Update the pilot's contract end date
-                CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
-                details.ExpirationDay = ModState.SimGameState.DaysPassed + details.ContractTerm;
-                Mod.Log.Debug?.Write($"  - pilot's contract ends on day: {details.ExpirationDay}");
-                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
 
                 // Performance tweak; skip
                 //ForceRefreshImmediate();

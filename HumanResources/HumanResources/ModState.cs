@@ -61,6 +61,7 @@ namespace HumanResources
 
             string guid = null;
             // Check the pilotDef for an existing guid
+            Mod.Log.Debug?.Write($"Checking pilot tags for GUID in Get");
             foreach (string tag in pilotDef.PilotTags)
             {
                 if (tag.StartsWith(ModTags.Tag_GUID))
@@ -77,6 +78,10 @@ namespace HumanResources
                 CrewDetails newDetails = new CrewDetails(pilotDef, CrewType.MechWarrior);
                 crewDetailsCache[newDetails.GUID] = newDetails;
                 return newDetails;
+            }
+            else
+            {
+                Mod.Log.Debug?.Write($"Reading crew details using GUID: {guid}");
             }
 
             CrewDetails details;
@@ -98,7 +103,14 @@ namespace HumanResources
                 Mod.Log.Debug?.Write($"Read companyStat value as: {statVal}");
 
                 details = JsonConvert.DeserializeObject<CrewDetails>(statVal);
-                Mod.Log.Debug?.Write("Fetched details from companyStats serialization.");
+                Mod.Log.Debug?.Write($"Fetched details from companyStats serialization: {details}.");
+
+                // Add to cache
+                crewDetailsCache[guid] = details;
+            }
+            else
+            {
+                Mod.Log.Debug?.Write($"Found cached details value: {details}");
             }
 
             return details;
@@ -110,7 +122,7 @@ namespace HumanResources
 
             string guid = null;
             // Check the pilotDef for an existing guid
-            Mod.Log.Debug?.Write($"Checking pilot tags for GUID");
+            Mod.Log.Debug?.Write($"Checking pilot tags for GUID in UpdateOrCreate");
             foreach (string tag in pilotDef.PilotTags)
             {
                 if (tag.StartsWith(ModTags.Tag_GUID))
@@ -123,8 +135,12 @@ namespace HumanResources
             // Generate a new guid if not present, and add it as a tag
             if (guid == null)
             {
-                Mod.Log.Debug?.Write($"No GUID found for pilotDef, using details GUID: {newDetails.GUID}");
+                Mod.Log.Debug?.Write($" -- no GUID found for pilotDef, adding new details GUID: {newDetails.GUID}");
                 pilotDef.PilotTags.Add($"{ModTags.Tag_GUID}{newDetails.GUID}");
+            }
+            else
+            {
+                Mod.Log.Debug?.Write($" -- pilot has existing details GUID: {guid}");
             }
 
             // TODO: Check for GUID mismatch in tags / details
@@ -138,7 +154,7 @@ namespace HumanResources
 
             string serializedDetails = JsonConvert.SerializeObject(newDetails);
             detailsCompanyStat.SetValue<string>(serializedDetails);
-            Mod.Log.Debug?.Write($"CompanyStat: {companyStatName} updated with new CrewDetails.");
+            Mod.Log.Debug?.Write($"CompanyStat: {companyStatName} updated with new CrewDetails: {serializedDetails}.");
 
             // Update the cache
             crewDetailsCache[guid] = newDetails;
