@@ -61,10 +61,9 @@ namespace HumanResources
 
             string guid = null;
             // Check the pilotDef for an existing guid
-            Mod.Log.Debug?.Write($"Checking pilot tags for GUID in Get");
+            //Mod.Log.Debug?.Write($"Checking pilot tags for GUID in Get");
             foreach (string tag in pilotDef.PilotTags)
             {
-                Mod.Log.Debug?.Write($" -- tag: {tag}");
                 if (tag.StartsWith(ModTags.Tag_GUID))
                 {
                     guid = tag.Substring(ModTags.Tag_GUID.Length);
