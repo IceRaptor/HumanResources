@@ -64,24 +64,25 @@ namespace HumanResources
             Mod.Log.Debug?.Write($"Checking pilot tags for GUID in Get");
             foreach (string tag in pilotDef.PilotTags)
             {
+                Mod.Log.Debug?.Write($" -- tag: {tag}");
                 if (tag.StartsWith(ModTags.Tag_GUID))
                 {
                     guid = tag.Substring(ModTags.Tag_GUID.Length);
-                    break;
                 }
             }
 
             // If we cannot find a GUID, assume we're a vanilla MechWarrior and generate a new CrewDetails
             if (guid == null)
             {
-                Mod.Log.Warn?.Write($"Failed to find GUID for pilotDef: {pilotDef} - creating a new default one for mechwarrior");
                 CrewDetails newDetails = new CrewDetails(pilotDef, CrewType.MechWarrior);
                 crewDetailsCache[newDetails.GUID] = newDetails;
+                Mod.Log.Warn?.Write($"Failed to find GUID for pilotDef: {pilotDef} - creating a new default one for mechwarrior");
+                UpdateOrCreateCrewDetails(pilotDef, newDetails);
                 return newDetails;
             }
             else
             {
-                Mod.Log.Debug?.Write($"Reading crew details using GUID: {guid}");
+                Mod.Log.Debug?.Write($"Reading crew details using GUID from tag: {guid}");
             }
 
             CrewDetails details;
@@ -96,14 +97,30 @@ namespace HumanResources
                 if (detailsCompanyStat == null)
                 {
                     Mod.Log.Warn?.Write($"Failed to read GUID {guid} from companyStat: {companyStatName}. This should never happen!");
+                    Mod.Log.Warn?.Write($"Iterating company crew stats");
+                    foreach (KeyValuePair<string, Statistic> kvp in ModState.SimGameState.CompanyStats)
+                    {
+                        if (kvp.Key.StartsWith(ModStats.Company_CrewDetail_Prefix))
+                        {
+                            Mod.Log.Debug?.Write($"-- Found stat: {kvp.Key}");
+                            Mod.Log.Debug?.Write($"--       '{kvp.Value.Value<string>()}'");
+                        }
+                    }
                     return null;
                 }
 
                 string statVal = detailsCompanyStat.Value<string>();
                 Mod.Log.Debug?.Write($"Read companyStat value as: {statVal}");
 
-                details = JsonConvert.DeserializeObject<CrewDetails>(statVal);
-                Mod.Log.Debug?.Write($"Fetched details from companyStats serialization: {details}.");
+                try
+                {
+                    details = JsonConvert.DeserializeObject<CrewDetails>(statVal);
+                    Mod.Log.Debug?.Write($"Fetched details from companyStats serialization: {details}.");
+                }
+                catch (Exception e)
+                {
+                    Mod.Log.Error?.Write(e, "Failed to deserialize json from companyStat");
+                }
 
                 // Add to cache
                 crewDetailsCache[guid] = details;

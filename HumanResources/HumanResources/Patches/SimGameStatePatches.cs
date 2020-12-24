@@ -437,14 +437,15 @@ namespace HumanResources.Patches
                 ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
             {
 
-                // Handle updating the contract length 
-                if (ModConsts.Event_ContractExpired_Option_Hire_NoBonus.Equals(option.Description.Id))
+                // Handle updating the contract length in the def; funds are handled by the event.
+                if (ModConsts.Event_ContractExpired_Option_Hire_NoBonus.Equals(option.Description.Id) ||
+                    ModConsts.Event_ContractExpired_Option_Hire_Bonus.Equals(option.Description.Id))
                 {
-                    Mod.Log.Debug?.Write($"NO BONUS");
-                }
-                else if (ModConsts.Event_ContractExpired_Option_Hire_Bonus.Equals(option.Description.Id))
-                {
-                    Mod.Log.Debug?.Write($"BONUS");
+                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+
+                    Mod.Log.Debug?.Write($"Pilot {expired.Pilot.Name} was re-hired w/o a bonus");
+                    expired.Details.ExpirationDay = ModState.SimGameState.DaysPassed + expired.Details.ContractTerm;
+                    ModState.UpdateOrCreateCrewDetails(expired.Pilot.pilotDef, expired.Details);
                 }
             }
 

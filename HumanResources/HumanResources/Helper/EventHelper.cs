@@ -35,7 +35,7 @@ namespace HumanResources.Helper
                         if (ModStats.HBS_Company_Funds.Equals(stat.name))
                         {
                             (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                            Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to {expired.Details?.AdjustedBonus}");
+                            Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to adjustedBonus: {expired.Details?.AdjustedBonus} for pilot: {expired.Pilot.Name}");
                             stat.value = $"-{expired.Details.AdjustedBonus}";
                         }
 
