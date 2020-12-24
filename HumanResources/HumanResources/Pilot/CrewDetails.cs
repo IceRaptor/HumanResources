@@ -136,9 +136,9 @@ namespace HumanResources.Extensions
             else
             {
                 IsPlayer = false;
-                Mod.Log.Debug?.Write("Generating contract length, initializating expiration day");
+                Mod.Log.Debug?.Write("Generating contract length, new expiration day");
                 this.ContractTerm = PilotHelper.RandomContractLength(config);
-                this.ExpirationDay = 999999;
+                this.ExpirationDay = ModState.SimGameState.DaysPassed + ContractTerm;
             }
 
 
