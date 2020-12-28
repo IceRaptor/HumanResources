@@ -10,7 +10,10 @@ namespace HumanResources
         public const string GO_HBS_Profile_Layout_Stats = "layout_Stats-Or-HiringCost";
         
         public const string GO_HBS_Barracks_ServicePanel_BattleStats = "obj-BattleStats";
+        public const string GO_HBS_Barracks_Dossier_FirstName = "text_firstName";
         public const string GO_HBS_Barracks_Dossier_LastName = "text_lastName";
+
+        public const string GO_HBS_Barracks_Skill_Button = "uixPrfBttn_BASE_TabMedium-MANAGED-skills";
 
         public const string GO_Profile_Override = "hr_crew_profile";
         public const string GO_Crew_Block = "hr_crew_block";

@@ -38,8 +38,19 @@ namespace HumanResources
         public const string LT_Crew_Contract_Term = "CREW_CONTRACT_TERM";
         public const string LT_Crew_Name_Format = "CREW_NAME_FORMAT";
 
+        public const string LT_Crew_Dossier_Name = "CREW_DOSSIER_NAME";
         public const string LT_Crew_Dossier_Contract_Term = "CREW_DOSSIER_CONTRACT_TERM";
         public const string LT_Crew_Dossier_Days_Remaining = "CREW_DOSSIER_DAYS_REMAINING";
+
+        public const string LT_Crew_Dossier_Biography_Attitude = "CREW_DOSSIER_BIO_ATTITUDE";
+        public const string LT_Crew_Dossier_Biography_Faction_Favored = "CREW_DOSSIER_BIO_FACTION_FAVORED";
+        public const string LT_Crew_Dossier_Biography_Faction_Hated = "CREW_DOSSIER_BIO_FACTION_HATED";
+
+        public const string LT_Crew_Attitude_Best = "CREW_ATTITUDE_BEST";
+        public const string LT_Crew_Attitude_Good = "CREW_ATTITUDE_GOOD";
+        public const string LT_Crew_Attitude_Average = "CREW_ATTITUDE_AVERAGE";
+        public const string LT_Crew_Attitude_Poor = "CREW_ATTITUDE_POOR";
+        public const string LT_Crew_Attitude_Worst = "CREW_ATTITUDE_WORST";
 
         public Dictionary<string, string> Labels = new Dictionary<string, string>
         {
@@ -69,9 +80,20 @@ namespace HumanResources
             { LT_Crew_Contract_Term, "The contract term for this mercenary is {0} days. " },
 
             { LT_Crew_Name_Format, "{0} {1}" },
-            
+
+            { LT_Crew_Dossier_Name, "Name" },
             { LT_Crew_Dossier_Contract_Term, "Contract End" },
-            { LT_Crew_Dossier_Days_Remaining, "{0} days" }
+            { LT_Crew_Dossier_Days_Remaining, "{0} days" },
+
+            { LT_Crew_Dossier_Biography_Attitude, "<b>Attitude towards the Company</b>: {0} ({1})<br/>" },
+            { LT_Crew_Dossier_Biography_Faction_Favored, "  <b>Favored Faction</b>: {0}<br/>" },
+            { LT_Crew_Dossier_Biography_Faction_Hated, "  <b>Hated Faction</b>: {0}<br/>" },
+
+            { LT_Crew_Attitude_Best, "Loyal" },
+            { LT_Crew_Attitude_Good, "Favored" },
+            { LT_Crew_Attitude_Average, "Neutral" },
+            { LT_Crew_Attitude_Poor, "Disliked" },
+            { LT_Crew_Attitude_Worst, "Detested" }
 
         };
 

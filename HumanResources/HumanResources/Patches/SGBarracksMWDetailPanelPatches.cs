@@ -1,11 +1,14 @@
 ﻿using BattleTech;
+using BattleTech.StringInterpolation;
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
 using HBS.Extensions;
 using HumanResources.Extensions;
 using Localize;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -54,17 +57,54 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksServicePanel), "SetPilot")]
     static class SGBarracksServicePanel_SetPilot
     {
-        static void Postfix(SGBarracksServicePanel __instance, Pilot p)
+        static void Postfix(SGBarracksServicePanel __instance, Pilot p, LocalizableText ___biographyLabel, SimGameState ___sim)
         {
             if (p == null) return;
 
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
+            Mod.Log.Debug?.Write("Updating battleStats and skillsButton.");
             GameObject battleStats = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_ServicePanel_BattleStats);
+            GameObject skillsButton = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Skill_Button);
+            if (skillsButton == null)
+                Mod.Log.Debug?.Write("SkillsButton is null!");
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
+            {
                 battleStats.SetActive(false);
+                //skillsButton.SetActive(false);
+            }
             else
+            {
                 battleStats.SetActive(true);
+                //skillsButton.SetActive(true);
+            }
+
+            Mod.Log.Debug?.Write("Updating attitude fields.");
+
+            // Inject attitude
+            StringBuilder sb = new StringBuilder();
+            // TODO: Convert attitude to text label
+            string attitudeDescS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Attitude_Average]).ToString();
+            string attitudeS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Attitude], new object[] { attitudeDescS, details.Attitude }).ToString();
+            sb.Append(attitudeS);
+            Mod.Log.Debug?.Write($"Attitude is: {attitudeS}");
+            
+            // TODO: Grab faction loyalty
+            string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { "DAVION" }).ToString();
+            sb.Append(favoredFactionS);
+            Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
+
+            // TODO: Grab faction hatred
+            string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { "KURITA" }).ToString();
+            sb.Append(hatedFactionS);
+            Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
+
+            // Pull the original description
+            sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), ___sim.Context, true));
+
+            string biographyS = sb.ToString();
+            Mod.Log.Debug?.Write($"Biography will be: {biographyS}");
+            ___biographyLabel.SetText(biographyS, Array.Empty<object>());
         }
     }
 
@@ -89,16 +129,37 @@ namespace HumanResources.Patches
                 }
             }
 
-            string nameS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Name_Format],
-                new object[] { p.FirstName, p.LastName }
-                ).ToString();
+            string nameS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Name_Format], 
+                new object[] { p.FirstName, p.LastName }).ToString();
             ___firstName.SetText(nameS);
 
+            // Set the firstname label to 'Name' instead of 'First Name'
+            Mod.Log.Debug?.Write("Updating firstName to Name");
+            GameObject firstNameGO = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Dossier_LastName);
+            GameObject firstNameLabelGO = firstNameGO.transform.parent.GetChild(0).GetChild(0).gameObject;
+            LocalizableText firstNameLabel = firstNameLabelGO.GetComponentInChildren<LocalizableText>();
+            string firstNameS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Contract_Term]).ToString();
+            firstNameLabel.SetText(firstNameS);
+
+            // Set the lastname label to 'Contract End' and the name value to the remaining days
+            Mod.Log.Debug?.Write("Updating lastName to ContractTerm");
             GameObject lastNameGO = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Dossier_LastName);
-            GameObject layoutLabelGO = lastNameGO.transform.parent.GetChild(0).GetChild(0).gameObject; // should be text_lastName -> parent -> layout-label -> label
-            LocalizableText lastNameLabel = layoutLabelGO.GetComponentInChildren<LocalizableText>();
+            GameObject lastNameLabelGO = lastNameGO.transform.parent.GetChild(0).GetChild(0).gameObject; // should be text_lastName -> parent -> layout-label -> label
+            LocalizableText lastNameLabel = lastNameLabelGO.GetComponentInChildren<LocalizableText>();
             string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Contract_Term]).ToString();
             lastNameLabel.SetText(contractTermS);
+
+            GameObject skillsButton = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Skill_Button);
+            if (skillsButton == null)
+                Mod.Log.Debug?.Write("SBGDP:SetPilot - SkillsButton is null!");
+            if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
+            {
+                //skillsButton.SetActive(false);
+            }
+            else
+            {
+                //skillsButton.SetActive(true);
+            }
 
             string contractTermRemaining = "------";
             if (!details.IsPlayer && details.ContractTerm != 0)

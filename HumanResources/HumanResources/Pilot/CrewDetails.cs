@@ -30,9 +30,11 @@ namespace HumanResources.Extensions
         public int HiringBonus { get; set; }
         public int Salary { get; set; }
         public int ContractTerm { get; set; }
+        public string FavoredFaction { get; set; }
+        public string HatedFaction { get; set; }
 
         // Mutable properties
-        public int Loyalty { get; set; }
+        public int Attitude { get; set; }
         public int ExpirationDay { get; set; }
 
         // Dyanmic properties
@@ -61,7 +63,7 @@ namespace HumanResources.Extensions
         public override string ToString()
         {
             return $"GUID:{GUID}  Type: {Type}  IsPlayer: {IsPlayer}  Size: {Size}  Skill: {Skill}  Value: {Value}  HiringBonus: {HiringBonus}" +
-                $"  Salary: {Salary}  ContractTerm: {ContractTerm}  Loyalty: {Loyalty}  ExpirationDay: {ExpirationDay}" +
+                $"  Salary: {Salary}  ContractTerm: {ContractTerm}  Loyalty: {Attitude}  ExpirationDay: {ExpirationDay}" +
                 $"  AdjustedBonus: {AdjustedBonus}  AdjustedSalary: {AdjustedSalary}";
         }
 
@@ -78,7 +80,7 @@ namespace HumanResources.Extensions
             this.Size = size;
             this.Skill = skill;
 
-            this.Loyalty = 0;
+            this.Attitude = 0;
 
             // Calculate value and set required tags
             CrewOpts config = null;

@@ -34,7 +34,7 @@ namespace HumanResources.Patches.UI
                 sb.Append(mechWarriorsBoundsText);
             }
 
-            if (scarcity.Vehicles.Lower > 0)
+            if (Mod.Config.HiringHall.VehicleCrews.Enabled && scarcity.Vehicles.Lower > 0)
             {
                 Mod.Log.Debug?.Write($"  Vehicles lowerBound: {scarcity.Vehicles.Lower}  upperBound: {scarcity.Vehicles.Upper}");
                 string vehicleCrewBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_VEHICLE_BOUNDS],
@@ -43,7 +43,7 @@ namespace HumanResources.Patches.UI
                 sb.Append(vehicleCrewBoundsText);
             }
 
-            if (scarcity.Aerospace.Lower > 0)
+            if (Mod.Config.HiringHall.AerospaceWings.Enabled && scarcity.Aerospace.Lower > 0)
             {
                 Mod.Log.Debug?.Write($"  Aerospace lowerBound: {scarcity.Aerospace.Lower}  upperBound: {scarcity.Aerospace.Upper}");
                 string mechTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_AERO_BOUNDS],
@@ -52,7 +52,7 @@ namespace HumanResources.Patches.UI
                 sb.Append(mechTechBoundsText);
             }
 
-            if (scarcity.MechTechs.Lower > 0)
+            if (Mod.Config.HiringHall.MechTechCrews.Enabled && scarcity.MechTechs.Lower > 0)
             {
                 Mod.Log.Debug?.Write($"  MechTechs lowerBound: {scarcity.MechTechs.Lower}  upperBound: {scarcity.MechTechs.Upper}");
                 string mechTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_MECH_TECH_BOUNDS],
@@ -61,7 +61,7 @@ namespace HumanResources.Patches.UI
                 sb.Append(mechTechBoundsText);
             }
 
-            if (scarcity.MedTechs.Lower > 0)
+            if (Mod.Config.HiringHall.MedTechCrews.Enabled && scarcity.MedTechs.Lower > 0)
             {
                 Mod.Log.Debug?.Write($"  MedTechs lowerBound: {scarcity.MedTechs.Lower}  upperBound: {scarcity.MedTechs.Upper}");
                 string medTechBoundsText = new Text(Mod.LocalizedText.PlanetStrings[ModText.PT_MED_TECH_BOUNDS],
