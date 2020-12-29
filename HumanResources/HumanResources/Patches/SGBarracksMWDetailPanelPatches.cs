@@ -94,23 +94,44 @@ namespace HumanResources.Patches
             StringBuilder sb = new StringBuilder();
 
             // TODO: Convert attitude to text label
-            string attitudeDescS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Attitude_Average]).ToString();
-            string attitudeS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Attitude], new object[] { attitudeDescS, details.Attitude }).ToString();
+            string attitudeValKey = ModText.LT_Crew_Attitude_Average;
+            if (details.Attitude >= Mod.Config.Attitude.ThresholdBest)
+                attitudeValKey = ModText.LT_Crew_Attitude_Best;
+            else if (details.Attitude >= Mod.Config.Attitude.ThresholdGood)
+                attitudeValKey = ModText.LT_Crew_Attitude_Good;
+            else if (details.Attitude <= Mod.Config.Attitude.ThresholdWorst)
+                attitudeValKey = ModText.LT_Crew_Attitude_Worst;
+            else if (details.Attitude <= Mod.Config.Attitude.ThresholdPoor)
+                attitudeValKey = ModText.LT_Crew_Attitude_Poor;
+
+            string attitudeDescS = new Text(Mod.LocalizedText.Labels[attitudeValKey]).ToString();
+            Mod.Log.Debug?.Write($"Attitude value is: {details.Attitude} with label: {attitudeDescS}");
+
+            string attitudeS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Attitude], 
+                new object[] { attitudeDescS, details.Attitude }).ToString();
             sb.Append(attitudeS);
-            Mod.Log.Debug?.Write($"Attitude is: {attitudeS}");
-            
-            // TODO: Grab faction loyalty
-            string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { "Davion" }).ToString();
-            sb.Append(favoredFactionS);
-            Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
+            sb.Append("\n");
 
-            // TODO: Grab faction hatred
-            string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { "Kurtia" }).ToString();
-            sb.Append(hatedFactionS);
-            Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
+            // Convert favored and hated faction
+            if (details.FavoredFaction > 0)
+            {
+                FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFaction);
+                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { faction.FriendlyName }).ToString();
+                sb.Append(favoredFactionS);
+                sb.Append("\n");
+                Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
+            }
 
-            // Pull the original description
-            Mod.Log.Debug?.Write($" RAW LOCALIZED DETAILS: '{p.pilotDef.Description.GetLocalizedDetails().ToString(true)}'");
+            if (details.HatedFaction > 0)
+            {
+                FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFaction);
+                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { faction.FriendlyName }).ToString();
+                sb.Append(hatedFactionS);
+                sb.Append("\n");
+                Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
+            }
+
+            // Add the original description
             sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), ___sim.Context, true));
 
             string biographyS = sb.ToString();

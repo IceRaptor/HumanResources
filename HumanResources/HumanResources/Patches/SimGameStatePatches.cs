@@ -467,8 +467,36 @@ namespace HumanResources.Patches
                 Mod.Log.Trace?.Write($"SGEventPanel details setting targetMechwarrior: {expired.Pilot.Name}");
                 ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, expired.Pilot);
             }
-
         }
-
     }
+
+    static class SimGameState_CanMechWarriorBeHiredAccordingToMRBRating
+    {
+        static void Postfix(SimGameState __instance, Pilot pilot, bool __result)
+        {
+            CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+        }
+    }
+
+    //public bool CanMechWarriorBeHiredAccordingToMRBRating(Pilot pilot)
+    //{
+    //    int currentMRBLevel = this.GetCurrentMRBLevel();
+    //    return (float)this.GetMechWarriorPowerLevel(pilot) <= this.Constants.Story.MRBRepHiringPowerLevelLimits[currentMRBLevel];
+    //}
+
+    static class SimGameState_CanMechWarriorBeHiredAccordingToMorale
+    {
+        static void Postfix(SimGameState __instance, Pilot pilot, bool __result)
+        {
+            CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+        }
+    }
+
+    //public bool CanMechWarriorBeHiredAccordingToMorale(Pilot pilot)
+    //{
+    //    this.GetCurrentMRBLevel();
+    //    int mechWarriorPowerLevel = this.GetMechWarriorPowerLevel(pilot);
+    //    int moraleHiringLevelIndex = this.GetMoraleHiringLevelIndex();
+    //    return moraleHiringLevelIndex < 0 || moraleHiringLevelIndex >= this.Constants.Story.MaxMoralePowerLevelLimits.Length || (float)mechWarriorPowerLevel <= this.Constants.Story.MaxMoralePowerLevelLimits[moraleHiringLevelIndex];
+    //}
 }

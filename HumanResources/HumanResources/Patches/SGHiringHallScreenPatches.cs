@@ -1,4 +1,5 @@
 ﻿using BattleTech;
+using BattleTech.StringInterpolation;
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using BattleTech.UI.Tooltips;
@@ -7,6 +8,8 @@ using HBS;
 using HumanResources.Extensions;
 using Localize;
 using System;
+using System.Collections;
+using System.Text;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -152,4 +155,44 @@ namespace HumanResources.Patches
         }
     }
 
+    [HarmonyPatch(typeof(SG_HiringHall_DetailPanel), "DisplayPilot")]
+    static class SG_HiringHall_DetailPanel_DisplayPilot
+    {
+        static void Postfix(SG_HiringHall_DetailPanel __instance, Pilot p, LocalizableText ___DescriptionText)
+        {
+            CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
+
+            StringBuilder sb = new StringBuilder();
+            // Convert favored and hated faction
+            if (details.FavoredFaction > 0)
+            {
+                FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFaction);
+                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { faction.FriendlyName }).ToString();
+                sb.Append(favoredFactionS);
+                sb.Append("\n\n");
+                Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
+            }
+
+            if (details.HatedFaction > 0)
+            {
+                FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFaction);
+                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { faction.FriendlyName }).ToString();
+                sb.Append(hatedFactionS);
+                sb.Append("\n\n");
+                Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
+            }
+
+            sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), ModState.SimGameState.Context, true));
+
+            ___DescriptionText.SetText(sb.ToString());
+        }
+
+        // TODO: Reimplement this to prevent scrolling to end?
+        //private static IEnumerator EndOfFrameScrollBarMovement()
+        //{
+        //    yield return new WaitForEndOfFrame();
+        //    this.scrollbarArea.verticalNormalizedPosition = 1f;
+        //    yield break;
+        //}
+    }
 }

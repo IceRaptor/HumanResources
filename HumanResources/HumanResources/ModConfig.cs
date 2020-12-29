@@ -32,6 +32,9 @@ namespace HumanResources
         // Bonus variance is always above the salary range; 10,000 salary will be between 10,000 and 13,000
         public float BonusVariance = 1.3f;
 
+        // The percentage of salary that gets applied as hazard pay
+        public float HazardPay = 0.05f;
+
         // -1 indicates no limit
         public float MaxOfType = -1;
 
@@ -46,6 +49,35 @@ namespace HumanResources
         public float MechWarriors = 0f;
         public float MedTechs = 0f;
         public float VehicleCrews = 0f;
+    }
+
+    public class AttitudeOpts
+    {
+        public int ThresholdMax = 100;
+        public int ThresholdBest = 75;
+        public int ThresholdGood = 30;
+        public int ThresholdPoor = -30;
+        public int ThresholdWorst = -75;
+        public int ThresholdMin = -100;
+
+        public float FavoredFactionChance = 0.3f;
+        public float HatedFactionChance = 0.3f;
+
+        public int PilotKilledMod = -10;
+
+        public int ContractSuccessMod = 1;
+        public int ContractFailedGoodFaithMod = -2;
+        public int ContractFailedMod = -10;
+
+        public int DeployedOnMissionMod = 1;
+        public int BenchedOnMissionMod = -2;
+        public int FavoredEmployerPerMissionMod = 1;
+        public int HatedEmployerPerMissionMod = -3;
+
+        public int FavoredEmployerAlliedMonthlyMod = 6;
+        public int HatedEmployerAlliedMonthlyMod = -30;
+ 
+        // Monthly morale modifier applies here?
     }
 
     public class ScarcityOps
@@ -65,7 +97,7 @@ namespace HumanResources
         };
     }
 
-    public class HiringHall
+    public class HiringHallOpts
     {
         public DistributionOpts SkillDistribution = new DistributionOpts() 
         {
@@ -186,7 +218,7 @@ namespace HumanResources
         };
     }
 
-    public class Poaching
+    public class PoachingOpts
     {
         public bool EnablePoaching = true;
 
@@ -231,8 +263,11 @@ namespace HumanResources
         public Icons Icons = new Icons();
 
         public CrewCfg Crew = new CrewCfg();
-        public HiringHall HiringHall = new HiringHall();
-        public Poaching Poaching = new Poaching();
+
+        public HiringHallOpts HiringHall = new HiringHallOpts();
+        public PoachingOpts Poaching = new PoachingOpts();
+
+        public AttitudeOpts Attitude = new AttitudeOpts();
 
         public void LogConfig()
         {

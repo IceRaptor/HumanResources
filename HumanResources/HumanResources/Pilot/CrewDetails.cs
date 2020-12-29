@@ -2,11 +2,12 @@
 using HumanResources.Helper;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HumanResources.Extensions
 {
-
     public enum CrewType
     {
         MechWarrior = 0,
@@ -30,8 +31,8 @@ namespace HumanResources.Extensions
         public int HiringBonus { get; set; }
         public int Salary { get; set; }
         public int ContractTerm { get; set; }
-        public string FavoredFaction { get; set; }
-        public string HatedFaction { get; set; }
+        public int FavoredFaction { get; set; }
+        public int HatedFaction { get; set; }
 
         // Mutable properties
         public int Attitude { get; set; }
@@ -143,6 +144,32 @@ namespace HumanResources.Extensions
                 this.ExpirationDay = ModState.SimGameState.DaysPassed + ContractTerm;
             }
 
+            // Check for favored / hated faction
+            List<FactionValue> factions = FactionEnumeration.FactionList.Where(fv => fv.DoesGainReputation).ToList();
+
+            double favoredRoll = Mod.Random.NextDouble();
+            if (favoredRoll < Mod.Config.Attitude.FavoredFactionChance)
+            {
+                int idx = Mod.Random.Next(factions.Count - 1);
+                FactionValue faction = factions.ElementAt(idx);
+                factions.RemoveAt(idx);
+                Mod.Log.Info?.Write($"Roll {favoredRoll} < {Mod.Config.Attitude.FavoredFactionChance}, adding {faction} as favored faction");
+                this.FavoredFaction = faction.ID;
+            }
+            else
+                this.FavoredFaction = -1;
+
+            double hatedRoll = Mod.Random.NextDouble();
+            if (hatedRoll < Mod.Config.Attitude.HatedFactionChance)
+            {
+                int idx = Mod.Random.Next(factions.Count - 1);
+                FactionValue faction = factions.ElementAt(idx);
+                factions.RemoveAt(idx);
+                Mod.Log.Info?.Write($"Roll {hatedRoll} < {Mod.Config.Attitude.HatedFactionChance}, adding {faction} as hated faction");
+                this.HatedFaction = faction.ID;
+            }
+            else
+                this.HatedFaction = -1;
 
         }
 

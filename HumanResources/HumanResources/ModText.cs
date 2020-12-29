@@ -85,9 +85,9 @@ namespace HumanResources
             { LT_Crew_Dossier_Contract_Term, "Contract End" },
             { LT_Crew_Dossier_Days_Remaining, "{0} days" },
 
-            { LT_Crew_Dossier_Biography_Attitude, "<b>Attitude towards the Company:</b>  {0} ({1})\n" },
-            { LT_Crew_Dossier_Biography_Faction_Favored, "<b>Favored Faction:</b>  {0}\n" },
-            { LT_Crew_Dossier_Biography_Faction_Hated, "<b>Hated Faction:</b>  {0}\n\n" },
+            { LT_Crew_Dossier_Biography_Attitude, "<b>Attitude towards the Company:</b>  {0} ({1})" },
+            { LT_Crew_Dossier_Biography_Faction_Favored, "<b>Favored Faction:</b>  {0}" },
+            { LT_Crew_Dossier_Biography_Faction_Hated, "<b>Hated Faction:</b>  {0}" },
 
             { LT_Crew_Attitude_Best, "Loyal" },
             { LT_Crew_Attitude_Good, "Favored" },

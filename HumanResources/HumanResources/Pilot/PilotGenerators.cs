@@ -4,6 +4,7 @@ using HBS.Collections;
 using HumanResources.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -63,7 +64,7 @@ namespace HumanResources.Helper
 
         public static PilotDef GenerateSupportCrew(string callsign, string backgroundDesc, out int crewSize, out int crewSkill)
         {
-            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}  backgroundDesc: {backgroundDesc}");
+            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign} backgroundDesc: {backgroundDesc}");
 
             int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + 
                 ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
@@ -81,11 +82,9 @@ namespace HumanResources.Helper
             crewSize  = GaussianHelper.RandomCrewSize(0, 0);
             crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
 
-            // TODO: Randomize N factions - include blacklist / filter
-            List<string> employerFactions = ModState.SimGameState.CurSystem.Def.ContractEmployerIDList;
-
             // TODO: Build jibberish history
-            // TODO: Add crew size, loyalty, etc to description
+
+            // TODO: Add crew size, etc to description
             StringBuilder lifepathDescParagraphs = new StringBuilder();
 
             // DETAILS string is EXTREMELY picky, see HumanDescriptionDef.GetLocalizedDetails
