@@ -3,6 +3,7 @@ using BattleTech.StringInterpolation;
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
+using HBS.Collections;
 using HBS.Extensions;
 using HumanResources.Extensions;
 using Localize;
@@ -25,11 +26,19 @@ namespace HumanResources.Patches
             if (p == null) return;
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
+            GameObject skillsButton = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Skill_Button);
+            if (skillsButton == null)
+                Mod.Log.Debug?.Write("SkillsButton is null!");
+
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
             {
-                ___advancementSectionGO.SetActive(false);
+                __instance.OnServiceSectionClicked();
+                skillsButton.SetActive(false);
             }
-
+            else
+            {
+                skillsButton.SetActive(true);
+            }
         }
     }
 
@@ -57,32 +66,33 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksServicePanel), "SetPilot")]
     static class SGBarracksServicePanel_SetPilot
     {
-        static void Postfix(SGBarracksServicePanel __instance, Pilot p, LocalizableText ___biographyLabel, SimGameState ___sim)
+        static void Postfix(SGBarracksServicePanel __instance, Pilot p, LocalizableText ___biographyLabel, SimGameState ___sim, HBSTagView ___tagViewer)
         {
             if (p == null) return;
 
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
-            Mod.Log.Debug?.Write("Updating battleStats and skillsButton.");
+            // Disable the battle stats 
             GameObject battleStats = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_ServicePanel_BattleStats);
-            GameObject skillsButton = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Skill_Button);
-            if (skillsButton == null)
-                Mod.Log.Debug?.Write("SkillsButton is null!");
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
-            {
                 battleStats.SetActive(false);
-                //skillsButton.SetActive(false);
-            }
             else
-            {
                 battleStats.SetActive(true);
-                //skillsButton.SetActive(true);
+
+            // Reinitialize the tag viewer, stripping any tags that are HR centric
+            TagSet baseTags = new TagSet();
+            foreach (string tag in p.pilotDef.PilotTags)
+            {
+                if (!tag.StartsWith("HR_"))
+                    baseTags.Add(tag);
             }
+            ___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
 
             Mod.Log.Debug?.Write("Updating attitude fields.");
 
             // Inject attitude
             StringBuilder sb = new StringBuilder();
+
             // TODO: Convert attitude to text label
             string attitudeDescS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Attitude_Average]).ToString();
             string attitudeS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Attitude], new object[] { attitudeDescS, details.Attitude }).ToString();
@@ -90,16 +100,17 @@ namespace HumanResources.Patches
             Mod.Log.Debug?.Write($"Attitude is: {attitudeS}");
             
             // TODO: Grab faction loyalty
-            string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { "DAVION" }).ToString();
+            string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { "Davion" }).ToString();
             sb.Append(favoredFactionS);
             Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
 
             // TODO: Grab faction hatred
-            string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { "KURITA" }).ToString();
+            string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { "Kurtia" }).ToString();
             sb.Append(hatedFactionS);
             Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
 
             // Pull the original description
+            Mod.Log.Debug?.Write($" RAW LOCALIZED DETAILS: '{p.pilotDef.Description.GetLocalizedDetails().ToString(true)}'");
             sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), ___sim.Context, true));
 
             string biographyS = sb.ToString();

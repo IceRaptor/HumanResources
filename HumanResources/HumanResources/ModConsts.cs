@@ -41,7 +41,6 @@ namespace HumanResources
         public const string Tag_Crew_Loyalty_Unhappy = "HR_CREW_LOYALTY_UNHAPPY";
         public const string Tag_Crew_Loyalty_Hated = "HR_CREW_LOYALTY_HATED";
 
-
         // Applied if you ignored their complains 
         public const string Tag_Crew_Loyalty_Faction_Warning = "HR_CREW_LOYALTY_FACTION_WARNING";
 
