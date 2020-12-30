@@ -502,7 +502,6 @@ namespace HumanResources.Patches
         static void Postfix(SimGameState __instance)
         {
 
-            // Check pilots to see if they favor or hate an allied faction
             List<FactionValue> alliedFactions = new List<FactionValue>();
             foreach (string factionName in __instance.GetAllCareerAllies())
             {
@@ -512,7 +511,24 @@ namespace HumanResources.Patches
             foreach (Pilot pilot in __instance.PilotRoster)
             {
                 CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
-                
+
+                // Decay positive attitude
+                if (details.Attitude > 0)
+                {
+                    int decayAmount = (int) Math.Ceiling(details.Attitude * Mod.Config.Attitude.Monthly.Decay);
+                    Mod.Log.Debug?.Write($"Decaying positive attitude from {details.Attitude} by {decayAmount}");
+                    details.Attitude -= decayAmount;
+                }
+
+                // Apply the morale modifier 
+                int econMod = Mod.Config.Attitude.Monthly.EconomyNormalMod;
+                if (__instance.ExpenditureLevel == EconomyScale.Spartan) econMod = Mod.Config.Attitude.Monthly.EconSpartanMod;
+                else if (__instance.ExpenditureLevel == EconomyScale.Restrictive) econMod = Mod.Config.Attitude.Monthly.EconRestrictiveMod;
+                else if (__instance.ExpenditureLevel == EconomyScale.Generous) econMod = Mod.Config.Attitude.Monthly.EconomyGenerousMod;
+                else if (__instance.ExpenditureLevel == EconomyScale.Extravagant) econMod = Mod.Config.Attitude.Monthly.EconomyExtravagantMod;
+                details.Attitude += econMod;
+
+                // Check pilots to see if they favor or hate an allied faction
                 if (details.FavoredFaction > 0)
                 {
                     foreach (FactionValue faction in alliedFactions)
@@ -520,8 +536,8 @@ namespace HumanResources.Patches
                         if (faction.ID == details.FavoredFaction)
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} favors allied faction: {faction.FriendlyName}, " +
-                                $"applying attitude mod: {Mod.Config.Attitude.FavoredEmployerAlliedMonthlyMod}");
-                            details.Attitude += Mod.Config.Attitude.FavoredEmployerAlliedMonthlyMod;
+                                $"applying attitude mod: {Mod.Config.Attitude.Monthly.FavoredEmployerAlliedMod}");
+                            details.Attitude += Mod.Config.Attitude.Monthly.FavoredEmployerAlliedMod;
                             ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
                         }
                     }
@@ -534,12 +550,17 @@ namespace HumanResources.Patches
                         if (faction.ID == details.HatedFaction)
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} hates allied faction: {faction.FriendlyName}, " +
-                                $"applying attitude mod: {Mod.Config.Attitude.HatedEmployerAlliedMonthlyMod}");
-                            details.Attitude += Mod.Config.Attitude.HatedEmployerAlliedMonthlyMod;
+                                $"applying attitude mod: {Mod.Config.Attitude.Monthly.HatedEmployerAlliedMod}");
+                            details.Attitude += Mod.Config.Attitude.Monthly.HatedEmployerAlliedMod;
                             ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
                         }
                     }
                 }
+
+                // Clamp values
+                details.Attitude = Mathf.Clamp(details.Attitude, Mod.Config.Attitude.ThresholdMin, Mod.Config.Attitude.ThresholdMax);
+
+                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
 
             }
         }

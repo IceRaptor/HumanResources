@@ -27,19 +27,19 @@ namespace HumanResources.Patches
                     return false;
             }).ToList();
 
-            int killedPilotsMod = Mod.Config.Attitude.PilotKilledMod * ___theContract.KilledPilots.Count;
+            int killedPilotsMod = Mod.Config.Attitude.PerMission.PilotKilledMod * ___theContract.KilledPilots.Count;
             Mod.Log.Debug?.Write($"Player lost {___theContract.KilledPilots.Count} pilots, applying a modifier of {killedPilotsMod} to all pilots.");
 
             // Calcluate the contract bonus 
-            int contractBonus = Mod.Config.Attitude.ContractFailedMod;
+            int contractBonus = Mod.Config.Attitude.PerMission.ContractFailedMod;
             if (___theContract.State == Contract.ContractState.Complete)
             {
-                contractBonus = Mod.Config.Attitude.ContractSuccessMod;
+                contractBonus = Mod.Config.Attitude.PerMission.ContractSuccessMod;
                 Mod.Log.Debug?.Write($"Contract was successful, applying contract modifier of: {contractBonus}");
             }
             else if (___theContract.IsGoodFaithEffort)
             {
-                contractBonus = Mod.Config.Attitude.ContractFailedGoodFaithMod;
+                contractBonus = Mod.Config.Attitude.PerMission.ContractFailedGoodFaithMod;
                 Mod.Log.Debug?.Write($"Contract was a good faith effort, applying contract modifier of: {contractBonus}");
             }
             else
@@ -56,13 +56,13 @@ namespace HumanResources.Patches
                 // Check for bench
                 if (deployedPilots.Contains(p))
                 {
-                    Mod.Log.Debug?.Write($" -- pilot was deployed, adding {Mod.Config.Attitude.DeployedOnMissionMod} attitude");
-                    details.Attitude += Mod.Config.Attitude.DeployedOnMissionMod;
+                    Mod.Log.Debug?.Write($" -- pilot was deployed, adding {Mod.Config.Attitude.PerMission.DeployedOnMissionMod} attitude");
+                    details.Attitude += Mod.Config.Attitude.PerMission.DeployedOnMissionMod;
                 }
                 else
                 {
-                    Mod.Log.Debug?.Write($" -- pilot was benched, adding {Mod.Config.Attitude.BenchedOnMissionMod} attitude");
-                    details.Attitude += Mod.Config.Attitude.BenchedOnMissionMod;
+                    Mod.Log.Debug?.Write($" -- pilot was benched, adding {Mod.Config.Attitude.PerMission.BenchedOnMissionMod} attitude");
+                    details.Attitude += Mod.Config.Attitude.PerMission.BenchedOnMissionMod;
                 }
 
                 // Apply modifier for contract success
@@ -76,14 +76,14 @@ namespace HumanResources.Patches
                 {
                     if (details.FavoredFaction == ___theContract.Override.employerTeam.FactionValue.ID)
                     {
-                        Mod.Log.Debug?.Write($" -- pilot favors employer faction, applying modifier: {Mod.Config.Attitude.FavoredFactionIsEmployerMod}");
-                        details.Attitude += Mod.Config.Attitude.FavoredFactionIsEmployerMod;
+                        Mod.Log.Debug?.Write($" -- pilot favors employer faction, applying modifier: {Mod.Config.Attitude.PerMission.FavoredFactionIsEmployerMod}");
+                        details.Attitude += Mod.Config.Attitude.PerMission.FavoredFactionIsEmployerMod;
                     }
 
                     if (details.FavoredFaction == ___theContract.Override.targetTeam.FactionValue.ID)
                     {
-                        Mod.Log.Debug?.Write($" -- pilot favors target faction, applying modifier: {Mod.Config.Attitude.FavoredFactionIsTargetMod}");
-                        details.Attitude += Mod.Config.Attitude.FavoredFactionIsTargetMod;
+                        Mod.Log.Debug?.Write($" -- pilot favors target faction, applying modifier: {Mod.Config.Attitude.PerMission.FavoredFactionIsTargetMod}");
+                        details.Attitude += Mod.Config.Attitude.PerMission.FavoredFactionIsTargetMod;
                     }
                 }
 
@@ -91,14 +91,14 @@ namespace HumanResources.Patches
                 {
                     if (details.HatedFaction == ___theContract.Override.employerTeam.FactionValue.ID)
                     {
-                        Mod.Log.Debug?.Write($" -- pilot hates employer faction, applying modifier: {Mod.Config.Attitude.HatedEmployerIsEmployerMod}");
-                        details.Attitude += Mod.Config.Attitude.HatedEmployerIsEmployerMod;
+                        Mod.Log.Debug?.Write($" -- pilot hates employer faction, applying modifier: {Mod.Config.Attitude.PerMission.HatedEmployerIsEmployerMod}");
+                        details.Attitude += Mod.Config.Attitude.PerMission.HatedEmployerIsEmployerMod;
                     }
 
                     if (details.HatedFaction == ___theContract.Override.targetTeam.FactionValue.ID)
                     {
-                        Mod.Log.Debug?.Write($" -- pilot hates target faction, applying modifier: {Mod.Config.Attitude.HatedEmployerIsTargetMod}");
-                        details.Attitude += Mod.Config.Attitude.HatedEmployerIsTargetMod;
+                        Mod.Log.Debug?.Write($" -- pilot hates target faction, applying modifier: {Mod.Config.Attitude.PerMission.HatedEmployerIsTargetMod}");
+                        details.Attitude += Mod.Config.Attitude.PerMission.HatedEmployerIsTargetMod;
                     }
                 }
 

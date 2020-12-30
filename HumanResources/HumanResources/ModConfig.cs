@@ -66,11 +66,31 @@ namespace HumanResources
         public float FavoredFactionChance = 0.3f;
         public float HatedFactionChance = 0.3f;
 
-        public int PilotKilledMod = -10;
+        public MonthlyAttitudeMods Monthly = new MonthlyAttitudeMods();
+        public PerMissionAttitudeMods PerMission = new PerMissionAttitudeMods();
+    }
 
+    public class MonthlyAttitudeMods
+    {
+        public int FavoredEmployerAlliedMod = 6;
+        public int HatedEmployerAlliedMod = -30;
+
+        public int EconSpartanMod = -6;
+        public int EconRestrictiveMod = -3;
+        public int EconomyNormalMod = 0;
+        public int EconomyGenerousMod = 2;
+        public int EconomyExtravagantMod = 4;
+
+        public float Decay = 0.05f;
+    }
+
+    public class PerMissionAttitudeMods
+    {
         public int ContractSuccessMod = 1;
         public int ContractFailedGoodFaithMod = -2;
         public int ContractFailedMod = -10;
+
+        public int PilotKilledMod = -10;
 
         public int DeployedOnMissionMod = 1;
         public int BenchedOnMissionMod = -2;
@@ -78,11 +98,6 @@ namespace HumanResources
         public int FavoredFactionIsTargetMod = -3;
         public int HatedEmployerIsEmployerMod = -3;
         public int HatedEmployerIsTargetMod = 3;
-
-        public int FavoredEmployerAlliedMonthlyMod = 6;
-        public int HatedEmployerAlliedMonthlyMod = -30;
- 
-        // TODO: Monthly morale modifier applies here?
     }
 
     public class ScarcityOps
