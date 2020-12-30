@@ -79,11 +79,10 @@ namespace HumanResources
         public int HatedEmployerIsEmployerMod = -3;
         public int HatedEmployerIsTargetMod = 3;
 
-        // TODO:
         public int FavoredEmployerAlliedMonthlyMod = 6;
         public int HatedEmployerAlliedMonthlyMod = -30;
  
-        // Monthly morale modifier applies here?
+        // TODO: Monthly morale modifier applies here?
     }
 
     public class ScarcityOps

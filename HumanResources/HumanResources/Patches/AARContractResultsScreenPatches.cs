@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace HumanResources.Patches
 {
@@ -100,6 +101,9 @@ namespace HumanResources.Patches
                         details.Attitude += Mod.Config.Attitude.HatedEmployerIsTargetMod;
                     }
                 }
+
+                // Clamp values to max and min
+                details.Attitude = Mathf.Clamp(details.Attitude, Mod.Config.Attitude.ThresholdMin, Mod.Config.Attitude.ThresholdMax);
 
                 ModState.UpdateOrCreateCrewDetails(p.pilotDef, details);
             }
