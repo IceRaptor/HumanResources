@@ -31,8 +31,8 @@ namespace HumanResources.Comparable
             if (typeComparison != 0) return typeComparison;
 
             // Compare by skill
-            int valueComparison = CrewDetails.CompareByValue(cd1, cd2);
-            if (valueComparison != 0) return valueComparison;
+            int skillComparison = CrewDetails.CompareByValue(cd1, cd2);
+            if (skillComparison != 0) return skillComparison;
 
             return 0;
         }

@@ -242,10 +242,12 @@ namespace HumanResources
 
     public class PoachingOpts
     {
-        public bool EnablePoaching = true;
+        public bool Enabled = true;
 
-        public float[] LifeStyleMods = { 0.35f, 0.2f, 0f, -0.2f, -0.35f };
-        public float[] PoachingChance = { 0.05f, 0.1f, 0.15f, 0.3f, 0.6f };
+        public float[] EconMods = { 0.35f, 0.2f, 0f, -0.2f, -0.35f };
+        public float[] ChanceBySkill = { 0.05f, 0.1f, 0.15f, 0.3f, 0.6f };
+        // Check for poaching N times per month
+        // Poaching goes from most legendary to least
     }
 
     public class CrewCfg

@@ -4,7 +4,6 @@ namespace HumanResources
 {
     public static class ModConsts
     {
-
         public const string GO_HBS_Profile_Layout_Title = "layout_title";
         public const string GO_HBS_Profile_Stats_Block = "mw_Stats";
         public const string GO_HBS_Profile_Layout_Stats = "layout_Stats-Or-HiringCost";
@@ -59,6 +58,7 @@ namespace HumanResources
         
         public const string Company_Reputation = "HR_CompanyRep";
         public const string Company_CrewDetail_Prefix = "HR_CrewDetail_";
+        public const string Company_Poaching_Record = "HR_Poaching_Record";
 
         public const string CrewCount_Aerospace = "HR_CrewCount_Aerospace";
         public const string CrewCount_MechTechs = "HR_CrewCount_MechTechs";

@@ -87,12 +87,12 @@ namespace HumanResources.Patches
                 foreach (Pilot pilot in __instance.PilotRoster)
                 {
 
-                    Mod.Log.Debug?.Write($"Pilot: {pilot.Name} has tags:");
-                    // Enumerate tags
-                    foreach (string tag in pilot.pilotDef.PilotTags)
-                    {
-                        Mod.Log.Debug?.Write($" -- {tag}");
-                    }
+                    //Mod.Log.Debug?.Write($"Pilot: {pilot.Name} has tags:");
+                    //// Enumerate tags
+                    //foreach (string tag in pilot.pilotDef.PilotTags)
+                    //{
+                    //    Mod.Log.Debug?.Write($" -- {tag}");
+                    //}
 
                     CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
                     if (details.ExpirationDay <= __instance.DaysPassed)
@@ -112,6 +112,56 @@ namespace HumanResources.Patches
                 }
             }
 
+            // TODO: Make this fire randomly during the quarter, not immediately
+            // TODO: Reset this when leaving a system and on each quarter
+            if (Mod.Config.Poaching.Enabled && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
+            {
+                bool testForPoaching = false;
+                Statistic poachingStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Poaching_Record);
+                if (poachingStat == null)
+                {
+                    __instance.CompanyStats.AddStatistic<int>(ModStats.Company_Poaching_Record, 0);
+                    testForPoaching = false;
+                }
+                else if (poachingStat.Value<int>() > 0)
+                {
+                    Mod.Log.Debug?.Write("Already tested for poaching this quarter, skipping.");
+                }
+                else
+                {
+                    __instance.CompanyStats.Set<int>(ModStats.Company_Poaching_Record, poachingStat.Value<int>() + 1);
+                    testForPoaching = true;
+                }
+
+                if (testForPoaching)
+                {
+                    // Order pilots by skill
+                    // Randomize pilots instead of sorting by skill?
+                    List<Pilot> pilots = __instance.PilotRoster.ToList();
+                    pilots.Sort((p1, p2) => {
+                        CrewDetails p1cd = ModState.GetCrewDetails(p1.pilotDef);
+                        CrewDetails p2cd = ModState.GetCrewDetails(p2.pilotDef);
+                        return CrewDetails.CompareByValue(p1cd, p2cd);
+                    });
+
+                    // Test for poaching
+                    float randomRoll = (float)Mod.Random.NextDouble();
+                    float econMod = Mod.Config.Poaching.EconMods[(int)__instance.ExpenditureLevel + 2];
+                    foreach (Pilot pilot in pilots)
+                    {
+                        CrewDetails cd = ModState.GetCrewDetails(pilot.pilotDef);
+                        Mod.Log.Debug?.Write($"Checking pilot: {pilot.Name} for poaching");
+                        float baseChance = Mod.Config.Poaching.ChanceBySkill[cd.Skill - 1];
+                        float modifiedChance = baseChance + econMod;
+                        Mod.Log.Debug?.Write($"  -- chance for pilot: {modifiedChance} vs. randomRoll: {randomRoll}");
+                        if (randomRoll <= modifiedChance)
+                            Mod.Log.Info?.Write($"Pilot: {pilot.Name} SHOULD BE POACHED");
+                        else
+                            Mod.Log.Debug?.Write("Pilot will not be poached.");
+                    }
+
+                }
+            }
         }
     }
 
