@@ -237,7 +237,7 @@ namespace HumanResources.Extensions
             get 
             {
                 CrewOpts options = null;
-                if (IsMechTechCrew || IsMedTechCrew) return 0;
+                if (IsMechTechCrew || IsMedTechCrew || IsPlayer) return 0;
                 else if (IsAerospaceCrew) options = Mod.Config.HiringHall.AerospaceWings;
                 else if (IsMechWarrior) options = Mod.Config.HiringHall.MechWarriors;
                 else if (IsVehicleCrew) options = Mod.Config.HiringHall.VehicleCrews;

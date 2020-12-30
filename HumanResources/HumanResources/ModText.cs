@@ -54,6 +54,8 @@ namespace HumanResources
 
         public const string LT_Crew_Hazard_Pay = "CREW_HAZARD_PAY";
 
+        public const string LT_Contract_Hazard_Pay = "CONTRACT_HAZARD_PAY";
+
         public Dictionary<string, string> Labels = new Dictionary<string, string>
         {
             { LT_Crew_Skill_1, "Rookie" },
@@ -97,7 +99,8 @@ namespace HumanResources
             { LT_Crew_Attitude_Poor, "Disliked" },
             { LT_Crew_Attitude_Worst, "Detested" },
 
-            { LT_Crew_Hazard_Pay, "<b>Hazard Pay:</b>  {0}" }
+            { LT_Crew_Hazard_Pay, "<b>Hazard Pay:</b>  {0}" },
+            { LT_Contract_Hazard_Pay, "Crew Hazard Pay: {0}" }
 
         };
 

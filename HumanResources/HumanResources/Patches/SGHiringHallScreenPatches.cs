@@ -171,7 +171,7 @@ namespace HumanResources.Patches
                     new object[] { SimGameState.GetCBillString(details.HazardPay) }).ToString();
                 Mod.Log.Debug?.Write($"Hazard pay is: {hazardPayS}");
                 sb.Append(hazardPayS);
-                sb.Append("\n");
+                sb.Append("\n\n");
             }
 
             // Convert favored and hated faction
