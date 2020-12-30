@@ -33,13 +33,17 @@ namespace HumanResources
         public float BonusVariance = 1.3f;
 
         // The percentage of salary that gets applied as hazard pay
-        public float HazardPay = 0.05f;
+        public float HazardPayRatio = 0.05f;
+
+        public int HazardPayUnits = 500;
+
+        // Value by MRB level. Should be one less than MRBRepCap in SimGameConstants, as you can always hire below the first value
+        //                                                  MRB: 1, 2, 3,  4,  5
+        public float[] ValueThresholdForMRBLevel = new float[] { 0, 8, 16, 24, 32 };
+        // 	50, 200, 500, 700, 900
 
         // -1 indicates no limit
         public float MaxOfType = -1;
-
-        // Change that the mercenary has a specific factional loyalty
-        public float FactionLoyaltyChance = 0.3f;
     }
 
     public class CrewScarcity
@@ -71,9 +75,12 @@ namespace HumanResources
 
         public int DeployedOnMissionMod = 1;
         public int BenchedOnMissionMod = -2;
-        public int FavoredEmployerPerMissionMod = 1;
-        public int HatedEmployerPerMissionMod = -3;
+        public int FavoredFactionIsEmployerMod = 1;
+        public int FavoredFactionIsTargetMod = -3;
+        public int HatedEmployerIsEmployerMod = -3;
+        public int HatedEmployerIsTargetMod = 3;
 
+        // TODO:
         public int FavoredEmployerAlliedMonthlyMod = 6;
         public int HatedEmployerAlliedMonthlyMod = -30;
  
@@ -115,6 +122,12 @@ namespace HumanResources
         
         public PointsBySkillAndSizeOpts PointsBySkillAndSize = new PointsBySkillAndSizeOpts();
 
+        // Morale (aka company rep?) is another breakpoint
+        public List<HiringBreakpoint> MRPHiringBreakpoints = new List<HiringBreakpoint>()
+        {
+            new HiringBreakpoint{ MRBCLevel = 20f, Value = 12f }
+        };
+
         public CrewOpts AerospaceWings = new CrewOpts
         {
             Enabled = true,
@@ -126,8 +139,8 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = 1,
-            FactionLoyaltyChance = 0.3f
-        };
+            HazardPayRatio = 0f
+    };
 
         public CrewOpts MechTechCrews = new CrewOpts
         {
@@ -140,7 +153,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            FactionLoyaltyChance = 0.3f
+            HazardPayRatio = 0f
         };
 
         public CrewOpts MedTechCrews = new CrewOpts
@@ -154,7 +167,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = 2,
-            FactionLoyaltyChance = 0.3f
+            HazardPayRatio = 0f
         };
 
         public CrewOpts MechWarriors = new CrewOpts
@@ -168,7 +181,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            FactionLoyaltyChance = 0.3f
+            HazardPayRatio = 0.05f
         };
 
         public CrewOpts VehicleCrews = new CrewOpts
@@ -182,9 +195,15 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            FactionLoyaltyChance = 0.3f
+            HazardPayRatio = 0.05f
         };
 
+    }
+
+    public class HiringBreakpoint
+    {
+        public float MRBCLevel = 0f;
+        public float Value = 0f;
     }
 
     public class PointsBySkillAndSizeOpts

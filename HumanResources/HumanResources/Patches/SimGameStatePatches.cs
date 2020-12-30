@@ -7,6 +7,7 @@ using HumanResources.Helper;
 using Localize;
 using SVGImporter;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -470,33 +471,74 @@ namespace HumanResources.Patches
         }
     }
 
+    [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMRBRating")]
     static class SimGameState_CanMechWarriorBeHiredAccordingToMRBRating
     {
-        static void Postfix(SimGameState __instance, Pilot pilot, bool __result)
+        static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
         {
+            int currentMRBLevel = __instance.GetCurrentMRBLevel();
             CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+            __result = details.CanBeHiredAtMRBLevel(currentMRBLevel);
         }
     }
 
-    //public bool CanMechWarriorBeHiredAccordingToMRBRating(Pilot pilot)
-    //{
-    //    int currentMRBLevel = this.GetCurrentMRBLevel();
-    //    return (float)this.GetMechWarriorPowerLevel(pilot) <= this.Constants.Story.MRBRepHiringPowerLevelLimits[currentMRBLevel];
-    //}
-
+    [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMorale")]
     static class SimGameState_CanMechWarriorBeHiredAccordingToMorale
     {
-        static void Postfix(SimGameState __instance, Pilot pilot, bool __result)
+        static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
         {
-            CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+            // Check morale settings here; 
+            //   should elites require more morale?
+            //   should high level mechwarriors require a higher morale?
+            //   should nobles require a high morale rating?
+
+            __result = true;
         }
     }
 
-    //public bool CanMechWarriorBeHiredAccordingToMorale(Pilot pilot)
-    //{
-    //    this.GetCurrentMRBLevel();
-    //    int mechWarriorPowerLevel = this.GetMechWarriorPowerLevel(pilot);
-    //    int moraleHiringLevelIndex = this.GetMoraleHiringLevelIndex();
-    //    return moraleHiringLevelIndex < 0 || moraleHiringLevelIndex >= this.Constants.Story.MaxMoralePowerLevelLimits.Length || (float)mechWarriorPowerLevel <= this.Constants.Story.MaxMoralePowerLevelLimits[moraleHiringLevelIndex];
-    //}
+    [HarmonyPatch(typeof(SimGameState), "DeductQuarterlyFunds")]
+    static class SimGameState_DeductQuarterlyFunds
+    {
+        static void Postfix(SimGameState __instance)
+        {
+
+            // Check pilots to see if they favor or hate an allied faction
+            List<FactionValue> alliedFactions = new List<FactionValue>();
+            foreach (string factionName in __instance.GetAllCareerAllies())
+            {
+                alliedFactions.Add(FactionEnumeration.GetFactionByName(factionName));
+            }
+
+            foreach (Pilot pilot in __instance.PilotRoster)
+            {
+                CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+                
+                if (details.FavoredFaction > 0)
+                {
+                    foreach (FactionValue faction in alliedFactions)
+                    {
+                        if (faction.ID == details.FavoredFaction)
+                        {
+                            Mod.Log.Debug?.Write($"Pilot {pilot.Name} favors allied faction: {faction.FriendlyName}, " +
+                                $"applying attitude mod: {Mod.Config.Attitude.FavoredEmployerAlliedMonthlyMod}");
+                        }
+                    }
+                }
+
+                if (details.HatedFaction > 0)
+                {
+                    foreach (FactionValue faction in alliedFactions)
+                    {
+                        if (faction.ID == details.HatedFaction)
+                        {
+                            Mod.Log.Debug?.Write($"Pilot {pilot.Name} hates allied faction: {faction.FriendlyName}, " +
+                                $"applying attitude mod: {Mod.Config.Attitude.HatedEmployerAlliedMonthlyMod}");
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
 }

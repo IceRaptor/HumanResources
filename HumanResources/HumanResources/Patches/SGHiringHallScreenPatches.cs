@@ -163,6 +163,17 @@ namespace HumanResources.Patches
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
             StringBuilder sb = new StringBuilder();
+
+            // Check hazard pay
+            if (details.HazardPay > 0)
+            {
+                string hazardPayS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hazard_Pay],
+                    new object[] { SimGameState.GetCBillString(details.HazardPay) }).ToString();
+                Mod.Log.Debug?.Write($"Hazard pay is: {hazardPayS}");
+                sb.Append(hazardPayS);
+                sb.Append("\n");
+            }
+
             // Convert favored and hated faction
             if (details.FavoredFaction > 0)
             {

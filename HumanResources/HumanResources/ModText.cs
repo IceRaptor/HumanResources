@@ -52,6 +52,8 @@ namespace HumanResources
         public const string LT_Crew_Attitude_Poor = "CREW_ATTITUDE_POOR";
         public const string LT_Crew_Attitude_Worst = "CREW_ATTITUDE_WORST";
 
+        public const string LT_Crew_Hazard_Pay = "CREW_HAZARD_PAY";
+
         public Dictionary<string, string> Labels = new Dictionary<string, string>
         {
             { LT_Crew_Skill_1, "Rookie" },
@@ -93,7 +95,9 @@ namespace HumanResources
             { LT_Crew_Attitude_Good, "Favored" },
             { LT_Crew_Attitude_Average, "Neutral" },
             { LT_Crew_Attitude_Poor, "Disliked" },
-            { LT_Crew_Attitude_Worst, "Detested" }
+            { LT_Crew_Attitude_Worst, "Detested" },
+
+            { LT_Crew_Hazard_Pay, "<b>Hazard Pay:</b>  {0}" }
 
         };
 

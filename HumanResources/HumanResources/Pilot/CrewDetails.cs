@@ -233,6 +233,44 @@ namespace HumanResources.Extensions
             }
         }
 
+        public int HazardPay { 
+            get 
+            {
+                CrewOpts options = null;
+                if (IsMechTechCrew || IsMedTechCrew) return 0;
+                else if (IsAerospaceCrew) options = Mod.Config.HiringHall.AerospaceWings;
+                else if (IsMechWarrior) options = Mod.Config.HiringHall.MechWarriors;
+                else if (IsVehicleCrew) options = Mod.Config.HiringHall.VehicleCrews;
+
+                float payFraction = Salary * options.HazardPayRatio;
+                Mod.Log.Debug?.Write($"Crew has payFraction: {payFraction} => salary: {Salary} x hazardPayRatio: {options.HazardPayRatio}");
+
+                float fraction = (float)Math.Floor(payFraction / options.HazardPayUnits);
+                float hazardPay = options.HazardPayUnits * fraction;
+                Mod.Log.Debug?.Write($"  Hazard pay: {hazardPay} => payFraction: {payFraction} % modulo: {options.HazardPayUnits} = fraction: {fraction}");
+
+                return (int)Math.Floor(hazardPay);
+            }
+        }
+
+        public bool CanBeHiredAtMRBLevel(int MRBLevel)
+        {
+            float threshold = 0f;
+            if (IsAerospaceCrew)
+                threshold = Mod.Config.HiringHall.AerospaceWings.ValueThresholdForMRBLevel[MRBLevel];
+            else if (IsMechTechCrew)
+                threshold = Mod.Config.HiringHall.MechTechCrews.ValueThresholdForMRBLevel[MRBLevel];
+            else if (IsMechWarrior)
+                threshold = Mod.Config.HiringHall.MechWarriors.ValueThresholdForMRBLevel[MRBLevel];
+            else if (IsMedTechCrew)
+                threshold = Mod.Config.HiringHall.MedTechCrews.ValueThresholdForMRBLevel[MRBLevel];
+            else if (IsVehicleCrew)
+                threshold = Mod.Config.HiringHall.VehicleCrews.ValueThresholdForMRBLevel[MRBLevel];
+
+            Mod.Log.Debug?.Write($"For MRBLevel: {MRBLevel} threshold is: {threshold} with value: {Value}");
+            return Value >= threshold;
+        }
+
         // -- COMPARISON FUNCTIONS --
 
         // Evaluation is highest skills == lowest

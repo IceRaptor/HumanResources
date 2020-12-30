@@ -90,10 +90,19 @@ namespace HumanResources.Patches
 
             Mod.Log.Debug?.Write("Updating attitude fields.");
 
-            // Inject attitude
             StringBuilder sb = new StringBuilder();
 
-            // TODO: Convert attitude to text label
+            // Inject hazard pay, if appropriate
+            if (details.HazardPay > 0)
+            {
+                string hazardPayS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hazard_Pay],
+                    new object[] { SimGameState.GetCBillString(details.HazardPay) }).ToString();
+                Mod.Log.Debug?.Write($"Hazard pay is: {hazardPayS}");
+                sb.Append(hazardPayS);
+                sb.Append("\n");
+            }
+
+            // Inject attitude
             string attitudeValKey = ModText.LT_Crew_Attitude_Average;
             if (details.Attitude >= Mod.Config.Attitude.ThresholdBest)
                 attitudeValKey = ModText.LT_Crew_Attitude_Best;
@@ -180,18 +189,6 @@ namespace HumanResources.Patches
             LocalizableText lastNameLabel = lastNameLabelGO.GetComponentInChildren<LocalizableText>();
             string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Contract_Term]).ToString();
             lastNameLabel.SetText(contractTermS);
-
-            GameObject skillsButton = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Skill_Button);
-            if (skillsButton == null)
-                Mod.Log.Debug?.Write("SBGDP:SetPilot - SkillsButton is null!");
-            if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
-            {
-                //skillsButton.SetActive(false);
-            }
-            else
-            {
-                //skillsButton.SetActive(true);
-            }
 
             string contractTermRemaining = "------";
             if (!details.IsPlayer && details.ContractTerm != 0)
