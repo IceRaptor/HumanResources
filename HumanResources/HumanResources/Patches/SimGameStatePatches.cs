@@ -521,6 +521,8 @@ namespace HumanResources.Patches
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} favors allied faction: {faction.FriendlyName}, " +
                                 $"applying attitude mod: {Mod.Config.Attitude.FavoredEmployerAlliedMonthlyMod}");
+                            details.Attitude += Mod.Config.Attitude.FavoredEmployerAlliedMonthlyMod;
+                            ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
                         }
                     }
                 }
@@ -533,6 +535,8 @@ namespace HumanResources.Patches
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} hates allied faction: {faction.FriendlyName}, " +
                                 $"applying attitude mod: {Mod.Config.Attitude.HatedEmployerAlliedMonthlyMod}");
+                            details.Attitude += Mod.Config.Attitude.HatedEmployerAlliedMonthlyMod;
+                            ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
                         }
                     }
                 }
