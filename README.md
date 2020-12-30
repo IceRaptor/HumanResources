@@ -156,4 +156,4 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Company reputation feels like a step too far; too much to manage but it's damn compelling. How would I make your aggregate reputation make sense?
 * Add MSRB restrictions for each crew member
 * Add pilot favor/hatred to pre-generated pilots
-
+* Compound faction names aren't whitespace separated

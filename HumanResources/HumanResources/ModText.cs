@@ -53,7 +53,6 @@ namespace HumanResources
         public const string LT_Crew_Attitude_Worst = "CREW_ATTITUDE_WORST";
 
         public const string LT_Crew_Hazard_Pay = "CREW_HAZARD_PAY";
-
         public const string LT_Contract_Hazard_Pay = "CONTRACT_HAZARD_PAY";
 
         public Dictionary<string, string> Labels = new Dictionary<string, string>

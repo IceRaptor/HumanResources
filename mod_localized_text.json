@@ -28,7 +28,21 @@
         "CREW_NAME_FORMAT" : "{0} {1}" ,
     
         "CREW_DOSSIER_CONTRACT_TERM" : "Contract End" ,
-        "CREW_DOSSIER_DAYS_REMAINING" : "{0} days"
+        "CREW_DOSSIER_DAYS_REMAINING" : "{0} days",
+
+        "CREW_DOSSIER_BIO_ATTITUDE" : "<b>Attitude towards the Company:</b>  {0} ({1})", 
+        "CREW_DOSSIER_BIO_FACTION_FAVORED" : "<b>Favored Faction:</b>  {0}",
+        "CREW_DOSSIER_BIO_FACTION_HATED" : "<b>Hated Faction:</b>  {0}",
+
+        "CREW_ATTITUDE_BEST" : "Loyal",
+        "CREW_ATTITUDE_GOOD" : "Liked",
+        "CREW_ATTITUDE_AVERAGE" : "Neutral",
+        "CREW_ATTITUDE_POOR" : "Disliked",
+        "CREW_ATTITUDE_WORST" : "Detested",
+
+        "CREW_HAZARD_PAY" : "<b>Hazard Pay:</b>  {0}",
+        "CONTRACT_HAZARD_PAY" : "Crew Hazard Pay: {0}"
+
         },
         "PlanetStrings" : {
             "PLANET_AEROSPACE_BOUNDS" : "<color=red>Hirable Aerospace Pilots</color> - {0} to {1}",

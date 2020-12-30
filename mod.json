@@ -33,6 +33,33 @@
             "VehicleCrewRGB" : [ 0.486, 0.745, 0.525 ],
             "MechwarriorRGB" : [ 0.376, 0.533, 0.604 ]
         },
+        "Attitude" : {
+            "ThresholdMax" : 100,
+            "ThresholdBest" : 75,
+            "ThresholdGood" : 30,
+            "ThresholdPoor" : -30,
+            "ThresholdWorst" : -75,
+            "ThresholdMin" : -100,
+
+            "FavoredFactionChance" : 0.3,
+            "HatedFactionChance" : 0.3,
+
+            "PilotKilledMod" : -10,
+
+            "ContractSuccessMod" : 1,
+            "ContractFailedGoodFaithMod" : -2,
+            "ContractFailedMod" : -10,
+
+            "DeployedOnMissionMod" : 1,
+            "BenchedOnMissionMod" : -2,
+            "FavoredFactionIsEmployerMod" : 1,
+            "FavoredFactionIsTargetMod" : -3,
+            "HatedEmployerIsEmployerMod" : -3,
+            "HatedEmployerIsTargetMod" : 3,
+
+            "FavoredEmployerAlliedMonthlyMod" : 6,
+            "HatedEmployerAlliedMonthlyMod" : -30
+        },
         "HiringHall" : {
             "Scarcity" : {
                 "Enabled": true,
@@ -110,6 +137,9 @@
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+                "HazardPayRatio" : 0.05,
+                "HazardPayUnits" : 500,
+                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
                 "MaxOfType" : 1
             },
             "MechTechCrews" : {
@@ -121,6 +151,9 @@
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+                "HazardPayRatio" : 0,
+                "HazardPayUnits" : 0,
+                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
                 "MaxOfType" : -1
             },
             "MedTechCrews" : {
@@ -132,6 +165,9 @@
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+                "HazardPayRatio" : 0,
+                "HazardPayUnits" : 0,
+                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
                 "MaxOfType" : 2
             },
             "MechWarriors" : {
@@ -143,6 +179,9 @@
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+                "HazardPayRatio" : 0.05,
+                "HazardPayUnits" : 500,
+                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
                 "MaxOfType" : -1
             },
             "VehicleCrews" : {
@@ -154,6 +193,9 @@
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+                "HazardPayRatio" : 0.05,
+                "HazardPayUnits" : 500,
+                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
                 "MaxOfType" : -1
             }
         },
