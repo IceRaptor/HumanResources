@@ -487,6 +487,7 @@ namespace HumanResources.Patches
     {
         static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
         {
+            // TODO:
             // Check morale settings here; 
             //   should elites require more morale?
             //   should high level mechwarriors require a higher morale?

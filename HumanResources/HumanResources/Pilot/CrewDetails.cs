@@ -268,7 +268,7 @@ namespace HumanResources.Extensions
                 threshold = Mod.Config.HiringHall.VehicleCrews.ValueThresholdForMRBLevel[MRBLevel];
 
             Mod.Log.Debug?.Write($"For MRBLevel: {MRBLevel} threshold is: {threshold} with value: {Value}");
-            return Value >= threshold;
+            return Value <= threshold;
         }
 
         // -- COMPARISON FUNCTIONS --

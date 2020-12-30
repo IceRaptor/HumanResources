@@ -188,6 +188,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
+            ValueThresholdForMRBLevel = new float[] { 0, 12, 20, 29, 36 },
             HazardPayRatio = 0.05f
         };
 
@@ -202,6 +203,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
+            ValueThresholdForMRBLevel = new float[] { 0, 12, 20, 29, 36 },
             HazardPayRatio = 0.05f
         };
 
