@@ -40,7 +40,6 @@ namespace HumanResources
         // Value by MRB level. Should be one less than MRBRepCap in SimGameConstants, as you can always hire below the first value
         //                                                  MRB: 1, 2, 3,  4,  5
         public float[] ValueThresholdForMRBLevel = new float[] { 0, 8, 16, 24, 32 };
-        // 	50, 200, 500, 700, 900
 
         // -1 indicates no limit
         public float MaxOfType = -1;
@@ -122,12 +121,6 @@ namespace HumanResources
         
         public PointsBySkillAndSizeOpts PointsBySkillAndSize = new PointsBySkillAndSizeOpts();
 
-        // Morale (aka company rep?) is another breakpoint
-        public List<HiringBreakpoint> MRPHiringBreakpoints = new List<HiringBreakpoint>()
-        {
-            new HiringBreakpoint{ MRBCLevel = 20f, Value = 12f }
-        };
-
         public CrewOpts AerospaceWings = new CrewOpts
         {
             Enabled = true,
@@ -198,12 +191,6 @@ namespace HumanResources
             HazardPayRatio = 0.05f
         };
 
-    }
-
-    public class HiringBreakpoint
-    {
-        public float MRBCLevel = 0f;
-        public float Value = 0f;
     }
 
     public class PointsBySkillAndSizeOpts
