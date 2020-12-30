@@ -79,10 +79,10 @@ namespace HumanResources
                 UpdateOrCreateCrewDetails(pilotDef, newDetails);
                 return newDetails;
             }
-            else
-            {
-                Mod.Log.Debug?.Write($"Reading crew details using GUID from tag: {guid}");
-            }
+            //else
+            //{
+            //    Mod.Log.Debug?.Write($"Reading crew details using GUID from tag: {guid}");
+            //}
 
             CrewDetails details;
             bool hasKey = crewDetailsCache.TryGetValue(guid, out details);
@@ -90,7 +90,7 @@ namespace HumanResources
             {
                 // Doesn't exist in cache, read from the company stat
                 string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
-                Mod.Log.Debug?.Write($"Trying to read companyStatName: {companyStatName}");
+                //Mod.Log.Debug?.Write($"Trying to read companyStatName: {companyStatName}");
 
                 Statistic detailsCompanyStat = ModState.SimGameState.CompanyStats.GetStatistic(companyStatName);
                 if (detailsCompanyStat == null)
@@ -109,12 +109,12 @@ namespace HumanResources
                 }
 
                 string statVal = detailsCompanyStat.Value<string>();
-                Mod.Log.Debug?.Write($"Read companyStat value as: {statVal}");
+                //Mod.Log.Debug?.Write($"Read companyStat value as: {statVal}");
 
                 try
                 {
                     details = JsonConvert.DeserializeObject<CrewDetails>(statVal);
-                    Mod.Log.Debug?.Write($"Fetched details from companyStats serialization: {details}.");
+                    //Mod.Log.Debug?.Write($"Fetched details from companyStats serialization: {details}.");
                 }
                 catch (Exception e)
                 {
@@ -124,10 +124,10 @@ namespace HumanResources
                 // Add to cache
                 crewDetailsCache[guid] = details;
             }
-            else
-            {
-                Mod.Log.Debug?.Write($"Found cached details value: {details}");
-            }
+            //else
+            //{
+            //    Mod.Log.Debug?.Write($"Found cached details value: {details}");
+            //}
 
             return details;
         }
@@ -163,14 +163,14 @@ namespace HumanResources
 
             // Write the new data to the company stats for it
             string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
-            Mod.Log.Debug?.Write($"Trying to read companyStat: {companyStatName}");
+            //Mod.Log.Debug?.Write($"Trying to read companyStat: {companyStatName}");
             Statistic detailsCompanyStat = ModState.SimGameState.CompanyStats.GetStatistic(companyStatName);
             if (detailsCompanyStat == null)
                 detailsCompanyStat = ModState.SimGameState.CompanyStats.AddStatistic<string>(companyStatName, "");
 
             string serializedDetails = JsonConvert.SerializeObject(newDetails);
             detailsCompanyStat.SetValue<string>(serializedDetails);
-            Mod.Log.Debug?.Write($"CompanyStat: {companyStatName} updated with new CrewDetails: {serializedDetails}.");
+            //Mod.Log.Debug?.Write($"CompanyStat: {companyStatName} updated with new CrewDetails: {serializedDetails}.");
 
             // Update the cache
             crewDetailsCache[guid] = newDetails;

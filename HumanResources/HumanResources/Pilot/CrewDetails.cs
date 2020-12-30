@@ -74,12 +74,12 @@ namespace HumanResources.Extensions
 
         }
 
-        public CrewDetails(PilotDef pilotDef, CrewType type, int size = 0, int skill = 0)
+        public CrewDetails(PilotDef pilotDef, CrewType type, int sizeIdx = 0, int skillIdx = 0)
         {
             this.Type = type;
             this.GUID = Guid.NewGuid().ToString();
-            this.Size = size;
-            this.Skill = skill;
+            this.Size = sizeIdx + 1; 
+            this.Skill = skillIdx + 1;
 
             this.Attitude = 0;
 
@@ -87,17 +87,17 @@ namespace HumanResources.Extensions
             CrewOpts config = null;
             if (IsAerospaceCrew)
             {
-                Value = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[skill][size];
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[skillIdx][sizeIdx];
                 config = Mod.Config.HiringHall.AerospaceWings;
             }
             else if (IsMechTechCrew)
             {
-                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[skill][size];
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[skillIdx][sizeIdx];
                 config = Mod.Config.HiringHall.MechTechCrews;
             }
             else if (IsMedTechCrew)
             {
-                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[skill][size];
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[skillIdx][sizeIdx];
                 config = Mod.Config.HiringHall.MedTechCrews;
             }
             else if (IsMechWarrior)
@@ -267,7 +267,7 @@ namespace HumanResources.Extensions
             else if (IsVehicleCrew)
                 threshold = Mod.Config.HiringHall.VehicleCrews.ValueThresholdForMRBLevel[MRBLevel];
 
-            Mod.Log.Debug?.Write($"For MRBLevel: {MRBLevel} threshold is: {threshold} with value: {Value}");
+            Mod.Log.Debug?.Write($"CanBeHired: {Value <= threshold} => value: {Value} <= threshold: {threshold}");
             return Value <= threshold;
         }
 

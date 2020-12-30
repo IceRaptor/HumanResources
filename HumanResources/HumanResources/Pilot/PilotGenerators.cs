@@ -80,7 +80,9 @@ namespace HumanResources.Helper
 
             // Determine crew size and skill
             crewSize  = GaussianHelper.RandomCrewSize(0, 0);
+            Mod.Log.Debug?.Write($"Generated random crewSize: {crewSize}");
             crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
+            Mod.Log.Debug?.Write($"Generated random crewSkill: {crewSkill}");
 
             // TODO: Build jibberish history
 

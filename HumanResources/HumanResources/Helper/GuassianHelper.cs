@@ -48,7 +48,7 @@ namespace HumanResources.Helper
                 }
             }
 
-            return index + 1;
+            return index;
         }
 
     }

@@ -109,11 +109,11 @@
             },
 
             "SkillDistribution" : {
-                "Breakpoints" : [ -1.5, 1.5, 2, 2.5 ]
+                "Breakpoints" : [ -0.5, 1, 1.75, 2.5 ]
             },
 
             "SizeDistribution" : {
-                "Breakpoints" : [ -1, 0.5, 1.25, 2 ]
+                "Breakpoints" : [ -0.25, 0.25, 1.25, 2  ]
             },
 
             "PointsBySkillAndSize" : {
@@ -151,7 +151,7 @@
                 "BonusVariance" : 1.5,
                 "HazardPayRatio" : 0.05,
                 "HazardPayUnits" : 500,
-                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
+                "ValueThresholdForMRBLevel" : [ 8, 16, 24, 32, 99 ],
                 "MaxOfType" : 1
             },
             "MechTechCrews" : {
@@ -165,7 +165,7 @@
                 "BonusVariance" : 1.5,
                 "HazardPayRatio" : 0,
                 "HazardPayUnits" : 0,
-                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
+                "ValueThresholdForMRBLevel" : [ 8, 16, 24, 32, 99 ],
                 "MaxOfType" : -1
             },
             "MedTechCrews" : {
@@ -179,7 +179,7 @@
                 "BonusVariance" : 1.5,
                 "HazardPayRatio" : 0,
                 "HazardPayUnits" : 0,
-                "ValueThresholdForMRBLevel" : [ 0, 8, 16, 24, 32 ],
+                "ValueThresholdForMRBLevel" : [ 8, 16, 24, 32, 99 ],
                 "MaxOfType" : 2
             },
             "MechWarriors" : {
@@ -193,7 +193,7 @@
                 "BonusVariance" : 1.5,
                 "HazardPayRatio" : 0.05,
                 "HazardPayUnits" : 500,
-                "ValueThresholdForMRBLevel" : [ 0, 12, 20, 29, 36 ],
+                "ValueThresholdForMRBLevel" : [ 10, 17, 24, 31, 99 ],
                 "MaxOfType" : -1
             },
             "VehicleCrews" : {
@@ -207,7 +207,7 @@
                 "BonusVariance" : 1.5,
                 "HazardPayRatio" : 0.05,
                 "HazardPayUnits" : 500,
-                "ValueThresholdForMRBLevel" : [ 0, 12, 20, 29, 36 ],
+                "ValueThresholdForMRBLevel" : [ 10, 17, 24, 31, 99 ],
                 "MaxOfType" : -1
             }
         },

@@ -39,7 +39,7 @@ namespace HumanResources
 
         // Value by MRB level. Should be one less than MRBRepCap in SimGameConstants, as you can always hire below the first value
         //                                                  MRB: 1, 2, 3,  4,  5
-        public float[] ValueThresholdForMRBLevel = new float[] { 0, 8, 16, 24, 32 };
+        public float[] ValueThresholdForMRBLevel = new float[] { 8, 16, 24, 32, 99 };
 
         // -1 indicates no limit
         public float MaxOfType = -1;
@@ -122,13 +122,13 @@ namespace HumanResources
         public DistributionOpts SkillDistribution = new DistributionOpts() 
         {
             // Rookie, Regular, Veteran, Elite, Legendary
-            Breakpoints = new float[] { -1.5f, 1.5f, 2f, 2.5f  }
+            Breakpoints = new float[] { -0.5f, 1f, 1.75f, 2.5f  }
         };
         
         public DistributionOpts SizeDistribution = new DistributionOpts()
         {
             // Tiny, Small, Medium, Large, Huge
-            Breakpoints = new float[] { -1f, 0.5f, 1.25f, 2f }
+            Breakpoints = new float[] { -0.25f, 0.25f, 1.25f, 2f }
         };
 
         public ScarcityOps Scarcity = new ScarcityOps();
@@ -188,7 +188,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            ValueThresholdForMRBLevel = new float[] { 0, 12, 20, 29, 36 },
+            ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 },
             HazardPayRatio = 0.05f
         };
 
@@ -203,7 +203,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            ValueThresholdForMRBLevel = new float[] { 0, 12, 20, 29, 36 },
+            ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 },
             HazardPayRatio = 0.05f
         };
 
