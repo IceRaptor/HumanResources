@@ -41,6 +41,10 @@ namespace HumanResources
         //                                                  MRB: 1, 2, 3,  4,  5
         public float[] ValueThresholdForMRBLevel = new float[] { 8, 16, 24, 32, 99 };
 
+        // For Combat units only; map skill levels to expertise boundaires (Green, Regular, Veteran, Elite, Legendary)
+        // Does not apply to units w/o combat skills
+        public float[] SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+
         // -1 indicates no limit
         public float MaxOfType = -1;
     }
@@ -240,7 +244,7 @@ namespace HumanResources
         };
     }
 
-    public class PoachingOpts
+    public class HeadHuntingOpts
     {
         public bool Enabled = true;
 
@@ -289,7 +293,8 @@ namespace HumanResources
         public CrewCfg Crew = new CrewCfg();
 
         public HiringHallOpts HiringHall = new HiringHallOpts();
-        public PoachingOpts Poaching = new PoachingOpts();
+
+        public HeadHuntingOpts HeadHunting = new HeadHuntingOpts();
 
         public AttitudeOpts Attitude = new AttitudeOpts();
 

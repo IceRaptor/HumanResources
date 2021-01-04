@@ -157,3 +157,4 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Add MSRB restrictions for each crew member
 * Add pilot favor/hatred to pre-generated pilots
 * Compound faction names aren't whitespace separated
+* I'm not updating pilots value, etc as their skills change; need to ensure that gets addressed at least at contract renegotiation

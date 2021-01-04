@@ -86,14 +86,6 @@ namespace HumanResources.Patches
                 // TODO: Only do check if not traveling and not at planet with no_population tag
                 foreach (Pilot pilot in __instance.PilotRoster)
                 {
-
-                    //Mod.Log.Debug?.Write($"Pilot: {pilot.Name} has tags:");
-                    //// Enumerate tags
-                    //foreach (string tag in pilot.pilotDef.PilotTags)
-                    //{
-                    //    Mod.Log.Debug?.Write($" -- {tag}");
-                    //}
-
                     CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
                     if (details.ExpirationDay <= __instance.DaysPassed)
                     {
@@ -105,16 +97,16 @@ namespace HumanResources.Patches
                 // Fire the first event, if there are more they will be fired from OnEventDismissed
                 if (ModState.ExpiredContracts.Count > 0)
                 {
+                    Mod.Log.Info?.Write($"Contract expiration event fired.");
                     (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
                     SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
-                    Mod.Log.Info?.Write($"Contract expiration event fired.");
                     ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
                 }
             }
 
             // TODO: Make this fire randomly during the quarter, not immediately
             // TODO: Reset this when leaving a system and on each quarter
-            if (Mod.Config.Poaching.Enabled && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
+            if (Mod.Config.HeadHunting.Enabled && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
             {
                 bool testForPoaching = false;
                 Statistic poachingStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Poaching_Record);
@@ -122,6 +114,7 @@ namespace HumanResources.Patches
                 {
                     __instance.CompanyStats.AddStatistic<int>(ModStats.Company_Poaching_Record, 0);
                     testForPoaching = false;
+                    Mod.Log.Debug?.Write("Stat not found, adding stat with value of 0.");
                 }
                 else if (poachingStat.Value<int>() > 0)
                 {
@@ -131,6 +124,7 @@ namespace HumanResources.Patches
                 {
                     __instance.CompanyStats.Set<int>(ModStats.Company_Poaching_Record, poachingStat.Value<int>() + 1);
                     testForPoaching = true;
+                    Mod.Log.Debug?.Write("Incrementing poaching stat");
                 }
 
                 if (testForPoaching)
@@ -146,16 +140,20 @@ namespace HumanResources.Patches
 
                     // Test for poaching
                     float randomRoll = (float)Mod.Random.NextDouble();
-                    float econMod = Mod.Config.Poaching.EconMods[(int)__instance.ExpenditureLevel + 2];
+                    float econMod = Mod.Config.HeadHunting.EconMods[(int)__instance.ExpenditureLevel + 2];
                     foreach (Pilot pilot in pilots)
                     {
                         CrewDetails cd = ModState.GetCrewDetails(pilot.pilotDef);
-                        Mod.Log.Debug?.Write($"Checking pilot: {pilot.Name} for poaching");
-                        float baseChance = Mod.Config.Poaching.ChanceBySkill[cd.Skill - 1];
+                        Mod.Log.Debug?.Write($"Checking pilot: {pilot.Name} for poaching for expertise: {cd.Expertise}");
+                        float baseChance = Mod.Config.HeadHunting.ChanceBySkill[cd.Expertise];
                         float modifiedChance = baseChance + econMod;
                         Mod.Log.Debug?.Write($"  -- chance for pilot: {modifiedChance} vs. randomRoll: {randomRoll}");
                         if (randomRoll <= modifiedChance)
+                        {
                             Mod.Log.Info?.Write($"Pilot: {pilot.Name} SHOULD BE POACHED");
+                            SimGameEventDef newEvent = EventHelper.CreateHeadHuntingEvent(pilot, cd, cd.HiringBonus, cd.HiringBonus);
+                            ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                        }
                         else
                             Mod.Log.Debug?.Write("Pilot will not be poached.");
                     }
@@ -489,8 +487,8 @@ namespace HumanResources.Patches
             {
 
                 // Handle updating the contract length in the def; funds are handled by the event.
-                if (ModConsts.Event_ContractExpired_Option_Hire_NoBonus.Equals(option.Description.Id) ||
-                    ModConsts.Event_ContractExpired_Option_Hire_Bonus.Equals(option.Description.Id))
+                if (ModConsts.Event_Option_ContractExpired_Hire_NoBonus.Equals(option.Description.Id) ||
+                    ModConsts.Event_Option_ContractExpired_Hire_Bonus.Equals(option.Description.Id))
                 {
                     (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
 

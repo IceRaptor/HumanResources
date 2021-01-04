@@ -23,8 +23,13 @@ namespace HumanResources
         public const string Tooltip_TooManyOfType = "HRTooltipTooManyOfType";
 
         public const string Event_ContractExpired = "event_hr_mw_contractExpired";
-        public const string Event_ContractExpired_Option_Hire_NoBonus = "outcome_0";
-        public const string Event_ContractExpired_Option_Hire_Bonus = "outcome_1";
+        public const string Event_Option_ContractExpired_Hire_NoBonus = "outcome_0";
+        public const string Event_Option_ContractExpired_Hire_Bonus = "outcome_1";
+
+        public const string Event_HeadHunting = "event_hr_mw_headhunting";
+        public const string Event_Option_HeadHunting_Retained = "outcome_0";
+        public const string Event_Option_HeadHunting_Leaves = "outcome_1";
+
     }
 
     // All of these tags are pilot tags

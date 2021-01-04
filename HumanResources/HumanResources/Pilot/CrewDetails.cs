@@ -78,7 +78,7 @@ namespace HumanResources.Extensions
         {
             this.Type = type;
             this.GUID = Guid.NewGuid().ToString();
-            this.Size = sizeIdx + 1; 
+            this.Size = sizeIdx + 1;
             this.Skill = skillIdx + 1;
 
             this.Attitude = 0;
@@ -102,18 +102,20 @@ namespace HumanResources.Extensions
             }
             else if (IsMechWarrior)
             {
-                Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
-                        pilotDef.BasePiloting + pilotDef.BonusPiloting +
-                        pilotDef.BaseGuts + pilotDef.BonusGuts +
-                        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                //Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
+                //        pilotDef.BasePiloting + pilotDef.BonusPiloting +
+                //        pilotDef.BaseGuts + pilotDef.BonusGuts +
+                //        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                Value = pilotDef.BaseGunnery + pilotDef.BasePiloting + pilotDef.BaseGuts + pilotDef.BaseTactics;
                 config = Mod.Config.HiringHall.MechWarriors;
             }
             else if (IsVehicleCrew)
             {
-                Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
-                        pilotDef.BasePiloting + pilotDef.BonusPiloting +
-                        pilotDef.BaseGuts + pilotDef.BonusGuts +
-                        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                //Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
+                //        pilotDef.BasePiloting + pilotDef.BonusPiloting +
+                //        pilotDef.BaseGuts + pilotDef.BonusGuts +
+                //        pilotDef.BaseTactics + pilotDef.BonusTactics;
+                Value = pilotDef.BaseGunnery + pilotDef.BasePiloting + pilotDef.BaseGuts + pilotDef.BaseTactics;
                 config = Mod.Config.HiringHall.VehicleCrews;
 
                 // Required tags
@@ -179,6 +181,27 @@ namespace HumanResources.Extensions
         public bool IsMedTechCrew { get { return Type == CrewType.MedTechCrew; } }
         public bool IsVehicleCrew { get { return Type == CrewType.VehicleCrew; } }
 
+        public int HazardPay
+        {
+            get
+            {
+                CrewOpts options = null;
+                if (IsMechTechCrew || IsMedTechCrew || IsPlayer) return 0;
+                else if (IsAerospaceCrew) options = Mod.Config.HiringHall.AerospaceWings;
+                else if (IsMechWarrior) options = Mod.Config.HiringHall.MechWarriors;
+                else if (IsVehicleCrew) options = Mod.Config.HiringHall.VehicleCrews;
+
+                float payFraction = Salary * options.HazardPayRatio;
+                Mod.Log.Debug?.Write($"Crew has payFraction: {payFraction} => salary: {Salary} x hazardPayRatio: {options.HazardPayRatio}");
+
+                float fraction = (float)Math.Floor(payFraction / options.HazardPayUnits);
+                float hazardPay = options.HazardPayUnits * fraction;
+                Mod.Log.Debug?.Write($"  Hazard pay: {hazardPay} => payFraction: {payFraction} % modulo: {options.HazardPayUnits} = fraction: {fraction}");
+
+                return (int)Math.Floor(hazardPay);
+            }
+        }
+
         public string SizeLabel
         {
             get
@@ -206,12 +229,15 @@ namespace HumanResources.Extensions
             }
         }
 
-        public string SkillLabel
+        public string ExpertiseLabel
         {
             get
             {
-                string label = "UNKNOWN";
-                switch (Skill)
+                int expertise = Skill;
+                if (IsMechWarrior || IsVehicleCrew) expertise = Expertise;
+
+                string label;
+                switch (expertise)
                 {
                     case 5:
                         label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_5];
@@ -233,23 +259,26 @@ namespace HumanResources.Extensions
             }
         }
 
-        public int HazardPay { 
-            get 
+        public int Expertise
+        {
+            get
             {
-                CrewOpts options = null;
-                if (IsMechTechCrew || IsMedTechCrew || IsPlayer) return 0;
-                else if (IsAerospaceCrew) options = Mod.Config.HiringHall.AerospaceWings;
-                else if (IsMechWarrior) options = Mod.Config.HiringHall.MechWarriors;
-                else if (IsVehicleCrew) options = Mod.Config.HiringHall.VehicleCrews;
+                if (IsAerospaceCrew || IsMechTechCrew || IsMedTechCrew) return Skill;
 
-                float payFraction = Salary * options.HazardPayRatio;
-                Mod.Log.Debug?.Write($"Crew has payFraction: {payFraction} => salary: {Salary} x hazardPayRatio: {options.HazardPayRatio}");
+                CrewOpts opts = IsMechWarrior ? Mod.Config.HiringHall.MechWarriors : Mod.Config.HiringHall.VehicleCrews;
 
-                float fraction = (float)Math.Floor(payFraction / options.HazardPayUnits);
-                float hazardPay = options.HazardPayUnits * fraction;
-                Mod.Log.Debug?.Write($"  Hazard pay: {hazardPay} => payFraction: {payFraction} % modulo: {options.HazardPayUnits} = fraction: {fraction}");
+                int expertise = 0;
+                for (int i = 0; i < opts.SkillToExpertiseThresholds.Count(); i++)
+                {
+                    if (Value <= opts.SkillToExpertiseThresholds[i])
+                    {
+                        expertise = i;
+                        break;
+                    }
+                }
 
-                return (int)Math.Floor(hazardPay);
+                return expertise;
+
             }
         }
 

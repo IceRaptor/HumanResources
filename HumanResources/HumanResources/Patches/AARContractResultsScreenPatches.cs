@@ -30,7 +30,7 @@ namespace HumanResources.Patches
             int killedPilotsMod = Mod.Config.Attitude.PerMission.PilotKilledMod * ___theContract.KilledPilots.Count;
             Mod.Log.Debug?.Write($"Player lost {___theContract.KilledPilots.Count} pilots, applying a modifier of {killedPilotsMod} to all pilots.");
 
-            // Calcluate the contract bonus 
+            // Calculate the contract bonus 
             int contractBonus = Mod.Config.Attitude.PerMission.ContractFailedMod;
             if (___theContract.State == Contract.ContractState.Complete)
             {

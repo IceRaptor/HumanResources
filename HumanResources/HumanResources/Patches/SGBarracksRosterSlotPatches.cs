@@ -178,7 +178,7 @@ namespace HumanResources.Patches
 
                 // Set the expertise of the crew
                 ___expertise.color = Color.white;
-                ___expertise.SetText(details.SkillLabel);
+                ___expertise.SetText(details.ExpertiseLabel);
 
             }
             else if (details.IsMechTechCrew)
@@ -222,7 +222,7 @@ namespace HumanResources.Patches
 
                 // Set the expertise of the crew
                 ___expertise.color = Color.white;
-                ___expertise.SetText(details.SkillLabel);
+                ___expertise.SetText(details.ExpertiseLabel);
 
             }
             else if (details.IsMedTechCrew)
@@ -266,7 +266,7 @@ namespace HumanResources.Patches
 
                 // Set the expertise of the crew
                 ___expertise.color = Color.white;
-                ___expertise.SetText(details.SkillLabel);
+                ___expertise.SetText(details.ExpertiseLabel);
             }
             else if (details.IsVehicleCrew)
             {
