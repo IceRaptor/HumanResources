@@ -211,7 +211,7 @@
                 "MaxOfType" : -1
             }
         },
-        "Poaching" : {
+        "HeadHunting" : {
             "Enabled" : true,
             "LifeStyleMods" :  [ 0.35, 0.2, -0.2, -0.35 ],
             "PoachingChance" : [ 0.05, 0.1, 0.15, 0.3, 0.6 ]
