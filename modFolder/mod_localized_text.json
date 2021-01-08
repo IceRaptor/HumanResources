@@ -42,13 +42,16 @@
 
         "CREW_HAZARD_PAY" : "<b>Hazard Pay:</b>  {0}",
         "CONTRACT_HAZARD_PAY" : "Crew Hazard Pay: {0}"
-
-        },
-        "PlanetStrings" : {
-            "PLANET_AEROSPACE_BOUNDS" : "<color=red>Hirable Aerospace Pilots</color> - {0} to {1}",
-            "PLANET_MECHWARRIOR_BOUNDS" : "<color=red>Hirable MechWarriors</color> - {0} to {1}",
-            "PLANET_MECH_TECH_BOUNDS" : "<color=red>Hirable MechTechs</color> - {0} to {1}",
-            "PLANET_MED_TECH_BOUNDS" : "<color=red>Hirable MedTechs</color> - {0} to {1}",
-            "PLANET_VEHICLE_CREW_BOUNDS" : "<color=red>Hirable Vehicle Crews</color> - {0} to {1}"
-        }
+	},
+	"Events" : {
+		"HEADHUNTED_RETENTION" : " Retention Bonus: {0}\n\n",
+		"HEADHUNTED_CONTRACT_BUYOUT" : " Buyout Payment: {0}\n\n"
+	},	
+	"PlanetStrings" : {
+		"PLANET_AEROSPACE_BOUNDS" : "<color=red>Hirable Aerospace Pilots</color> - {0} to {1}",
+		"PLANET_MECHWARRIOR_BOUNDS" : "<color=red>Hirable MechWarriors</color> - {0} to {1}",
+		"PLANET_MECH_TECH_BOUNDS" : "<color=red>Hirable MechTechs</color> - {0} to {1}",
+		"PLANET_MED_TECH_BOUNDS" : "<color=red>Hirable MedTechs</color> - {0} to {1}",
+		"PLANET_VEHICLE_CREW_BOUNDS" : "<color=red>Hirable Vehicle Crews</color> - {0} to {1}"
+	}
 }

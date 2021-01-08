@@ -1,10 +1,11 @@
-﻿using System;
+﻿using HumanResources.Extensions;
+using System;
 
 namespace HumanResources.Helper
 {
     public static class SalaryHelper
     {
-        public static void CalculateSalary(int value, CrewOpts config, out int salary, out int bonus)
+        public static void CalcSalary(int value, CrewOpts config, out int salary, out int bonus)
         {
             int salaryByValue = (int)Math.Floor(config.SalaryMulti * (float)Math.Pow(config.SalaryExponent, value));
             Mod.Log.Debug?.Write($" -- salaryByValue: {salaryByValue}");
@@ -28,6 +29,20 @@ namespace HumanResources.Helper
             Mod.Log.Debug?.Write($" -- bonus: {bonus}");
 
             return;
+        }
+
+        public static int CalcCounterOffer(CrewDetails details)
+        {
+            float counterOfferBounds = details.AdjustedBonus * Mod.Config.HeadHunting.CounterOfferVariance;
+            float delta = counterOfferBounds - details.AdjustedBonus;
+            float variance = delta * (float)Mod.Random.NextDouble();
+            Mod.Log.Debug?.Write($"Counter offer => adjustedBonus: {details.AdjustedBonus} + variance: {variance}");
+
+            int rawCounterOffer = (int)Math.Ceiling(details.AdjustedBonus + variance);
+            int counterOffer = (rawCounterOffer / 10) * 10; // Round to nearest 10 cbills
+            Mod.Log.Debug?.Write($" -- counterOffer: {counterOffer}");
+
+            return counterOffer;
         }
     }
 }

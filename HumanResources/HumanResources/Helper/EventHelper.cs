@@ -1,5 +1,6 @@
 ﻿using BattleTech;
 using HumanResources.Extensions;
+using Localize;
 using System;
 using System.Text;
 
@@ -45,14 +46,23 @@ namespace HumanResources.Helper
         {
             SimGameEventDef rawEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_HeadHunting);
 
+            int counterOffer = SalaryHelper.CalcCounterOffer(details);
+            int buyout = details.AdjustedBonus;
+            Mod.Log.Info?.Write($"For headhunting event, counterOffer: {counterOffer}  buyout: {buyout}");
+            
             // Change the description fields
             BaseDescriptionDef rawBaseDescDef = rawEventDef.Description;
             StringBuilder detailsSB = new StringBuilder(rawBaseDescDef.Details);
             detailsSB.Append("\n\n");
             detailsSB.Append("<margin=5em>\n");
-            // TODO: Localize
-            detailsSB.Append($" Retention Bonus: {SimGameState.GetCBillString(details.AdjustedBonus)}\n\n");
-            detailsSB.Append($" Contract Buyout Payment: {SimGameState.GetCBillString(details.AdjustedSalary)}\n\n");
+            detailsSB.Append(
+                new Text(Mod.LocalizedText.Events[ModText.ET_HeadHunted_Retention], 
+                new object[] { SimGameState.GetCBillString(counterOffer) }).ToString()
+                );
+            detailsSB.Append(
+                new Text(Mod.LocalizedText.Events[ModText.ET_HeadHunted_Buyout],
+                new object[] { SimGameState.GetCBillString(buyout) }).ToString()
+                );
             detailsSB.Append("</margin>\n");
             BaseDescriptionDef newBaseDescDef = new BaseDescriptionDef(rawBaseDescDef.Id, rawBaseDescDef.Name, detailsSB.ToString(), rawBaseDescDef.Icon);
 

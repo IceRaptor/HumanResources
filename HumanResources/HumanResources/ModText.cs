@@ -12,6 +12,7 @@ namespace HumanResources
 
     public class ModText
     {
+        // === Labels text ====
         public const string LT_Crew_Skill_1 = "SKILL_LEVEL_1";
         public const string LT_Crew_Skill_2 = "SKILL_LEVEL_2";
         public const string LT_Crew_Skill_3 = "SKILL_LEVEL_3";
@@ -103,6 +104,17 @@ namespace HumanResources
 
         };
 
+        // === Head Hunting text ====
+        public const string ET_HeadHunted_Retention = "HEADHUNTED_RETENTION";
+        public const string ET_HeadHunted_Buyout = "HEADHUNTED_CONTRACT_BUYOUT";
+
+        public Dictionary<string, string> Events = new Dictionary<string, string>
+        {
+            { ET_HeadHunted_Retention, " Retention Bonus: {0}\n\n" },
+            { ET_HeadHunted_Buyout, " Buyout Payment: {0}\n\n" }
+        };
+
+        // === Planetary text ====
         public const string PT_AERO_BOUNDS = "PLANET_AEROSPACE_BOUNDS";
         public const string PT_MW_BOUNDS = "PLANET_MECHWARRIOR_BOUNDS";
         public const string PT_MECH_TECH_BOUNDS = "PLANET_MECH_TECH_BOUNDS";

@@ -177,3 +177,5 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * MedTechs, MechTechs, Aerospace should improve as you use them
 * Check if player character is paid a salary
 * What happens if you fire then re-hire the same mechwarrior? Does the old state persist?
+* Random list of merc company names as the hiring company
+* Account for inflated hiring bonuses when recalculating on rehire

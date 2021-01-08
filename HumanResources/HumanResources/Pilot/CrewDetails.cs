@@ -118,7 +118,7 @@ namespace HumanResources.Extensions
             pilotDef.PilotTags.Add($"{ModTags.Tag_GUID}{GUID}");
 
             // Calculate salary and bonus
-            SalaryHelper.CalculateSalary(Value, config, out int salary, out int bonus);
+            SalaryHelper.CalcSalary(Value, config, out int salary, out int bonus);
             this.Salary = salary;
             this.HiringBonus = bonus;
 
@@ -335,7 +335,7 @@ namespace HumanResources.Extensions
             }
 
             // Calculate salary and bonus
-            SalaryHelper.CalculateSalary(Value, config, out int salary, out int bonus);
+            SalaryHelper.CalcSalary(Value, config, out int salary, out int bonus);
             this.Salary = salary;
             this.HiringBonus = bonus;
 
