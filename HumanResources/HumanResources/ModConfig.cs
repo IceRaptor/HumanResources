@@ -70,6 +70,9 @@ namespace HumanResources
         public float FavoredFactionChance = 0.3f;
         public float HatedFactionChance = 0.3f;
 
+        // Bonus added when a contract is renewed with the merc
+        public int RehireBonusMod = 2;
+
         public MonthlyAttitudeMods Monthly = new MonthlyAttitudeMods();
         public PerMissionAttitudeMods PerMission = new PerMissionAttitudeMods();
     }
@@ -250,8 +253,23 @@ namespace HumanResources
 
         public float[] EconMods = { 0.35f, 0.2f, 0f, -0.2f, -0.35f };
         public float[] ChanceBySkill = { 0.05f, 0.1f, 0.15f, 0.3f, 0.6f };
+
         // Check for poaching N times per month
-        // Poaching goes from most legendary to least
+        public int CompanyCooldownInterval = 30;
+
+        // Crew cannot be attempted to be poached more than 1 time in this period
+        public int CrewCooldownInterval = 90;
+
+        // Determine a random amount between the bonus and bonus x CounterOfferVariance to determine is their 'counter-offer' to keep them
+        public float CounterOfferVariance = 1.5f;
+
+        public List<string> PlanetBlacklist = new List<string>() { "planet_civ_primitive", "planet_other_plague", "planet_pop_none" };
+
+        // Poaching goes from most legendary to least ?
+
+        // You pay an additional bonus to keep them AND their re-hire bonus changes to the new amount
+        // They leave and the head-hunters pay-back their hiring bonus
+        // They leave and pocket the hiring bonus (if disgrunted or less)
     }
 
     public class CrewCfg

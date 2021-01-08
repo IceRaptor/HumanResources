@@ -45,6 +45,7 @@ A crew's base salary is driven by an exponential function `ab^x` where a = `Sala
 
 Once the base salary is calculated, a variance is applied to randomize the amount. This is controlled by the `SalaryVariance` multiplier.  A random value between the base salary and the salary x `SalaryVariance` will be used as the final salary the mercenary asks for.
 
+### Hiring Bonus
 Each mercenary asks for a hiring bonus when their contract is renewed. This bonus is calculated using the same formula as the salary, but used `BonusVariance` multiplier instead. 
 
 > Example: A mercenary with base salary 95,000 has `SalaryVariance` = 1.1 and `BonusVariance` = 1.5. 
@@ -80,6 +81,17 @@ The availability of crews are determined on a planet by planet basis, through pl
 All the modifiers from all the tags on the planet are added together, the rounded up to the nearest integer to determine the maximum number of each crew that will be randomly generated. The lower bound of each crew type is half the upper bound, rounded to zero. 
 
 > Example: The tag modifiers includes `planet_other_capital` with `MedTechs=1.3`, `planet_pop_small` with `Medtechs=0.8` and `planet_industry_recreation` with `MedTechs=0.5`. The sum of these is 2.6, which is rounded up to 3 for the upper bound. The lower bound is half the upper bound rounded down, or 3 / 2 = 1.5 for 1. This planet will generate between 1 and 3 MedTechs.
+
+
+# Head Hunting
+
+Skilled mercenaries are in high demand, and most of them care more about the size of their paycheck than concepts like loyalty or honor. Any time you are orbiting an inhabited 
+
+
+    // You talk them into staying without a hiring bonus (requires best attitude)
+    // You pay an additional bonus to keep them AND their re-hire bonus changes to the new amount
+    // They leave and the head-hunters pay-back their hiring bonus
+    // They leave and pocket the hiring bonus (if poor or less)
 
 # Crew Value
 
@@ -158,3 +170,10 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Add pilot favor/hatred to pre-generated pilots
 * Compound faction names aren't whitespace separated
 * I'm not updating pilots value, etc as their skills change; need to ensure that gets addressed at least at contract renegotiation
+* Context popup from events needs to account for crews
+* * Optional kill bonus where each unit killed gives a bonus to the pilot
+* * Doco note: salary only changes on renegotiation
+* Update salary for mechwarriors/vcrew prior to event fire
+* MedTechs, MechTechs, Aerospace should improve as you use them
+* Check if player character is paid a salary
+* What happens if you fire then re-hire the same mechwarrior? Does the old state persist?

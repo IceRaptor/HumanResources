@@ -64,7 +64,7 @@ namespace HumanResources.Extensions
         public override string ToString()
         {
             return $"GUID:{GUID}  Type: {Type}  IsPlayer: {IsPlayer}  Size: {Size}  Skill: {Skill}  Value: {Value}  HiringBonus: {HiringBonus}" +
-                $"  Salary: {Salary}  ContractTerm: {ContractTerm}  Loyalty: {Attitude}  ExpirationDay: {ExpirationDay}" +
+                $"  Salary: {Salary}  ContractTerm: {ContractTerm}  Attitude: {Attitude}  ExpirationDay: {ExpirationDay}" +
                 $"  AdjustedBonus: {AdjustedBonus}  AdjustedSalary: {AdjustedSalary}";
         }
 
@@ -102,19 +102,11 @@ namespace HumanResources.Extensions
             }
             else if (IsMechWarrior)
             {
-                //Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
-                //        pilotDef.BasePiloting + pilotDef.BonusPiloting +
-                //        pilotDef.BaseGuts + pilotDef.BonusGuts +
-                //        pilotDef.BaseTactics + pilotDef.BonusTactics;
                 Value = pilotDef.BaseGunnery + pilotDef.BasePiloting + pilotDef.BaseGuts + pilotDef.BaseTactics;
                 config = Mod.Config.HiringHall.MechWarriors;
             }
             else if (IsVehicleCrew)
             {
-                //Value = pilotDef.BaseGunnery + pilotDef.BonusGunnery +
-                //        pilotDef.BasePiloting + pilotDef.BonusPiloting +
-                //        pilotDef.BaseGuts + pilotDef.BonusGuts +
-                //        pilotDef.BaseTactics + pilotDef.BonusTactics;
                 Value = pilotDef.BaseGunnery + pilotDef.BasePiloting + pilotDef.BaseGuts + pilotDef.BaseTactics;
                 config = Mod.Config.HiringHall.VehicleCrews;
 
@@ -298,6 +290,57 @@ namespace HumanResources.Extensions
 
             Mod.Log.Debug?.Write($"CanBeHired: {Value <= threshold} => value: {Value} <= threshold: {threshold}");
             return Value <= threshold;
+        }
+
+        public void UpdateAttitudeTags(PilotDef pilotDef)
+        {
+            string tag = ModTags.Tag_Attitude_Neutral;
+            if (Attitude > Mod.Config.Attitude.ThresholdBest) tag = ModTags.Tag_Attitude_Best;
+            else if (Attitude > Mod.Config.Attitude.ThresholdGood) tag = ModTags.Tag_Attitude_Good;
+            else if (Attitude < Mod.Config.Attitude.ThresholdWorst) tag = ModTags.Tag_Attitude_Worst;
+            else if (Attitude < Mod.Config.Attitude.ThresholdPoor) tag = ModTags.Tag_Attitude_Poor;
+
+            pilotDef.PilotTags.RemoveRange(ModTags.Tags_Attitude_All);
+            pilotDef.PilotTags.Add(tag);
+        }
+
+        public void UpdateOnRehire(PilotDef pilotDef)
+        {
+            // Calculate value and set required tags
+            CrewOpts config = null;
+            if (IsAerospaceCrew)
+            {
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[this.Skill - 1][this.Size - 1];
+                config = Mod.Config.HiringHall.AerospaceWings;
+            }
+            else if (IsMechTechCrew)
+            {
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[this.Skill - 1][this.Size - 1];
+                config = Mod.Config.HiringHall.MechTechCrews;
+            }
+            else if (IsMedTechCrew)
+            {
+                Value = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[this.Skill - 1][this.Size - 1];
+                config = Mod.Config.HiringHall.MedTechCrews;
+            }
+            else if (IsMechWarrior)
+            {
+                Value = pilotDef.BaseGunnery + pilotDef.BasePiloting + pilotDef.BaseGuts + pilotDef.BaseTactics;
+                config = Mod.Config.HiringHall.MechWarriors;
+            }
+            else if (IsVehicleCrew)
+            {
+                Value = pilotDef.BaseGunnery + pilotDef.BasePiloting + pilotDef.BaseGuts + pilotDef.BaseTactics;
+                config = Mod.Config.HiringHall.VehicleCrews;
+            }
+
+            // Calculate salary and bonus
+            SalaryHelper.CalculateSalary(Value, config, out int salary, out int bonus);
+            this.Salary = salary;
+            this.HiringBonus = bonus;
+
+            this.Attitude += Mod.Config.Attitude.RehireBonusMod;
+            this.ExpirationDay = ModState.SimGameState.DaysPassed + ContractTerm;
         }
 
         // -- COMPARISON FUNCTIONS --

@@ -159,6 +159,9 @@ namespace HumanResources
                 Mod.Log.Debug?.Write($" -- pilot has existing details GUID: {guid}");
             }
 
+            // Update attitude tags on pilot
+            newDetails.UpdateAttitudeTags(pilotDef);
+
             // TODO: Check for GUID mismatch in tags / details
 
             // Write the new data to the company stats for it

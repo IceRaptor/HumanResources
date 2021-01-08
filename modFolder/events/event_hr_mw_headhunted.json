@@ -1,6 +1,6 @@
 {
   "Description": {
-    "Id": "event_hr_mw_headhunted_salary",
+    "Id": "event_hr_mw_headhunted",
     "Name": "Crew Head Hunted",
     "Details": "Darius comes to find you early in the shift. '[[TGT_MW,{TGT_MW.Callsign}]] has someone trying to head-hunt them. We have to decide if we want to counter-offer, or let them go.' The company trying to head-hunt the mechwarrior is offering them a better salary, you will need to outdo the offer to retain them. The amount you have to exceed the offer by depends on the mercenaries attitude. If the mechwarrior leaves the company they will repay a portion of their hiring bonus (depending on their attitude).",
     "Icon": "uixTxrSpot_Darius.png"
@@ -54,18 +54,18 @@
   ],
   "AdditionalObjects": [],
   "Options": [
-    {
+  {
       "Description": {
         "Id": "outcome_0",
-        "Name": "You raise the offer for [[TGT_MW,{TGT_MW.Callsign}]] and retain their services... for now.",
-        "Details": "Stays with the company",
+        "Name": "You remind [[TGT_MW,{TGT_MW.Callsign}]] how good the company has been to them",
+        "Details": "Persuasion",
         "Icon": null
       },
       "RequirementList": [
         {
           "Scope": "MechWarrior",
           "RequirementTags": {
-            "items": null,
+            "items": [ "HR_CREW_ATTITUDE_BEST" ],
             "tagSetSourceFile": "Tags/PilotTags"
           },
           "ExclusionTags": {
@@ -79,8 +79,8 @@
         {
           "Description": {
             "Id": "outcome_0_0",
-            "Name": "Crew stays",
-            "Details": "[[TGT_MW,{TGT_MW.Callsign}]] stays with the company, at a higher salary",
+            "Name": "Crew Remains",
+            "Details": "[[TGT_MW,{TGT_MW.Callsign}]] ignores the other offer and stays with the company",
             "Icon": null
           },
           "Weight": 100,
@@ -129,8 +129,8 @@
     {
       "Description": {
         "Id": "outcome_1",
-        "Name": "{TGT_MW.Callsign} breaks their contract and leaves the company.",
-        "Details": "Renew the Contract",
+        "Name": "You offer [[TGT_MW,{TGT_MW.Callsign}]] a larger sum to retain them",
+        "Details": "Counter Offer",
         "Icon": null
       },
       "RequirementList": [
@@ -141,7 +141,7 @@
             "tagSetSourceFile": "Tags/PilotTags"
           },
           "ExclusionTags": {
-            "items": null,
+            "items": [ "HR_CREW_ATTITUDE_BEST" ],
             "tagSetSourceFile": "Tags/PilotTags"
           },
           "RequirementComparisons": []
@@ -151,6 +151,85 @@
         {
           "Description": {
             "Id": "outcome_1_0",
+            "Name": "[[TGT_MW,{TGT_MW.Callsign}]] stays with the company after pocketing the bonus",
+            "Details": "Crew Remains",
+            "Icon": null
+          },
+          "Weight": 100,
+          "Results": [
+            {
+              "Scope": "Company",
+              "Requirements": null,
+              "AddedTags": {
+                "tagSetSourceFile": "",
+                "items": []
+              },
+              "RemovedTags": {
+                "tagSetSourceFile": "",
+                "items": []
+              },
+              "Stats": [
+			    {
+                  "typeString": "System.Int32",
+                  "name": "Funds",
+                  "value": "1",
+                  "set": false,
+                  "valueConstant": null
+                },
+                {
+                  "typeString": "System.Int32",
+                  "name": "HR_CompanyRep",
+                  "value": "1",
+                  "set": false,
+                  "valueConstant": null
+                }
+              ],
+              "Actions": null,
+              "ForceEvents": null,
+              "TemporaryResult": false,
+              "ResultDuration": 0
+            }
+          ]
+        }
+      ],
+      "Requirements": {
+        "Scope": "Company",
+        "RequirementTags": {
+          "tagSetSourceFile": "",
+          "items": []
+        },
+        "ExclusionTags": {
+          "tagSetSourceFile": "",
+          "items": []
+        },
+        "RequirementComparisons": []
+      }
+    },
+    {
+      "Description": {
+        "Id": "outcome_2",
+        "Name": "{TGT_MW.Callsign} breaks their contract and leaves the company.",
+        "Details": "Headhunted",
+        "Icon": null
+      },
+      "RequirementList": [
+        {
+          "Scope": "MechWarrior",
+          "RequirementTags": {
+            "items": null,
+            "tagSetSourceFile": "Tags/PilotTags"
+          },
+          "ExclusionTags": {
+            "items": [ "HR_CREW_ATTITUDE_WORST" ],
+            "tagSetSourceFile": "Tags/PilotTags"
+          },
+          "RequirementComparisons": []
+        }
+      ],
+      "ResultSets": [
+        {
+          "Description": {
+            "Id": "outcome_2_0",
             "Name": "MW stays",
             "Details": "[[TGT_MW,{TGT_MW.Callsign}]] leaves but returns their bonus",
             "Icon": null
@@ -176,6 +255,86 @@
                   "set": false,
                   "valueConstant": null
                 },
+                {
+                  "typeString": "System.Int32",
+                  "name": "HR_CompanyRep",
+                  "value": "1",
+                  "set": false,
+                  "valueConstant": null
+                }
+              ],
+              "Actions": [
+                {
+                  "Type": "MechWarrior_Fire",
+                  "value": "1",
+                  "valueConstant": null,
+                  "additionalValues": null
+                }
+              ],
+              "ForceEvents": null,
+              "TemporaryResult": false,
+              "ResultDuration": 0
+            }
+          ]
+        }
+      ],
+      "Requirements": {
+        "Scope": "Company",
+        "RequirementTags": {
+          "tagSetSourceFile": "",
+          "items": []
+        },
+        "ExclusionTags": {
+          "tagSetSourceFile": "",
+          "items": []
+        },
+        "RequirementComparisons": [
+        ]
+      }
+    },
+	{
+      "Description": {
+        "Id": "outcome_3",
+        "Name": "{TGT_MW.Callsign} leaves without notice - or payback.",
+        "Details": "Deserts",
+        "Icon": null
+      },
+      "RequirementList": [
+        {
+          "Scope": "MechWarrior",
+          "RequirementTags": {
+            "items": [ "HR_CREW_ATTITUDE_POOR", "HR_CREW_ATTITUDE_WORST" ],
+            "tagSetSourceFile": "Tags/PilotTags"
+          },
+          "ExclusionTags": {
+            "items": [],
+            "tagSetSourceFile": "Tags/PilotTags"
+          },
+          "RequirementComparisons": []
+        }
+      ],
+      "ResultSets": [
+        {
+          "Description": {
+            "Id": "outcome_3_0",
+            "Name": "Desertion!",
+            "Details": "[[TGT_MW,{TGT_MW.Callsign}]] deserts for another company",
+            "Icon": null
+          },
+          "Weight": 100,
+          "Results": [
+            {
+              "Scope": "Company",
+              "Requirements": null,
+              "AddedTags": {
+                "tagSetSourceFile": "",
+                "items": []
+              },
+              "RemovedTags": {
+                "tagSetSourceFile": "",
+                "items": []
+              },
+              "Stats": [
                 {
                   "typeString": "System.Int32",
                   "name": "HR_CompanyRep",

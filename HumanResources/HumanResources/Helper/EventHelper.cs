@@ -1,5 +1,6 @@
 ﻿using BattleTech;
 using HumanResources.Extensions;
+using System;
 using System.Text;
 
 namespace HumanResources.Helper
@@ -27,24 +28,8 @@ namespace HumanResources.Helper
             {
                 if (ModConsts.Event_Option_ContractExpired_Hire_Bonus.Equals(sgeOption.Description.Id))
                 {
-                    SimGameEventResultSet[] newResultSets = sgeOption.ResultSets;
-                    SimGameEventResult[] newResult = newResultSets[0].Results;
-                    SimGameStat[] newStats = newResult[0].Stats;
-                    for (int i = 0; i < newStats.Length; i++)
-                    {
-                        SimGameStat stat = newStats[i];
-                        if (ModStats.HBS_Company_Funds.Equals(stat.name))
-                        {
-                            (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                            Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to adjustedBonus: {expired.Details?.AdjustedBonus} for pilot: {expired.Pilot.Name}");
-                            stat.value = $"-{expired.Details.AdjustedBonus}";
-                        }
-
-                        newStats[i] = stat;
-                    }
-                    newResult[0].Stats = newStats;
-                    newResultSets[0].Results = newResult;
-                    sgeOption.ResultSets = newResultSets;
+                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                    UpdateFundsStat(pilot, expired.Details.AdjustedBonus, sgeOption);
                 }
             }
 
@@ -63,7 +48,7 @@ namespace HumanResources.Helper
             // Change the description fields
             BaseDescriptionDef rawBaseDescDef = rawEventDef.Description;
             StringBuilder detailsSB = new StringBuilder(rawBaseDescDef.Details);
-            detailsSB.Append("\n");
+            detailsSB.Append("\n\n");
             detailsSB.Append("<margin=5em>\n");
             // TODO: Localize
             detailsSB.Append($" Retention Bonus: {SimGameState.GetCBillString(details.AdjustedBonus)}\n\n");
@@ -78,44 +63,12 @@ namespace HumanResources.Helper
                 if (ModConsts.Event_Option_HeadHunting_Leaves.Equals(sgeOption.Description.Id))
                 {
                     // Mechwarrior leaves, company gets a payoff 
-                    SimGameEventResultSet[] newResultSets = sgeOption.ResultSets;
-                    SimGameEventResult[] newResult = newResultSets[0].Results;
-                    SimGameStat[] newStats = newResult[0].Stats;
-                    for (int i = 0; i < newStats.Length; i++)
-                    {
-                        SimGameStat stat = newStats[i];
-                        if (ModStats.HBS_Company_Funds.Equals(stat.name))
-                        {
-                            Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to contract_Buyout: {buyoutPayment} for pilot: {pilot.Name}");
-                            stat.value = $"{buyoutPayment}";
-                        }
-
-                        newStats[i] = stat;
-                    }
-                    newResult[0].Stats = newStats;
-                    newResultSets[0].Results = newResult;
-                    sgeOption.ResultSets = newResultSets;
+                    UpdateFundsStat(pilot, buyoutPayment, sgeOption);
                 }
                 else if (ModConsts.Event_Option_HeadHunting_Retained.Equals(sgeOption.Description.Id))
                 {
                     // Mechwarrior statys, company pays them retention 
-                    SimGameEventResultSet[] newResultSets = sgeOption.ResultSets;
-                    SimGameEventResult[] newResult = newResultSets[0].Results;
-                    SimGameStat[] newStats = newResult[0].Stats;
-                    for (int i = 0; i < newStats.Length; i++)
-                    {
-                        SimGameStat stat = newStats[i];
-                        if (ModStats.HBS_Company_Funds.Equals(stat.name))
-                        {
-                            Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to retention_bonus: {retentionBonus} for pilot: {pilot.Name}");
-                            stat.value = $"-{retentionBonus}";
-                        }
-
-                        newStats[i] = stat;
-                    }
-                    newResult[0].Stats = newStats;
-                    newResultSets[0].Results = newResult;
-                    sgeOption.ResultSets = newResultSets;
+                    UpdateFundsStat(pilot, retentionBonus, sgeOption);                    
                 }
             }
 
@@ -125,6 +78,28 @@ namespace HumanResources.Helper
                 rawEventDef.AdditionalObjects, newOptions,
                 rawEventDef.Weight, rawEventDef.OneTimeEvent, rawEventDef.Tags);
             return eventDef;
+        }
+
+        // Update the funds stat to the new vaslue
+        private static void UpdateFundsStat(Pilot pilot, float newValue, SimGameEventOption sgeOption)
+        {
+            SimGameEventResultSet[] newResultSets = sgeOption.ResultSets;
+            SimGameEventResult[] newResult = newResultSets[0].Results;
+            SimGameStat[] newStats = newResult[0].Stats;
+            for (int i = 0; i < newStats.Length; i++)
+            {
+                SimGameStat stat = newStats[i];
+                if (ModStats.HBS_Company_Funds.Equals(stat.name))
+                {
+                    Mod.Log.Debug?.Write($" --- Changing funds stat from: {stat.value} to value: {newValue} for pilot: {pilot.Name}");
+                    stat.value = $"{newValue}";
+                }
+
+                newStats[i] = stat;
+            }
+            newResult[0].Stats = newStats;
+            newResultSets[0].Results = newResult;
+            sgeOption.ResultSets = newResultSets;
         }
     }
 }

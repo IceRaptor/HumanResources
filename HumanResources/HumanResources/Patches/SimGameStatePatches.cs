@@ -67,124 +67,7 @@ namespace HumanResources.Patches
         }
     }
 
-    [HarmonyPatch(typeof(SimGameState), "OnDayPassed")]
-    static class SimGameState_OnDayPassed
-    {
-        static void Postfix(SimGameState __instance, int timeLapse, SimGameInterruptManager ___interruptQueue,
-            SimGameEventTracker ___companyEventTracker, SimGameEventTracker ___mechWarriorEventTracker,
-            SimGameEventTracker ___deadEventTracker, SimGameEventTracker ___moraleEventTracker)
-        {
-            Mod.Log.Debug?.Write($"OnDayPassed called with timeLapse: {timeLapse}");
-
-            if (!___interruptQueue.IsOpen)
-            {
-                // Force fire our test event - works
-                // Mod.Log.Debug?.Write("FIRING EVENT");
-                //SimGameEventDef companyEventDef = __instance.DataManager.SimGameEventDefs.Get("event_hr_co_smearCampaign");
-                //___companyEventTracker.ActivateEvent(companyEventDef, null);
-
-                // TODO: Only do check if not traveling and not at planet with no_population tag
-                foreach (Pilot pilot in __instance.PilotRoster)
-                {
-                    CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
-                    if (details.ExpirationDay <= __instance.DaysPassed)
-                    {
-                        Mod.Log.Debug?.Write($"CONTRACT FOR PILOT: {pilot.Name} HAS ELAPSED, FIRING EVENT");
-                        ModState.ExpiredContracts.Enqueue((pilot, details));
-                    }
-                }
-
-                // Fire the first event, if there are more they will be fired from OnEventDismissed
-                if (ModState.ExpiredContracts.Count > 0)
-                {
-                    Mod.Log.Info?.Write($"Contract expiration event fired.");
-                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                    SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
-                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
-                }
-            }
-
-            // TODO: Make this fire randomly during the quarter, not immediately
-            // TODO: Reset this when leaving a system and on each quarter
-            if (Mod.Config.HeadHunting.Enabled && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
-            {
-                bool testForPoaching = false;
-                Statistic poachingStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Poaching_Record);
-                if (poachingStat == null)
-                {
-                    __instance.CompanyStats.AddStatistic<int>(ModStats.Company_Poaching_Record, 0);
-                    testForPoaching = false;
-                    Mod.Log.Debug?.Write("Stat not found, adding stat with value of 0.");
-                }
-                else if (poachingStat.Value<int>() > 0)
-                {
-                    Mod.Log.Debug?.Write("Already tested for poaching this quarter, skipping.");
-                }
-                else
-                {
-                    __instance.CompanyStats.Set<int>(ModStats.Company_Poaching_Record, poachingStat.Value<int>() + 1);
-                    testForPoaching = true;
-                    Mod.Log.Debug?.Write("Incrementing poaching stat");
-                }
-
-                if (testForPoaching)
-                {
-                    // Order pilots by skill
-                    // Randomize pilots instead of sorting by skill?
-                    List<Pilot> pilots = __instance.PilotRoster.ToList();
-                    pilots.Sort((p1, p2) => {
-                        CrewDetails p1cd = ModState.GetCrewDetails(p1.pilotDef);
-                        CrewDetails p2cd = ModState.GetCrewDetails(p2.pilotDef);
-                        return CrewDetails.CompareByValue(p1cd, p2cd);
-                    });
-
-                    // Test for poaching
-                    float randomRoll = (float)Mod.Random.NextDouble();
-                    float econMod = Mod.Config.HeadHunting.EconMods[(int)__instance.ExpenditureLevel + 2];
-                    foreach (Pilot pilot in pilots)
-                    {
-                        CrewDetails cd = ModState.GetCrewDetails(pilot.pilotDef);
-                        Mod.Log.Debug?.Write($"Checking pilot: {pilot.Name} for poaching for expertise: {cd.Expertise}");
-                        float baseChance = Mod.Config.HeadHunting.ChanceBySkill[cd.Expertise];
-                        float modifiedChance = baseChance + econMod;
-                        Mod.Log.Debug?.Write($"  -- chance for pilot: {modifiedChance} vs. randomRoll: {randomRoll}");
-                        if (randomRoll <= modifiedChance)
-                        {
-                            Mod.Log.Info?.Write($"Pilot: {pilot.Name} SHOULD BE POACHED");
-                            SimGameEventDef newEvent = EventHelper.CreateHeadHuntingEvent(pilot, cd, cd.HiringBonus, cd.HiringBonus);
-                            ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
-                        }
-                        else
-                            Mod.Log.Debug?.Write("Pilot will not be poached.");
-                    }
-
-                }
-            }
-        }
-    }
-
-    // Check for any other events that need to be fired.
-    [HarmonyPatch(typeof(SimGameState), "OnEventDismissed")]
-    static class SimGameState_OnEventDismissed
-    {
-        static void Postfix(SimGameEventTracker ___mechWarriorEventTracker)
-        {
-            // First, dequeue to remove any existing pilot
-            if (ModState.ExpiredContracts.Count > 0)
-                ModState.ExpiredContracts.Dequeue();
-
-            // If there are any other events left after that, fire them here.
-            if (ModState.ExpiredContracts.Count > 0)
-            {
-                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
-                Mod.Log.Info?.Write($"Contract expiration event fired.");
-                ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
-            }
-        }
-    }
-
-
+    // ==== PILOT CHANGES =====
     [HarmonyPatch(typeof(SimGameState), "AddPilotToRoster")]
     [HarmonyPatch(new Type[] { typeof(PilotDef), typeof(bool), typeof(bool) })]
     [HarmonyAfter(new string[] { "us.tbone.TisButAScratch" })]
@@ -374,6 +257,205 @@ namespace HumanResources.Patches
         }
     }
 
+    // Upgrade all the existing pilots w/ a contract time
+    [HarmonyPatch(typeof(SimGameState), "OnCareerModeCharacterCreationComplete")]
+    static class SimGameState_OnCareerModeCharacterCreationComplete
+    {
+        static void Postfix(SimGameState __instance)
+        {
+            foreach (Pilot pilot in __instance.PilotRoster)
+            {
+                if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
+
+                // Initialize new details for the pre-generated pilots
+                CrewDetails details = new CrewDetails(pilot.pilotDef, CrewType.MechWarrior);
+                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
+            }
+        }
+    }
+
+    // ==== EVENTS =====
+
+    [HarmonyPatch(typeof(SimGameState), "OnDayPassed")]
+    static class SimGameState_OnDayPassed
+    {
+        static void Postfix(SimGameState __instance, int timeLapse, SimGameInterruptManager ___interruptQueue,
+            SimGameEventTracker ___companyEventTracker, SimGameEventTracker ___mechWarriorEventTracker,
+            SimGameEventTracker ___deadEventTracker, SimGameEventTracker ___moraleEventTracker)
+        {
+            Mod.Log.Debug?.Write($"OnDayPassed called with timeLapse: {timeLapse}");
+
+            if (!___interruptQueue.IsOpen)
+            {
+                // Force fire our test event - works
+                // Mod.Log.Debug?.Write("FIRING EVENT");
+                //SimGameEventDef companyEventDef = __instance.DataManager.SimGameEventDefs.Get("event_hr_co_smearCampaign");
+                //___companyEventTracker.ActivateEvent(companyEventDef, null);
+
+                // TODO: Only do check if not traveling and not at planet with no_population tag
+                foreach (Pilot pilot in __instance.PilotRoster)
+                {
+                    CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+                    if (details.ExpirationDay <= __instance.DaysPassed)
+                    {
+                        Mod.Log.Debug?.Write($"CONTRACT FOR PILOT: {pilot.Name} HAS ELAPSED, FIRING EVENT");
+                        ModState.ExpiredContracts.Enqueue((pilot, details));
+                    }
+                }
+
+                // Fire the first event, if there are more they will be fired from OnEventDismissed
+                if (ModState.ExpiredContracts.Count > 0)
+                {
+                    Mod.Log.Info?.Write($"Contract expiration event fired.");
+                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                    SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
+                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                }
+            }
+
+            // TODO: Make this fire randomly during the quarter, not immediately
+            // TODO: Reset this when leaving a system and on each quarter
+            if (Mod.Config.HeadHunting.Enabled && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
+            {
+                bool testForPoaching = false;
+                Statistic poachingStat = __instance.CompanyStats.GetStatistic(ModStats.Company_Poaching_Record);
+                if (poachingStat == null)
+                {
+                    __instance.CompanyStats.AddStatistic<int>(ModStats.Company_Poaching_Record, 0);
+                    testForPoaching = false;
+                    Mod.Log.Debug?.Write("Stat not found, adding stat with value of 0.");
+                }
+                else if (poachingStat.Value<int>() > 0)
+                {
+                    Mod.Log.Debug?.Write("Already tested for poaching this quarter, skipping.");
+                }
+                else
+                {
+                    __instance.CompanyStats.Set<int>(ModStats.Company_Poaching_Record, poachingStat.Value<int>() + 1);
+                    testForPoaching = true;
+                    Mod.Log.Debug?.Write("Incrementing poaching stat");
+                }
+
+                if (testForPoaching)
+                {
+                    // Order pilots by skill
+                    // Randomize pilots instead of sorting by skill?
+                    List<Pilot> pilots = __instance.PilotRoster.ToList();
+                    pilots.Sort((p1, p2) => {
+                        CrewDetails p1cd = ModState.GetCrewDetails(p1.pilotDef);
+                        CrewDetails p2cd = ModState.GetCrewDetails(p2.pilotDef);
+                        return CrewDetails.CompareByValue(p1cd, p2cd);
+                    });
+
+                    // Test for poaching
+                    float randomRoll = (float)Mod.Random.NextDouble();
+                    float econMod = Mod.Config.HeadHunting.EconMods[(int)__instance.ExpenditureLevel + 2];
+                    foreach (Pilot pilot in pilots)
+                    {
+                        CrewDetails cd = ModState.GetCrewDetails(pilot.pilotDef);
+                        Mod.Log.Debug?.Write($"Checking pilot: {pilot.Name} for poaching for expertise: {cd.Expertise}");
+                        float baseChance = Mod.Config.HeadHunting.ChanceBySkill[cd.Expertise];
+                        float modifiedChance = baseChance + econMod;
+                        Mod.Log.Debug?.Write($"  -- chance for pilot: {modifiedChance} vs. randomRoll: {randomRoll}");
+                        if (randomRoll <= modifiedChance)
+                        {
+                            Mod.Log.Info?.Write($"Pilot: {pilot.Name} SHOULD BE POACHED");
+                            SimGameEventDef newEvent = EventHelper.CreateHeadHuntingEvent(pilot, cd, cd.HiringBonus, cd.HiringBonus);
+                            ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                        }
+                        else
+                            Mod.Log.Debug?.Write("Pilot will not be poached.");
+                    }
+
+                }
+            }
+        }
+    }
+
+    // Select an expired pilot and populate the fields with their data
+    [HarmonyPatch(typeof(SGEventPanel), "SetEvent")]
+    static class SGEventPanel_SetEvent
+    {
+        // Populate the target mechwarrior before the event
+        static void Prefix(SGEventPanel __instance, SimGameEventDef evt)
+        {
+            Mod.Log.Debug?.Write("SGEP:SetEvent:PRE");
+            if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id) && ModState.ExpiredContracts.Count > 0)
+            {
+                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                Mod.Log.Trace?.Write($"SGEventPanel details setting targetMechwarrior: {expired.Pilot.Name}");
+                ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, expired.Pilot);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(SGEventPanel), "OnOptionSelected")]
+    static class SimGameState_OnOptionSelected
+    {
+        static void Postfix(SGEventPanel __instance, SimGameEventOption option,
+            SimGameInterruptManager.EventPopupEntry ___thisEntry)
+        {
+
+            if (___thisEntry != null && ___thisEntry.parameters != null &&
+                ___thisEntry.parameters[0] is SimGameEventDef eventDef)
+            {
+
+                if (ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
+                {
+                    // Handle updating the contract length in the def; funds are handled by the event.
+                    if (ModConsts.Event_Option_ContractExpired_Hire_NoBonus.Equals(option.Description.Id) ||
+                        ModConsts.Event_Option_ContractExpired_Hire_Bonus.Equals(option.Description.Id))
+                    {
+                        (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+
+                        Mod.Log.Debug?.Write($"Pilot {expired.Pilot.Name} was re-hired w/o a bonus");
+                        expired.Details.ExpirationDay = ModState.SimGameState.DaysPassed + expired.Details.ContractTerm;
+                        ModState.UpdateOrCreateCrewDetails(expired.Pilot.pilotDef, expired.Details);
+                    }
+                }
+                else if (ModConsts.Event_HeadHunting.Equals(eventDef.Description.Id))
+                {
+
+                }
+
+            }                
+        }
+    }
+
+
+
+    // Check for any other events that need to be fired.
+    [HarmonyPatch(typeof(SimGameState), "OnEventDismissed")]
+    static class SimGameState_OnEventDismissed
+    {
+        static void Postfix(SimGameInterruptManager.EventPopupEntry entry, SimGameEventTracker ___mechWarriorEventTracker)
+        {
+            SimGameEventDef evt = entry != null && entry.parameters[0] is SimGameEventDef ? (SimGameEventDef)entry.parameters[0] : null;
+            if (String.Equals(ModConsts.Event_ContractExpired, evt?.Description?.Id))
+            {
+                // First, dequeue to remove any existing pilot
+                if (ModState.ExpiredContracts.Count > 0)
+                    ModState.ExpiredContracts.Dequeue();
+
+                // If there are any other events left after that, fire them here.
+                if (ModState.ExpiredContracts.Count > 0)
+                {
+                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
+                    SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
+                    Mod.Log.Info?.Write($"Contract expiration event fired.");
+                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                }
+            }
+
+            if (String.Equals(ModConsts.Event_HeadHunting, evt?.Description?.Id))
+            {
+                // TODO
+            }
+
+        }
+    }
+
+    // ===== COSTS =====
     [HarmonyPatch(typeof(SimGameState), "GetMechWarriorSalary")]
     static class SimGameState_GetMechWarriorSalary
     {
@@ -427,23 +509,6 @@ namespace HumanResources.Patches
         }
     }
 
-    // Upgrade all the existing pilots w/ a contract time
-    [HarmonyPatch(typeof(SimGameState), "OnCareerModeCharacterCreationComplete")]
-    static class SimGameState_OnCareerModeCharacterCreationComplete
-    {
-        static void Postfix(SimGameState __instance)
-        {
-            foreach (Pilot pilot in __instance.PilotRoster)
-            {
-                if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
-
-                // Initialize new details for the pre-generated pilots
-                CrewDetails details = new CrewDetails(pilot.pilotDef, CrewType.MechWarrior);
-                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
-            }
-        }
-    }
-
     [HarmonyPatch(typeof(SimGameState), "GetMechWarriorValue")]
     static class SimGameState_GetMechWarriorValue
     {
@@ -453,95 +518,6 @@ namespace HumanResources.Patches
             __result = details != null ? details.Salary : 0;
 
             return false;
-        }
-    }
-
-    [HarmonyPatch(typeof(SGEventPanel), "OnOptionSelected")]
-    static class SimGameState_OnOptionSelected
-    {
-        public static bool isExpiredContractEvent = false;
-
-        // Prefix here to set stat values for money?
-        static void Prefix(SGEventPanel __instance, SimGameEventOption option,
-            SimGameInterruptManager.EventPopupEntry ___thisEntry)
-        {
-            if (___thisEntry != null && ___thisEntry.parameters != null &&
-                ___thisEntry.parameters[0] is SimGameEventDef eventDef &&
-                ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
-            {
-                isExpiredContractEvent = true;
-            }
-            else
-            {
-                isExpiredContractEvent = false;
-            }
-        }
-
-        static void Postfix(SGEventPanel __instance, SimGameEventOption option, 
-            SimGameInterruptManager.EventPopupEntry ___thisEntry)
-        {
-
-            if (___thisEntry != null && ___thisEntry.parameters != null &&
-                ___thisEntry.parameters[0] is SimGameEventDef eventDef &&
-                ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
-            {
-
-                // Handle updating the contract length in the def; funds are handled by the event.
-                if (ModConsts.Event_Option_ContractExpired_Hire_NoBonus.Equals(option.Description.Id) ||
-                    ModConsts.Event_Option_ContractExpired_Hire_Bonus.Equals(option.Description.Id))
-                {
-                    (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-
-                    Mod.Log.Debug?.Write($"Pilot {expired.Pilot.Name} was re-hired w/o a bonus");
-                    expired.Details.ExpirationDay = ModState.SimGameState.DaysPassed + expired.Details.ContractTerm;
-                    ModState.UpdateOrCreateCrewDetails(expired.Pilot.pilotDef, expired.Details);
-                }
-            }
-
-            isExpiredContractEvent = false;
-        }
-    }
-
-    // Select an expired pilot and populate the fields with their data
-    [HarmonyPatch(typeof(SGEventPanel), "SetEvent")]
-    static class SGEventPanel_SetEvent
-    {
-        // Populate the target mechwarrior before the event
-        static void Prefix(SGEventPanel __instance, SimGameEventDef evt)
-        {
-            Mod.Log.Debug?.Write("SGEP:SetEvent:PRE");
-            if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id) && ModState.ExpiredContracts.Count > 0)
-            {
-                (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
-                Mod.Log.Trace?.Write($"SGEventPanel details setting targetMechwarrior: {expired.Pilot.Name}");
-                ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, expired.Pilot);
-            }
-        }
-    }
-
-    [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMRBRating")]
-    static class SimGameState_CanMechWarriorBeHiredAccordingToMRBRating
-    {
-        static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
-        {
-            int currentMRBLevel = __instance.GetCurrentMRBLevel();
-            CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
-            __result = details.CanBeHiredAtMRBLevel(currentMRBLevel);
-        }
-    }
-
-    [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMorale")]
-    static class SimGameState_CanMechWarriorBeHiredAccordingToMorale
-    {
-        static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
-        {
-            // TODO:
-            // Check morale settings here; 
-            //   should elites require more morale?
-            //   should high level mechwarriors require a higher morale?
-            //   should nobles require a high morale rating?
-
-            __result = true;
         }
     }
 
@@ -564,7 +540,7 @@ namespace HumanResources.Patches
                 // Decay positive attitude
                 if (details.Attitude > 0)
                 {
-                    int decayAmount = (int) Math.Ceiling(details.Attitude * Mod.Config.Attitude.Monthly.Decay);
+                    int decayAmount = (int)Math.Ceiling(details.Attitude * Mod.Config.Attitude.Monthly.Decay);
                     Mod.Log.Debug?.Write($"Decaying positive attitude from {details.Attitude} by {decayAmount}");
                     details.Attitude -= decayAmount;
                 }
@@ -614,5 +590,35 @@ namespace HumanResources.Patches
             }
         }
     }
+
+
+
+    [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMRBRating")]
+    static class SimGameState_CanMechWarriorBeHiredAccordingToMRBRating
+    {
+        static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
+        {
+            int currentMRBLevel = __instance.GetCurrentMRBLevel();
+            CrewDetails details = ModState.GetCrewDetails(pilot.pilotDef);
+            __result = details.CanBeHiredAtMRBLevel(currentMRBLevel);
+        }
+    }
+
+    [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMorale")]
+    static class SimGameState_CanMechWarriorBeHiredAccordingToMorale
+    {
+        static void Postfix(SimGameState __instance, Pilot pilot, ref bool __result)
+        {
+            // TODO:
+            // Check morale settings here; 
+            //   should elites require more morale?
+            //   should high level mechwarriors require a higher morale?
+            //   should nobles require a high morale rating?
+
+            __result = true;
+        }
+    }
+
+    
 
 }

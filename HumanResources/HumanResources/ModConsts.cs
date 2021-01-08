@@ -1,5 +1,7 @@
 ﻿
 
+using System.Collections.Generic;
+
 namespace HumanResources
 {
     public static class ModConsts
@@ -26,9 +28,11 @@ namespace HumanResources
         public const string Event_Option_ContractExpired_Hire_NoBonus = "outcome_0";
         public const string Event_Option_ContractExpired_Hire_Bonus = "outcome_1";
 
-        public const string Event_HeadHunting = "event_hr_mw_headhunting";
-        public const string Event_Option_HeadHunting_Retained = "outcome_0";
-        public const string Event_Option_HeadHunting_Leaves = "outcome_1";
+        public const string Event_HeadHunting = "event_hr_mw_headhunted";
+        public const string Event_Option_HeadHunting_Persuaded = "outcome_0";
+        public const string Event_Option_HeadHunting_Retained = "outcome_1";
+        public const string Event_Option_HeadHunting_Leaves = "outcome_2";
+        public const string Event_Option_HeadHunting_Deserts = "outcome_3";
 
     }
 
@@ -39,14 +43,15 @@ namespace HumanResources
         // A unique GUID for me to use to associate CompanyStats to specific pilots
         public const string Tag_GUID = "HR_GUID_";
 
-        public const string Tag_Crew_Loyalty_Dedicated = "HR_CREW_LOYALTY_DEDICATED";
-        public const string Tag_Crew_Loyalty_Comfortable = "HR_CREW_LOYALTY_COMFORTABLE";
-        public const string Tag_Crew_Loyalty_Neutral = "HR_CREW_LOYALTY_NEUTRAL";
-        public const string Tag_Crew_Loyalty_Unhappy = "HR_CREW_LOYALTY_UNHAPPY";
-        public const string Tag_Crew_Loyalty_Hated = "HR_CREW_LOYALTY_HATED";
-
-        // Applied if you ignored their complains 
-        public const string Tag_Crew_Loyalty_Faction_Warning = "HR_CREW_LOYALTY_FACTION_WARNING";
+        public const string Tag_Attitude_Best = "HR_CREW_ATTITUDE_BEST";
+        public const string Tag_Attitude_Good = "HR_CREW_ATTITUDE_GOOD";
+        public const string Tag_Attitude_Neutral = "HR_CREW_ATTITUDE_NEUTRAL";
+        public const string Tag_Attitude_Poor = "HR_CREW_ATTITUDE_POOR";
+        public const string Tag_Attitude_Worst = "HR_CREW_ATTITUDE_WORST";
+        public static List<string> Tags_Attitude_All = new List<string> 
+        { 
+            ModTags.Tag_Attitude_Best, ModTags.Tag_Attitude_Good, ModTags.Tag_Attitude_Neutral, ModTags.Tag_Attitude_Worst, ModTags.Tag_Attitude_Poor 
+        };
 
         // CU Vehicles - pilot_vehicle_crew allow tank piloting,
         public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
