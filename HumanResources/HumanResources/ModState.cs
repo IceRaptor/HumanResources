@@ -27,9 +27,11 @@ namespace HumanResources
     {
         public static PilotCreateState PilotCreate = new PilotCreateState();
         public static SimGameState SimGameState = null;
-        public static Queue<(Pilot Pilot, CrewDetails Details)> ExpiredContracts = 
-            new Queue<(Pilot, CrewDetails)>();
         public static bool IsHiringFlow = false;
+
+        // Event-based objects
+        public static Queue<(Pilot Pilot, CrewDetails Details)> ExpiredContracts = new Queue<(Pilot, CrewDetails)>();
+        public static Pilot HeadHuntedPilot = null;
 
         private static Dictionary<string, CrewDetails> crewDetailsCache = new Dictionary<string, CrewDetails>();
 
@@ -39,7 +41,10 @@ namespace HumanResources
             Mod.Log.Info?.Write("CLEARING ALL MOD STATE DATA");
             SimGameState = null;
             PilotCreate = new PilotCreateState();
+            
             ExpiredContracts.Clear();
+            HeadHuntedPilot = null;
+
             IsHiringFlow = false;
         }
 

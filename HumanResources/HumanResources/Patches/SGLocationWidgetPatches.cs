@@ -32,7 +32,8 @@ namespace HumanResources.Patches
 
                     // Randomize pilots instead of sorting by skill?
                     List<Pilot> pilots = ModState.SimGameState.PilotRoster.ToList();
-                    pilots.Sort((p1, p2) => {
+                    pilots.Sort((p1, p2) =>
+                    {
                         CrewDetails p1cd = ModState.GetCrewDetails(p1.pilotDef);
                         CrewDetails p2cd = ModState.GetCrewDetails(p2.pilotDef);
                         return CrewDetails.CompareByValue(p1cd, p2cd);
@@ -40,17 +41,49 @@ namespace HumanResources.Patches
 
                     int idx = Mod.Random.Next(0, pilots.Count - 1);
                     Pilot random = pilots[idx];
-                    Mod.Log.Info?.Write($"--  Poached pilot: {random.Name}");
+                    Mod.Log.Info?.Write($"--  Headhunted pilot: {random.Name}");
                     CrewDetails cd = ModState.GetCrewDetails(random.pilotDef);
                     SimGameEventDef newEvent = EventHelper.CreateHeadHuntingEvent(random, cd, cd.HiringBonus, cd.HiringBonus);
 
                     Traverse mechWarriorEventTrackerT = Traverse.Create(ModState.SimGameState).Field("mechWarriorEventTracker");
                     SimGameEventTracker mechWarriorEventTracker = mechWarriorEventTrackerT.GetValue<SimGameEventTracker>();
+
+                    ModState.HeadHuntedPilot = random;
+                    Mod.Log.Info?.Write($"--  Firing debug event");
+                    ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, random);
                     ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, mechWarriorEventTracker);
 
                     return false;
                 }
+                else if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) &&
+                    ModState.SimGameState.TravelState == SimGameTravelStatus.IN_SYSTEM)
+                {
+                    Mod.Log.Info?.Write("-- Forcing contract expiration on random crew.");
 
+                    // Randomize pilots instead of sorting by skill?
+                    List<Pilot> pilots = ModState.SimGameState.PilotRoster.ToList();
+                    pilots.Sort((p1, p2) =>
+                    {
+                        CrewDetails p1cd = ModState.GetCrewDetails(p1.pilotDef);
+                        CrewDetails p2cd = ModState.GetCrewDetails(p2.pilotDef);
+                        return CrewDetails.CompareByValue(p1cd, p2cd);
+                    });
+
+                    int idx = Mod.Random.Next(0, pilots.Count - 1);
+                    Pilot random = pilots[idx];
+                    Mod.Log.Info?.Write($"--  Expired pilot: {random.Name}");
+                    CrewDetails cd = ModState.GetCrewDetails(random.pilotDef);
+
+                    ModState.ExpiredContracts.Enqueue((random, cd));
+                    SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(random, cd);
+
+                    Traverse mechWarriorEventTrackerT = Traverse.Create(ModState.SimGameState).Field("mechWarriorEventTracker");
+                    SimGameEventTracker mechWarriorEventTracker = mechWarriorEventTrackerT.GetValue<SimGameEventTracker>();
+
+                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, mechWarriorEventTracker);
+
+                    return false;
+                }
             }
 
             return true;

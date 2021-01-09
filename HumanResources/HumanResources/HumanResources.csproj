@@ -81,6 +81,7 @@
   <ItemGroup>
     <Compile Include="Comparable\SGBarracksRosterSlotComparisons.cs" />
     <Compile Include="Helper\EventHelper.cs" />
+    <Compile Include="Helper\HeadHuntingHelper.cs" />
     <Compile Include="Helper\SalaryHelper.cs" />
     <Compile Include="Patches\AARContractObjectivesWidgetPatches.cs" />
     <Compile Include="Patches\AARContractResultsScreenPatches.cs" />

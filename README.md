@@ -179,3 +179,4 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * What happens if you fire then re-hire the same mechwarrior? Does the old state persist?
 * Random list of merc company names as the hiring company
 * Account for inflated hiring bonuses when recalculating on rehire
+* Check events for crew callsigns; I think they only have names?

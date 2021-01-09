@@ -254,11 +254,17 @@ namespace HumanResources
         public float[] EconMods = { 0.35f, 0.2f, 0f, -0.2f, -0.35f };
         public float[] ChanceBySkill = { 0.05f, 0.1f, 0.15f, 0.3f, 0.6f };
 
-        // Check for poaching N times per month
-        public int CompanyCooldownInterval = 30;
+        // Check for poaching N times per month. On a failed check (nobody was poached, wait this many days)
+        public int FailedCooldownIntervalMin = 3;
+        public int FailedCooldownIntervalMax = 7;
+
+        // On a successful check, wait this many days
+        public int SuccessCooldownIntervalMin = 15;
+        public int SuccessCooldownIntervalMax = 45;
 
         // Crew cannot be attempted to be poached more than 1 time in this period
-        public int CrewCooldownInterval = 90;
+        public int CrewCooldownIntervalMin = 60;
+        public int CrewCooldownIntervalMax = 120;
 
         // Determine a random amount between the bonus and bonus x CounterOfferVariance to determine is their 'counter-offer' to keep them
         public float CounterOfferVariance = 1.5f;

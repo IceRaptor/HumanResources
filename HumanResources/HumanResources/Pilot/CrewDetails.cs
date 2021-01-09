@@ -37,6 +37,8 @@ namespace HumanResources.Extensions
         // Mutable properties
         public int Attitude { get; set; }
         public int ExpirationDay { get; set; }
+        public int NextHeadHuntingDay { get; set; }
+
 
         // Dyanmic properties
         public int AdjustedBonus
@@ -165,6 +167,7 @@ namespace HumanResources.Extensions
             else
                 this.HatedFaction = -1;
 
+            this.NextHeadHuntingDay = ModState.SimGameState.DaysPassed;
         }
 
         public bool IsAerospaceCrew { get { return Type == CrewType.AerospaceWing; } }
@@ -225,11 +228,8 @@ namespace HumanResources.Extensions
         {
             get
             {
-                int expertise = Skill;
-                if (IsMechWarrior || IsVehicleCrew) expertise = Expertise;
-
                 string label;
-                switch (expertise)
+                switch (Expertise)
                 {
                     case 5:
                         label = Mod.LocalizedText.Labels[ModText.LT_Crew_Skill_5];
@@ -255,10 +255,12 @@ namespace HumanResources.Extensions
         {
             get
             {
+                // Skill ranges from 0-5
                 if (IsAerospaceCrew || IsMechTechCrew || IsMedTechCrew) return Skill;
 
                 CrewOpts opts = IsMechWarrior ? Mod.Config.HiringHall.MechWarriors : Mod.Config.HiringHall.VehicleCrews;
 
+                // Expertise is 0-4
                 int expertise = 0;
                 for (int i = 0; i < opts.SkillToExpertiseThresholds.Count(); i++)
                 {
@@ -269,7 +271,7 @@ namespace HumanResources.Extensions
                     }
                 }
 
-                return expertise;
+                return expertise + 1;
 
             }
         }

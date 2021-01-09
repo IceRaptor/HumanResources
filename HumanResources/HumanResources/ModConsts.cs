@@ -68,13 +68,15 @@ namespace HumanResources
         
         public const string Company_Reputation = "HR_CompanyRep";
         public const string Company_CrewDetail_Prefix = "HR_CrewDetail_";
-        public const string Company_Poaching_Record = "HR_Poaching_Record";
+     
+        public const string Company_HeadHunting_TestOnDay = "HR_HeadHunting_TestOnDay";
 
         public const string CrewCount_Aerospace = "HR_CrewCount_Aerospace";
         public const string CrewCount_MechTechs = "HR_CrewCount_MechTechs";
         public const string CrewCount_MechWarriors = "HR_CrewCount_MechWarriors";
         public const string CrewCount_MedTechs = "HR_CrewCount_MedTechs";
         public const string CrewCount_VehicleCrews = "HR_CrewCount_VehicleCrews";
+
     }
 
 }
