@@ -2,24 +2,61 @@
 using BattleTech.Data;
 using Harmony;
 using HBS.Collections;
+using HumanResources.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HumanResources.Patches
 {
+
 	[HarmonyPatch(typeof(SimGameEventTracker), "IsEventValid")]
     static class SimGameEventTracker_IsEventValid
     {
-        static bool Prefix(SimGameEventTracker __instance, EventScope scope, EventDef_MDD evt, List<TagSet> reqList, 
-            out SimGameEventTracker.PotentialEvent goodEvent, bool __result,
+
+		// This is stupidly slow, but because the way the weighted works it's not easy to get a list of the 
+		//   remaining elements. So we (unfortunately) iterate through the pilots until we find a mechwarrior.
+		static Pilot NextSGSMechwarrior()
+		{
+			//___sim.PilotRoster.GetNext(true);
+			Pilot mechWarrior = null;
+			while (mechWarrior == null)
+			{
+				Pilot pilot = ModState.SimGameState.PilotRoster.GetNext(true);
+				CrewDetails cd = ModState.GetCrewDetails(pilot.pilotDef);
+				if (cd.IsMechWarrior)
+				{
+					mechWarrior = pilot;
+				}
+			}
+			return mechWarrior;
+		}
+
+		static List<Pilot> AllMechWarriors()
+        {
+			List<Pilot> allPilots = ModState.SimGameState.PilotRoster.ToList();
+			return allPilots.Where((p) => {
+				CrewDetails cd = ModState.GetCrewDetails(p.pilotDef);
+				return cd.IsMechWarrior;
+			}).ToList();
+		}
+
+		static bool Prefix(SimGameEventTracker __instance, EventScope scope, EventDef_MDD evt, List<TagSet> reqList, 
+            out SimGameEventTracker.PotentialEvent goodEvent, ref bool __result,
 			SimGameState ___sim, SimGameReport.ReportEntry ___VerboseEntry)
         {
 			goodEvent = null;
 
-			Traverse pushRecordT = Traverse.Create(__instance).Method("PushRecord");
+			Mod.Log.Debug?.Write($"Validating event with defId: {evt?.EventDefID}");
+			
+			// Skip any HR events and use the base validation
+			if (evt != null &&
+				(String.Equals(ModConsts.Event_ContractExpired, evt.EventDefID, StringComparison.InvariantCulture) ||
+				String.Equals(ModConsts.Event_HeadHunting, evt.EventDefID, StringComparison.InvariantCulture))
+				)
+				return true;
+
+			Traverse pushRecordT = Traverse.Create(__instance).Method("PushRecord", new Type[] { typeof(string) });
 			Traverse popRecordT = Traverse.Create(__instance).Method("PopRecord");
 
 			int num = 0;
@@ -29,7 +66,7 @@ namespace HumanResources.Patches
 			}
 			else if (scope == EventScope.MechWarrior)
 			{
-				num = ___sim.PilotRoster.Count;
+				num = AllMechWarriors().Count();
 			}
 			else if (scope == EventScope.DeadMechWarrior)
 			{
@@ -42,7 +79,7 @@ namespace HumanResources.Patches
 				Pilot pilot = null;
 				if (scope == EventScope.MechWarrior)
 				{
-					pilot = ___sim.PilotRoster.GetNext(true);
+					pilot = NextSGSMechwarrior();
 					if (pilot.pilotDef.TimeoutRemaining <= 0)
 					{
 						reqList.Clear();
@@ -70,6 +107,8 @@ namespace HumanResources.Patches
 				{
 					TagSet curTags = reqList[j];
 					__instance.RecordLog("Attempting Event: " + evt.EventDefID, SimGameLogLevel.VERBOSE);
+	
+
 					if (!___sim.DataManager.SimGameEventDefs.Exists(evt.EventDefID))
 					{
 						Mod.Log.Warn?.Write($"Event {evt.EventDefID} cannot be found in manifest. Skipping.");
@@ -190,7 +229,7 @@ namespace HumanResources.Patches
 										k++;
 										continue;
 									IL_3C7:
-										foreach (Pilot pilot2 in ___sim.PilotRoster)
+										foreach (Pilot pilot2 in AllMechWarriors())
 										{
 											if (pilot2.pilotDef.TimeoutRemaining > 0)
 											{

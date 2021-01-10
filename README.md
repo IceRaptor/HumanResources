@@ -180,3 +180,6 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Random list of merc company names as the hiring company
 * Account for inflated hiring bonuses when recalculating on rehire
 * Check events for crew callsigns; I think they only have names?
+* Commander should have neither hatred/loyalty/attitude
+* Expense costs should be exponential?
+* Renewal should update terms, not 'same terms'
