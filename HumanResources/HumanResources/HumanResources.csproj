@@ -88,6 +88,8 @@
     <Compile Include="Patches\ContractPatches.cs" />
     <Compile Include="Patches\SGBarracksMWDetailPanelPatches.cs" />
     <Compile Include="Patches\SGCaptainsQuartersStatusScreen.cs" />
+    <Compile Include="Patches\SGTravelManagerPatches.cs" />
+    <Compile Include="Patches\SimGameEventTrackerPatches.cs" />
     <Compile Include="Pilot\CrewDetails.cs" />
     <Compile Include="Helper\GuassianHelper.cs" />
     <Compile Include="Pilot\PilotGenerators.cs" />
