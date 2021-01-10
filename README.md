@@ -5,10 +5,14 @@ This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life
 
  * Hirable Aerospace, MechTech, MedTech, and Vehicle crews in the Hiring Hall
  * Fully customizable salary and hiring bonus calculations based upon an exponential formula
- * Scarcity of all hirable crews based upon planetary tags
- * Scarcity of all hirable crews driven by a gaussian distribution
- * Crews have a customizable contract length
- * (Optional) Crews can be poached by other employers when the conditions are right
+ * Scarcity of all hireable crews based upon planetary tags
+ * Scarcity of all hireable crews driven by a gaussian distribution
+ * Crews have a contract length and must be re-hired periodically
+ * Crews have an attitude towards the company and may leave if they become unhappy
+ * Crews may have a loyalty or hatred for specific factions, which impacts their attitude
+ * (Optional) Crews can be head-hunted by other mercenaries companies and start a bidding war
+ * (Optional) Crews may demand hazard-pay for combat drops
+ * (Optional) Crews may demand kill-bonuses for units they destroy in a mission
 
 This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
 
@@ -16,14 +20,16 @@ This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmo
 
 This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews). Some configuration elements will be common across these two types.
 
-*Combat Crews* are handled normally, though their distribution and prices are handled by the mod. Overall there are few changes to these units. Vehicle Crews are treated as MechWarriors, but assigned the `pilot_vehicle_crew` and `pilot_nomech_crew` tags for CustomUnits compatibility.
+*Combat Crews* are handled normally, though their distribution and prices are handled by the mod. They gain skills normally and can die during combat. Vehicle Crews are assigned the `pilot_vehicle_crew` and `pilot_nomech_crew` tags for CustomUnits compatibility.
 
-*Support Crews* are given a skill and size rating. Both ratings go from 1-5, and are labeled in `mod_localization.json` by their rating:
+*Support Crews* are non-combat units with a skill rating indicating their competency and a size rating indicating how many people comprise the crew. Both ratings are between 1-5 with customizable labels in `mod_localization.json` (indexed by rating value):
 
 | Name | 1 | 2 | 3 | 4 | 5 |
 | -- | -- | -- | -- | -- | -- |
 | Skill | Rookie | Regular | Veteran | Elite | Legendary |
 | Size | Tiny | Small | Medium | Large | Huge |
+
+
 
 # Hiring 
 
@@ -83,6 +89,20 @@ All the modifiers from all the tags on the planet are added together, the rounde
 > Example: The tag modifiers includes `planet_other_capital` with `MedTechs=1.3`, `planet_pop_small` with `Medtechs=0.8` and `planet_industry_recreation` with `MedTechs=0.5`. The sum of these is 2.6, which is rounded up to 3 for the upper bound. The lower bound is half the upper bound rounded down, or 3 / 2 = 1.5 for 1. This planet will generate between 1 and 3 MedTechs.
 
 
+# Attitude
+
+Mercenaries are known for their individuality, and don't always choose to stay with one employer. Your actions can make them hate you and want off your boat at the first port, or make them think your company is their best chance to make it big. A crew's attitude is tracked between -100 and 100, with several breakpoints between the extremes. There are five attitude bands: best, good, neutral, poor, worst. The labels for each of these are defined in `mod_localization_text.json` and are configured via the `Attitude.Threshold` values in `mod.json`.
+
+A mercenary at or above `Attitude.ThresholdBest` is likely to ignore head-hunting offers, be willing to forgo a re-hiring bonus, or offer similar perks. At `Attitude.ThresholdWorst` or below they are likely to take the first chance to leave your company they find. You can expect them to willing be head-hunted or just slip out in the middle of the night.
+
+Attitudes change over time, with changes occurring at the end of every mission and at the end of the month. After each mission all crew in the company receives a bonus or penalty based upon the contract status:
+
+* `Attitude.PerMission.ContractSuccessMod` is added if the mission is a success
+* `Attitude.PerMission.ContractFailedGoodFaithMod` is added if the mission is a good-faith failure
+* `Attitude.PerMission.ContractFailedMod` is added if the mission was a bad-faith failure
+
+
+
 # Head Hunting
 
 Skilled mercenaries are in high demand, and most of them care more about the size of their paycheck than concepts like loyalty or honor. When the player is orbiting an inhabited planet there's a chance that someone will attempt to head-hunt your crews. When a crew is headhunted, the player will be presented with a dialog with four choices:
@@ -97,6 +117,12 @@ Checks to head-hunt a crew occurs periodically. When the player first arrives at
 A head-hunting check is a random roll between 0 and 1, modified by `HeadHunting.EconMods`. This modifier is indexed by the current company expense setting (i.e. Spartan, Restrictive, Regular, etc). The list of all crew is randomized and the modified check result is compared against the the _Headhunting Chance_. The expertise level of a crew (from 1-5, i.e. Green through Elite) indexes the `HeadHunting.ChanceBySkill` configuration which determines the _HeadHunting Chance_ for each crew. If any crew's _Headhunting Chance_ is greater than or equal to the modified result, they are the target of the headhunting event. Otherwise, every other crew is checked until all crew have been checked for head-hunting.
 
 > Example: There are three crews with with skill 1, 2, 3. The company's expenses are set to regular, which gives a 0 modifier for economy. A random roll of 0.73 is made, making the modified check 0.73. The list of crew is randomly sorted into 2,3,1. The first crew has a headhunting chance of 0.1, which is less than 0.73 and thus they are skipped. The next crew has a chance of 0.15, and thus is also skipped. The final crew has a chance of 0.05 and is skipped. This counts as a failed headhunting attempt, and a random value of 5 (between 3 and 7) is determined. The system will check for headhunting again in 5 days.
+
+WIP: If a crew is head-hunted but retained by the company, they cannot be head-hunted in the near future. A random value between `HeadHunting.CrewCooldownIntervalMin` and `HeadHunting.CrewCooldownIntervalMax` will be added to the current days elapsed. They will automatically fail any head-hunting checks until this date has passed.
+
+During a head-hunting event, the counter-offer value is controlled by the `HeadHunting.CounterOfferVariance` value. A random value between the crew's current HiringBonus and __HiringBonus x CounterOfferVariance__ will be set as the counter-offer value. This value is only used in the head-hunting event and does not change the crew's hiring bonus value.
+
+WIP: Head-hunting events will not spawn on planets with one or more tags specified in `HeadHunting.PlanetBlacklist`. These are treated as automatic failures for tracking purposes.
 
 This feature can be completely disabled by setting `HeadHunting.Enabled=false` in mod.json. 
 
@@ -143,7 +169,11 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 | Large     | 4      | 8       | 12      | 20    | 32        |
 | Huge      | 5      | 10      | 15      | 25    | 40        |
 
-### TODO
+# Miscellaneous
+
+Many vanilla events target MechWarriors, and this mod's 'crews' are all considered MechWarriors by the game code. For this reason the mod does a prefix=false patch on `SimGameEventTracker.IsEventValid` and prohibits any crews from being targeted by vanilla events. This means vehicle crews won't get into fights, MechTech crews won't get low spirits, and Aerospace pilots can't get injured.
+
+# TODO
 
 * Descriptions for MedTechs/MercTechs
   * Background
@@ -192,3 +222,13 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Implement planet blacklist for head hunting
 * Add re-hire bonus to attitude
 * Implement CrewCooldownInterval for head-hunting
+* Hiring bonus should not change as you keep crew? Or should it?
+* Add profit sharing as an event?
+* Add attitude decay based upon pilot tags?  
+* Chance to ignore rehire bonus/salary increase at very high attitude?
+* Chance to leave at Worst/Poor thresholds
+* Chance to offer personal contracts at Good/Best?
+* Combat bonuses/penalties for attitude?
+	- Auto-eject at worst from time to time (I'm not getting paid enough for this)
+	- Attack bonus if they are really happy?
+	- Chance of a better health outcome?
