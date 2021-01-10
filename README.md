@@ -85,13 +85,21 @@ All the modifiers from all the tags on the planet are added together, the rounde
 
 # Head Hunting
 
-Skilled mercenaries are in high demand, and most of them care more about the size of their paycheck than concepts like loyalty or honor. Any time you are orbiting an inhabited 
+Skilled mercenaries are in high demand, and most of them care more about the size of their paycheck than concepts like loyalty or honor. When the player is orbiting an inhabited planet there's a chance that someone will attempt to head-hunt your crews. When a crew is headhunted, the player will be presented with a dialog with four choices:
 
+* You persuade them to remain with the company, effectively no change. _Requires attitude at or above the best mark_
+* You counter-offer, and pay them an additional (higher) hiring bonus to keep them on payroll. 
+* You let them take the offer, and their new employer pays you a buyout bonus equal to their hiring bonus.
+* They desert in the night. You get nothing and the pilot is gone. _Requires attitude at or below the worst mark_.
 
-    // You talk them into staying without a hiring bonus (requires best attitude)
-    // You pay an additional bonus to keep them AND their re-hire bonus changes to the new amount
-    // They leave and the head-hunters pay-back their hiring bonus
-    // They leave and pocket the hiring bonus (if poor or less)
+Checks to head-hunt a crew occurs periodically. When the player first arrives at a planet, a random day between `HeadHuting.FailedCooldownIntervalMin` and `HeadHunting.FailedCooldownIntervalMax`is added to the current day. On that day, assuming no other events are firing a head-hunting check will be made. If the check fails another random day between `HeadHuting.FailedCooldownIntervalMin` and `HeadHunting.FailedCooldownIntervalMax` will be added to the date. If the check is successful (i.e. an event is spawn) a random day between `HeadHuting.SuccessCooldownIntervalMin` and `HeadHunting.SuccessCooldownIntervalMax` will be added to the date. Note that a low period between failures may be frustrating when the player has many experienced crews, as they are more likely to be head-hunted than lower-skill crews (see below). 
+
+A head-hunting check is a random roll between 0 and 1, modified by `HeadHunting.EconMods`. This modifier is indexed by the current company expense setting (i.e. Spartan, Restrictive, Regular, etc). The list of all crew is randomized and the modified check result is compared against the the _Headhunting Chance_. The expertise level of a crew (from 1-5, i.e. Green through Elite) indexes the `HeadHunting.ChanceBySkill` configuration which determines the _HeadHunting Chance_ for each crew. If any crew's _Headhunting Chance_ is greater than or equal to the modified result, they are the target of the headhunting event. Otherwise, every other crew is checked until all crew have been checked for head-hunting.
+
+> Example: There are three crews with with skill 1, 2, 3. The company's expenses are set to regular, which gives a 0 modifier for economy. A random roll of 0.73 is made, making the modified check 0.73. The list of crew is randomly sorted into 2,3,1. The first crew has a headhunting chance of 0.1, which is less than 0.73 and thus they are skipped. The next crew has a chance of 0.15, and thus is also skipped. The final crew has a chance of 0.05 and is skipped. This counts as a failed headhunting attempt, and a random value of 5 (between 3 and 7) is determined. The system will check for headhunting again in 5 days.
+
+This feature can be completely disabled by setting `HeadHunting.Enabled=false` in mod.json. 
+
 
 # Crew Value
 
@@ -143,7 +151,6 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
   * Faction loyalty
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
-* Firing events takes forever according to t-bone; profile when firing the event
 * skill distribution mu and sigma modified by planet tags
 * size distribution mu and sigma modified by planet tags
 * MechWarrior skill distribution to reflect our distribution
@@ -159,10 +166,7 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Max injuries should be hidden on hiring screen
 * BUG: Colors not updating when you first look at screen
 * BUG: Colors not updating for Mechs in list
-* SimGameEventTracker.IsEventValid should filter non-mechwarriors, so vanilla events don't impact crew
-  * This implies crew needs new events
 * Contract desc / pilot isn't getting reset between events
-* Loyalty shouldn't ensure a no-hire bonus, only make it easier
 * MRBC rating should apply somehow?
 * Allow mod-makers to set faction hatred/favors on pre-generated pilots
 * Company reputation feels like a step too far; too much to manage but it's damn compelling. How would I make your aggregate reputation make sense?
@@ -170,9 +174,9 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Add pilot favor/hatred to pre-generated pilots
 * Compound faction names aren't whitespace separated
 * I'm not updating pilots value, etc as their skills change; need to ensure that gets addressed at least at contract renegotiation
-* Context popup from events needs to account for crews
-* * Optional kill bonus where each unit killed gives a bonus to the pilot
-* * Doco note: salary only changes on renegotiation
+* Context tooltip from events needs to account for crews
+* Optional kill bonus where each unit killed gives a bonus to the pilot
+* Doco note: salary only changes on renegotiation
 * Update salary for mechwarriors/vcrew prior to event fire
 * MedTechs, MechTechs, Aerospace should improve as you use them
 * Check if player character is paid a salary
@@ -181,5 +185,10 @@ MedTech points are applied to the CompanyStat `MedTechSkill`. This value determi
 * Account for inflated hiring bonuses when recalculating on rehire
 * Check events for crew callsigns; I think they only have names?
 * Commander should have neither hatred/loyalty/attitude
-* Expense costs should be exponential?
+* Expense costs should be exponential? 
+* Expense changes should have personnel costs (luxury cost, maybe tied to tags)?
 * Renewal should update terms, not 'same terms'
+* Fix/eliminate smear campaign event
+* Implement planet blacklist for head hunting
+* Add re-hire bonus to attitude
+* Implement CrewCooldownInterval for head-hunting

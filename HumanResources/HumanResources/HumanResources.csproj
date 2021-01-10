@@ -86,7 +86,9 @@
     <Compile Include="Patches\AARContractObjectivesWidgetPatches.cs" />
     <Compile Include="Patches\AARContractResultsScreenPatches.cs" />
     <Compile Include="Patches\ContractPatches.cs" />
+    <Compile Include="Patches\SGBarracksDossierPanelPatches.cs" />
     <Compile Include="Patches\SGBarracksMWDetailPanelPatches.cs" />
+    <Compile Include="Patches\SGBarracksServicePanelPatches.cs" />
     <Compile Include="Patches\SGCaptainsQuartersStatusScreen.cs" />
     <Compile Include="Patches\SGTravelManagerPatches.cs" />
     <Compile Include="Patches\SimGameEventTrackerPatches.cs" />
