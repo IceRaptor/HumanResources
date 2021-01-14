@@ -18,7 +18,9 @@ namespace HumanResources.Patches
         {
             List<Pilot> deployedPilots = ___theContract.PlayerUnitResults.Select(ur => ur.pilot).ToList();
 
-            // Find all pilots
+            // Find just combat pilots (for benched mod)
+            List<Pilot> allPilots = __instance.Sim.PilotRoster.ToList();
+
             List<Pilot> combatPilots = __instance.Sim.PilotRoster.Where(p => {
                 CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
                 if (details.IsMechTechCrew || details.IsVehicleCrew)
@@ -48,20 +50,20 @@ namespace HumanResources.Patches
             }
 
             // Iterate pilots apply modifiers
-            foreach (Pilot p in combatPilots)
+            foreach (Pilot p in allPilots)
             {
                 Mod.Log.Debug?.Write($"Applying attitude modifiers to pilot: {p.Name}");
                 CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
-                // Check for bench
+                // Check for bench - only applies to combat pilots
                 if (deployedPilots.Contains(p))
                 {
-                    Mod.Log.Debug?.Write($" -- pilot was deployed, adding {Mod.Config.Attitude.PerMission.DeployedOnMissionMod} attitude");
+                    Mod.Log.Debug?.Write($" -- combat pilot was deployed, adding {Mod.Config.Attitude.PerMission.DeployedOnMissionMod} attitude");
                     details.Attitude += Mod.Config.Attitude.PerMission.DeployedOnMissionMod;
                 }
-                else
+                else if (combatPilots.Contains(p))
                 {
-                    Mod.Log.Debug?.Write($" -- pilot was benched, adding {Mod.Config.Attitude.PerMission.BenchedOnMissionMod} attitude");
+                    Mod.Log.Debug?.Write($" -- combat pilot was benched, adding {Mod.Config.Attitude.PerMission.BenchedOnMissionMod} attitude");
                     details.Attitude += Mod.Config.Attitude.PerMission.BenchedOnMissionMod;
                 }
 
