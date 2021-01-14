@@ -246,32 +246,22 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 * Descriptions for MedTechs/MercTechs
   * Background
   * Attributes
-  * Faction loyalty
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
 * skill distribution mu and sigma modified by planet tags
 * size distribution mu and sigma modified by planet tags
 * MechWarrior skill distribution to reflect our distribution
 * Mercenary loyalty
-  * Low morale decays their loyalty slightly, high morale increases it
-  * Fighting against their faction has a slight reduction
-  * Fighting against a faction they hate has a improvement. Decays over time?
-  * Pilot losses impact their loyalty
-  * Staying on the bench hurts as well; not deploying reduces loyalty and deploying increases it
-  * Company reputation; go with options that make you hated and it becomes harder to hire
   * After AAR report, will complain if you work against their faction
-  * Poaching - sometimes they will want to break a contract (for more pay) and you have to decide what to do
+  * Company reputation; go with options that make you hated and it becomes harder to hire
 * Max injuries should be hidden on hiring screen
 * BUG: Colors not updating when you first look at screen
 * BUG: Colors not updating for Mechs in list
 * Contract desc / pilot isn't getting reset between events
-* MRBC rating should apply somehow?
 * Allow mod-makers to set faction hatred/favors on pre-generated pilots
-* Company reputation feels like a step too far; too much to manage but it's damn compelling. How would I make your aggregate reputation make sense?
-* Add MSRB restrictions for each crew member
 * Add pilot favor/hatred to pre-generated pilots
-* Compound faction names aren't whitespace separated
-* I'm not updating pilots value, etc as their skills change; need to ensure that gets addressed at least at contract renegotiation
+* Compound faction names aren't whitespace separated (in events?)
+* I'm not updating pilots value, etc as their skills change; need to ensure that getzs addressed at least at contract renegotiation
 * Context tooltip from events needs to account for crews
 * Optional kill bonus where each unit killed gives a bonus to the pilot
 * Doco note: salary only changes on renegotiation
@@ -283,12 +273,10 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 * Account for inflated hiring bonuses when recalculating on rehire
 * Check events for crew callsigns; I think they only have names?
 * Commander should have neither hatred/loyalty/attitude
-* Expense costs should be exponential? 
-* Expense changes should have personnel costs (luxury cost, maybe tied to tags)?
+tags)?
 * Renewal should update terms, not 'same terms'
 * Fix/eliminate smear campaign event
-* Implement planet blacklist for head hunting
-* Add re-hire bonus to attitude
+* <Partial> Implement planet blacklist for head hunting
 * Implement CrewCooldownInterval for head-hunting
 * Hiring bonus should not change as you keep crew? Or should it?
 * Add profit sharing as an event?
@@ -300,3 +288,8 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 	- Auto-eject at worst from time to time (I'm not getting paid enough for this)
 	- Attack bonus if they are really happy?
 	- Chance of a better health outcome?
+* BD: Allow tags that let him set salaryMulti, salaryExponent on a pilot. Allow him to set a tag that defines how many re-hires happen before this is lost. After that, use normal values
+	
+* (REJECTED) Expense costs should be exponential? 
+* (REJECTED) Expense changes should have personnel costs (luxury cost, maybe tied to 	
+* (REJECTED) Company reputation feels like a step too far; too much to manage but it's damn compelling. How would I make your aggregate reputation make sense?
