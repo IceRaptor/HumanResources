@@ -42,12 +42,12 @@ namespace HumanResources.Helper
             return expiredEventDef;
         }
 
-        public static SimGameEventDef CreateHeadHuntingEvent(Pilot pilot, CrewDetails details, float retentionBonus, float buyoutPayment)
+        public static SimGameEventDef CreateHeadHuntingEvent(Pilot pilot, CrewDetails details, float retentionCost, float buyoutPayment)
         {
             SimGameEventDef rawEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_HeadHunting);
 
-            int counterOffer = SalaryHelper.CalcCounterOffer(details);
-            int buyout = details.AdjustedBonus * -1;
+            int counterOffer = SalaryHelper.CalcCounterOffer(details) * -1;
+            int buyout = details.AdjustedBonus;
             Mod.Log.Info?.Write($"For headhunting event, counterOffer: {counterOffer}  buyout: {buyout}");
             
             // Change the description fields
@@ -73,12 +73,12 @@ namespace HumanResources.Helper
                 if (ModConsts.Event_Option_HeadHunting_Leaves.Equals(sgeOption.Description.Id))
                 {
                     // Mechwarrior leaves, company gets a payoff 
-                    UpdateFundsStat(pilot, buyoutPayment, sgeOption);
+                    UpdateFundsStat(pilot, buyout, sgeOption);
                 }
                 else if (ModConsts.Event_Option_HeadHunting_Retained.Equals(sgeOption.Description.Id))
                 {
                     // Mechwarrior statys, company pays them retention 
-                    UpdateFundsStat(pilot, retentionBonus, sgeOption);                    
+                    UpdateFundsStat(pilot, counterOffer, sgeOption);                    
                 }
             }
 

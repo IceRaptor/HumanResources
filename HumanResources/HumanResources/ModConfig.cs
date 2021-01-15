@@ -47,6 +47,12 @@ namespace HumanResources
 
         // -1 indicates no limit
         public float MaxOfType = -1;
+
+        public string[] originTags = new string[] { };
+
+        public string[] traitTags = new string[] { };
+
+
     }
 
     public class CrewScarcity
@@ -101,6 +107,7 @@ namespace HumanResources
 
         public int DeployedOnMissionMod = 1;
         public int BenchedOnMissionMod = -2;
+
         public int FavoredFactionIsEmployerMod = 1;
         public int FavoredFactionIsTargetMod = -3;
         public int HatedEmployerIsEmployerMod = -3;

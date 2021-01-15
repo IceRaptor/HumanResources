@@ -29,6 +29,8 @@ This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) a
 | Skill | Rookie | Regular | Veteran | Elite | Legendary |
 | Size | Tiny | Small | Medium | Large | Huge |
 
+:warning: This mod introduces new pilot tags. If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
+
 # Hiring 
 
 All crews are available to be hired from the HiringHall. Mechwarriors are untouched, but all other crews are represented with different icons:
@@ -253,7 +255,6 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 * MechWarrior skill distribution to reflect our distribution
 * Mercenary loyalty
   * After AAR report, will complain if you work against their faction
-  * Company reputation; go with options that make you hated and it becomes harder to hire
 * Max injuries should be hidden on hiring screen
 * BUG: Colors not updating when you first look at screen
 * BUG: Colors not updating for Mechs in list
@@ -272,8 +273,6 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 * Random list of merc company names as the hiring company
 * Account for inflated hiring bonuses when recalculating on rehire
 * Check events for crew callsigns; I think they only have names?
-* Commander should have neither hatred/loyalty/attitude
-tags)?
 * Renewal should update terms, not 'same terms'
 * Fix/eliminate smear campaign event
 * <Partial> Implement planet blacklist for head hunting
@@ -289,6 +288,9 @@ tags)?
 	- Attack bonus if they are really happy?
 	- Chance of a better health outcome?
 * BD: Allow tags that let him set salaryMulti, salaryExponent on a pilot. Allow him to set a tag that defines how many re-hires happen before this is lost. After that, use normal values
+* Add slackers event for support; reduces their value for N days has a change in attitude
+* Add motivated event for support; increases their value for N days if you fund it 
+* Add feud event; two crews are fighting with each other.
 	
 * (REJECTED) Expense costs should be exponential? 
 * (REJECTED) Expense changes should have personnel costs (luxury cost, maybe tied to 	
