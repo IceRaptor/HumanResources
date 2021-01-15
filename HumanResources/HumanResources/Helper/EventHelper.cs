@@ -46,8 +46,8 @@ namespace HumanResources.Helper
         {
             SimGameEventDef rawEventDef = ModState.SimGameState.DataManager.SimGameEventDefs.Get(ModConsts.Event_HeadHunting);
 
-            int counterOffer = SalaryHelper.CalcCounterOffer(details) * -1;
-            int buyout = details.AdjustedBonus;
+            int counterOffer = SalaryHelper.CalcCounterOffer(details);
+            int buyout = details.AdjustedBonus * -1;
             Mod.Log.Info?.Write($"For headhunting event, counterOffer: {counterOffer}  buyout: {buyout}");
             
             // Change the description fields
