@@ -83,6 +83,7 @@
     <Compile Include="Helper\EventHelper.cs" />
     <Compile Include="Helper\HeadHuntingHelper.cs" />
     <Compile Include="Helper\SalaryHelper.cs" />
+    <Compile Include="Helper\MetadataDatabaseExtensions.cs" />
     <Compile Include="Patches\AARContractObjectivesWidgetPatches.cs" />
     <Compile Include="Patches\AARContractResultsScreenPatches.cs" />
     <Compile Include="Patches\ContractPatches.cs" />
@@ -102,7 +103,6 @@
     <Compile Include="ModState.cs" />
     <Compile Include="ModText.cs" />
     <Compile Include="Patches\LanceConfiguratorPanelPatches.cs" />
-    <Compile Include="Patches\SGBarracksRosterPatches.cs" />
     <Compile Include="Patches\PilotGeneratorPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterListPatches.cs" />
     <Compile Include="Patches\SGBarracksRosterSlotPatches.cs" />
