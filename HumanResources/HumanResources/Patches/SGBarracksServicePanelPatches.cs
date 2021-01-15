@@ -33,69 +33,74 @@ namespace HumanResources.Patches
                 battleStats.SetActive(true);
 
             // Reinitialize the tag viewer, stripping any tags that are HR centric
+            Mod.Log.Debug?.Write($"Iterating tags for pilot: {p.Name}");
             TagSet baseTags = new TagSet();
             foreach (string tag in p.pilotDef.PilotTags)
             {
                 bool isHrTag = tag.StartsWith("HR_") || tag.StartsWith("hr_");
                 bool isCUTag = String.Equals(ModTags.Tag_CU_NoMech_Crew, tag, StringComparison.InvariantCultureIgnoreCase) ||
                     String.Equals(ModTags.Tag_CU_Vehicle_Crew, tag, StringComparison.InvariantCultureIgnoreCase);
-                if (!isHrTag && !isCUTag)
-                {
-                    baseTags.Add(tag);
-                }
+                Mod.Log.Debug?.Write($" -- tag: {tag}");
+                //if (!isHrTag && !isCUTag)
+                //{
+                //    baseTags.Add(tag);
+                //}
             }
-            ___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
+            //___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
 
             Mod.Log.Debug?.Write("Updating attitude fields.");
 
             StringBuilder sb = new StringBuilder();
 
-            // Inject hazard pay, if appropriate
-            if (details.HazardPay > 0)
+            if (!details.IsPlayer)
             {
-                string hazardPayS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hazard_Pay],
-                    new object[] { SimGameState.GetCBillString(details.HazardPay) }).ToString();
-                Mod.Log.Debug?.Write($"Hazard pay is: {hazardPayS}");
-                sb.Append(hazardPayS);
+                // Inject hazard pay, if appropriate
+                if (details.HazardPay > 0)
+                {
+                    string hazardPayS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hazard_Pay],
+                        new object[] { SimGameState.GetCBillString(details.HazardPay) }).ToString();
+                    Mod.Log.Debug?.Write($"Hazard pay is: {hazardPayS}");
+                    sb.Append(hazardPayS);
+                    sb.Append("\n");
+                }
+
+                // Inject attitude
+                string attitudeValKey = ModText.LT_Crew_Attitude_Average;
+                if (details.Attitude >= Mod.Config.Attitude.ThresholdBest)
+                    attitudeValKey = ModText.LT_Crew_Attitude_Best;
+                else if (details.Attitude >= Mod.Config.Attitude.ThresholdGood)
+                    attitudeValKey = ModText.LT_Crew_Attitude_Good;
+                else if (details.Attitude <= Mod.Config.Attitude.ThresholdWorst)
+                    attitudeValKey = ModText.LT_Crew_Attitude_Worst;
+                else if (details.Attitude <= Mod.Config.Attitude.ThresholdPoor)
+                    attitudeValKey = ModText.LT_Crew_Attitude_Poor;
+
+                string attitudeDescS = new Text(Mod.LocalizedText.Labels[attitudeValKey]).ToString();
+                Mod.Log.Debug?.Write($"Attitude value is: {details.Attitude} with label: {attitudeDescS}");
+
+                string attitudeS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Attitude],
+                    new object[] { attitudeDescS, details.Attitude }).ToString();
+                sb.Append(attitudeS);
                 sb.Append("\n");
-            }
 
-            // Inject attitude
-            string attitudeValKey = ModText.LT_Crew_Attitude_Average;
-            if (details.Attitude >= Mod.Config.Attitude.ThresholdBest)
-                attitudeValKey = ModText.LT_Crew_Attitude_Best;
-            else if (details.Attitude >= Mod.Config.Attitude.ThresholdGood)
-                attitudeValKey = ModText.LT_Crew_Attitude_Good;
-            else if (details.Attitude <= Mod.Config.Attitude.ThresholdWorst)
-                attitudeValKey = ModText.LT_Crew_Attitude_Worst;
-            else if (details.Attitude <= Mod.Config.Attitude.ThresholdPoor)
-                attitudeValKey = ModText.LT_Crew_Attitude_Poor;
+                // Convert favored and hated faction
+                if (details.FavoredFaction > 0)
+                {
+                    FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFaction);
+                    string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { faction.FriendlyName }).ToString();
+                    sb.Append(favoredFactionS);
+                    sb.Append("\n");
+                    Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
+                }
 
-            string attitudeDescS = new Text(Mod.LocalizedText.Labels[attitudeValKey]).ToString();
-            Mod.Log.Debug?.Write($"Attitude value is: {details.Attitude} with label: {attitudeDescS}");
-
-            string attitudeS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Attitude],
-                new object[] { attitudeDescS, details.Attitude }).ToString();
-            sb.Append(attitudeS);
-            sb.Append("\n");
-
-            // Convert favored and hated faction
-            if (details.FavoredFaction > 0)
-            {
-                FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFaction);
-                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { faction.FriendlyName }).ToString();
-                sb.Append(favoredFactionS);
-                sb.Append("\n");
-                Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
-            }
-
-            if (details.HatedFaction > 0)
-            {
-                FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFaction);
-                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { faction.FriendlyName }).ToString();
-                sb.Append(hatedFactionS);
-                sb.Append("\n");
-                Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
+                if (details.HatedFaction > 0)
+                {
+                    FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFaction);
+                    string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { faction.FriendlyName }).ToString();
+                    sb.Append(hatedFactionS);
+                    sb.Append("\n");
+                    Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
+                }
             }
 
             // Add the original description

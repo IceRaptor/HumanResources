@@ -79,7 +79,6 @@ namespace HumanResources.Extensions
         public CrewDetails(PilotDef pilotDef, CrewType type, int sizeIdx = 0, int skillIdx = 0)
         {
             this.Type = type;
-            this.GUID = Guid.NewGuid().ToString();
             this.Size = sizeIdx + 1;
             this.Skill = skillIdx + 1;
 
@@ -91,16 +90,19 @@ namespace HumanResources.Extensions
             {
                 Value = Mod.Config.HiringHall.PointsBySkillAndSize.Aerospace[skillIdx][sizeIdx];
                 config = Mod.Config.HiringHall.AerospaceWings;
+                pilotDef.PilotTags.Add(ModTags.Tag_CrewType_Aerospace);
             }
             else if (IsMechTechCrew)
             {
                 Value = Mod.Config.HiringHall.PointsBySkillAndSize.MechTech[skillIdx][sizeIdx];
                 config = Mod.Config.HiringHall.MechTechCrews;
+                pilotDef.PilotTags.Add(ModTags.Tag_CrewType_MechTech);
             }
             else if (IsMedTechCrew)
             {
                 Value = Mod.Config.HiringHall.PointsBySkillAndSize.MedTech[skillIdx][sizeIdx];
                 config = Mod.Config.HiringHall.MedTechCrews;
+                pilotDef.PilotTags.Add(ModTags.Tag_CrewType_MedTech);
             }
             else if (IsMechWarrior)
             {
@@ -116,8 +118,6 @@ namespace HumanResources.Extensions
                 pilotDef.PilotTags.Add(ModTags.Tag_CU_NoMech_Crew);
                 pilotDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
             }
-            // Add GUID tag
-            pilotDef.PilotTags.Add($"{ModTags.Tag_GUID}{GUID}");
 
             // Calculate salary and bonus
             SalaryHelper.CalcSalary(Value, config, out int salary, out int bonus);

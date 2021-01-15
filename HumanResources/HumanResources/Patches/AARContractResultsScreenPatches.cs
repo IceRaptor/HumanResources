@@ -52,8 +52,11 @@ namespace HumanResources.Patches
             // Iterate pilots apply modifiers
             foreach (Pilot p in allPilots)
             {
-                Mod.Log.Debug?.Write($"Applying attitude modifiers to pilot: {p.Name}");
                 CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
+                
+                if (details.IsPlayer) continue;
+
+                Mod.Log.Debug?.Write($"Applying attitude modifiers to pilot: {p.Name}");
 
                 // Check for bench - only applies to combat pilots
                 if (deployedPilots.Contains(p))

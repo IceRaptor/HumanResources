@@ -78,10 +78,16 @@ namespace HumanResources
             // If we cannot find a GUID, assume we're a vanilla MechWarrior and generate a new CrewDetails
             if (guid == null)
             {
+                Mod.Log.Warn?.Write($"Failed to find crew details for pilotDef - creating a new one.");
                 CrewDetails newDetails = new CrewDetails(pilotDef, CrewType.MechWarrior);
-                crewDetailsCache[newDetails.GUID] = newDetails;
-                Mod.Log.Warn?.Write($"Failed to find GUID for pilotDef: {pilotDef} - creating a new default one for mechwarrior");
+
+                //System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
+                //Mod.Log.Info?.Write($"Failure occured at stack: {t}");
+
                 UpdateOrCreateCrewDetails(pilotDef, newDetails);
+                Mod.Log.Info?.Write($" -- pilotDef associated with GUID: {newDetails.GUID}");
+                crewDetailsCache[newDetails.GUID] = newDetails;
+
                 return newDetails;
             }
             //else
@@ -153,21 +159,34 @@ namespace HumanResources
                 }
             }
 
-            // Generate a new guid if not present, and add it as a tag
-            if (guid == null)
+            // PilotDef has no existing GUID, so we need to create a new one.
+            if (guid == null || String.IsNullOrEmpty(newDetails.GUID))
             {
+                // Check for failure state where newDetails has no GUID assigned
+                if (newDetails.GUID == null)
+                    newDetails.GUID = Guid.NewGuid().ToString();
+                
+                guid = newDetails.GUID;
                 Mod.Log.Debug?.Write($" -- no GUID found for pilotDef, adding new details GUID: {newDetails.GUID}");
-                pilotDef.PilotTags.Add($"{ModTags.Tag_GUID}{newDetails.GUID}");
+            }
+            else if (!String.Equals(guid, newDetails.GUID, StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Something is seriously fucked up; fail fast and make a mess
+                Mod.Log.Error?.Write($"Pilot has GUID: {guid} but asked to be updated with GUID: {newDetails.GUID}. " +
+                    $"Can't process this inconsisteny, failing!");
+                return null;
             }
             else
             {
                 Mod.Log.Debug?.Write($" -- pilot has existing details GUID: {guid}");
             }
 
+            // Make sure the pilotDef gets the linking tag
+            if (!pilotDef.PilotTags.Contains(guid))
+                pilotDef.PilotTags.Add($"{ModTags.Tag_GUID}{guid}");
+
             // Update attitude tags on pilot
             newDetails.UpdateAttitudeTags(pilotDef);
-
-            // TODO: Check for GUID mismatch in tags / details
 
             // Write the new data to the company stats for it
             string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
@@ -184,6 +203,41 @@ namespace HumanResources
             crewDetailsCache[guid] = newDetails;
 
             return newDetails;
+        }
+
+        public static void RemoveCrewDetails(PilotDef pilotDef, CrewDetails newDetails)
+        {
+            if (pilotDef == null || newDetails == null) return;
+
+            Mod.Log.Info?.Write($"Deleting crew details for pilotDef with guid: {pilotDef?.GUID}");
+
+            string guid = null;
+            // Check the pilotDef for an existing guid
+            Mod.Log.Debug?.Write($"Deleting  pilot tags for GUID in UpdateOrCreate");
+            foreach (string tag in pilotDef.PilotTags)
+            {
+                if (tag.StartsWith(ModTags.Tag_GUID))
+                {
+                    guid = tag.Substring(ModTags.Tag_GUID.Length);
+                    break;
+                }
+            }
+
+            if (guid != null)
+            {
+                Mod.Log.Info?.Write($" -- removing GUID: {guid}");
+                string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
+                Statistic detailsCompanyStat = ModState.SimGameState.CompanyStats.GetStatistic(companyStatName);
+                if (detailsCompanyStat != null)
+                    ModState.SimGameState.CompanyStats.RemoveStatistic(companyStatName);
+                pilotDef.PilotTags.Remove($"{ModTags.Tag_GUID}{newDetails.GUID}");
+            }
+
+            newDetails.UpdateAttitudeTags(pilotDef);
+
+            // Delete all tags in the mod
+            pilotDef.PilotTags.RemoveRange(ModTags.Tags_All);
+
         }
 
     }

@@ -53,9 +53,21 @@ namespace HumanResources
             ModTags.Tag_Attitude_Best, ModTags.Tag_Attitude_Good, ModTags.Tag_Attitude_Neutral, ModTags.Tag_Attitude_Worst, ModTags.Tag_Attitude_Poor 
         };
 
+        public const string Tag_CrewType_Aerospace = "HR_CREWTYPE_AEROSPACE";
+        public const string Tag_CrewType_MechTech = "HR_CREWTYPE_MECH_TECH";
+        public const string Tag_CrewType_MedTech = "HR_CREWTYPE_MED_TECH";
+
         // CU Vehicles - pilot_vehicle_crew allow tank piloting,
-        public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
         public const string Tag_CU_NoMech_Crew = "pilot_nomech_crew";
+        public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
+
+        // Used during cleanup; should contain all tag names
+        public static List<string> Tags_All = new List<string>
+        {
+            ModTags.Tag_Attitude_Best, ModTags.Tag_Attitude_Good, ModTags.Tag_Attitude_Neutral, ModTags.Tag_Attitude_Worst, ModTags.Tag_Attitude_Poor,
+            Tag_CrewType_Aerospace, Tag_CrewType_MechTech, Tag_CrewType_MedTech,
+            Tag_CU_NoMech_Crew, Tag_CU_Vehicle_Crew
+        };
     }
 
     public static class ModStats

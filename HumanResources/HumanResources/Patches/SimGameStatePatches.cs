@@ -2,6 +2,7 @@
 using BattleTech.Data;
 using BattleTech.UI;
 using Harmony;
+using HBS.Collections;
 using HumanResources.Extensions;
 using HumanResources.Helper;
 using Localize;
@@ -35,6 +36,21 @@ namespace HumanResources.Patches
             // Reinitialize state
             ModState.Reset();
             ModState.SimGameState = __instance;
+
+            // Reinitialize tags; has to be done here b/c ModTek munges MDDB after modinit
+            // If we made it past here, initialize our tagset by wiping out the old one and applying a new one
+            TagSet newTagSet = new TagSet();
+
+            Tag_MDD aerospaceTag = new Tag_MDD(ModTags.Tag_CrewType_Aerospace, false, true, "Aerospace Crew", "Loreum ipsum - flyers");
+            Tag_MDD mechTechTag = new Tag_MDD(ModTags.Tag_CrewType_MechTech, false, true, "MechTech Crew", "Loreum ipsum - mech fixas");
+            Tag_MDD medTechTag = new Tag_MDD(ModTags.Tag_CrewType_MedTech, false, true, "MedTechCrew", "Loreum ipsum - healers");
+
+            MetadataDatabase.Instance.AddOrUpdate(aerospaceTag);
+            Tag_MDD aerospaceCheck = MetadataDatabase.Instance.GetTagIfExists(ModTags.Tag_CrewType_Aerospace);
+            Mod.Log.Info?.Write($"Refetch of added tag: {ModTags.Tag_CrewType_Aerospace} has Tag_MDD: {aerospaceCheck != null}");
+
+            MetadataDatabase.Instance.AddOrUpdate(mechTechTag);
+            MetadataDatabase.Instance.AddOrUpdate(medTechTag);
         }
     }
 
@@ -253,6 +269,9 @@ namespace HumanResources.Patches
                         StatCollection.StatOperation.Int_Subtract, 1);
             }
 
+            // Cleanup company state
+            ModState.RemoveCrewDetails(p.pilotDef, details);
+
             __instance.RoomManager.RefreshTimeline(false);
             __instance.RoomManager.RefreshDisplay();
         }
@@ -269,8 +288,10 @@ namespace HumanResources.Patches
                 if (pilot.pilotDef.IsFree && pilot.pilotDef.IsImmortal) continue; // player character, skip
 
                 // Initialize new details for the pre-generated pilots
+                Mod.Log.Info?.Write($"Creating details for career-default pilot: {pilot.Name}");
                 CrewDetails details = new CrewDetails(pilot.pilotDef, CrewType.MechWarrior);
                 ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
+                Mod.Log.Info?.Write($"  -- pilot will have GUID: {details.GUID}");
             }
         }
     }
@@ -518,7 +539,7 @@ namespace HumanResources.Patches
                 details.Attitude += econMod;
 
                 // Check pilots to see if they favor or hate an allied faction
-                if (details.FavoredFaction > 0)
+                if (details.FavoredFaction > 0 && !details.IsPlayer)
                 {
                     foreach (FactionValue faction in alliedFactions)
                     {
@@ -532,7 +553,7 @@ namespace HumanResources.Patches
                     }
                 }
 
-                if (details.HatedFaction > 0)
+                if (details.HatedFaction > 0 && !details.IsPlayer)
                 {
                     foreach (FactionValue faction in alliedFactions)
                     {
@@ -554,8 +575,6 @@ namespace HumanResources.Patches
             }
         }
     }
-
-
 
     [HarmonyPatch(typeof(SimGameState), "CanMechWarriorBeHiredAccordingToMRBRating")]
     static class SimGameState_CanMechWarriorBeHiredAccordingToMRBRating
@@ -582,7 +601,5 @@ namespace HumanResources.Patches
             __result = true;
         }
     }
-
-    
 
 }

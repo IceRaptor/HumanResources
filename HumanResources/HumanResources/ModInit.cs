@@ -1,4 +1,7 @@
-﻿using Harmony;
+﻿using BattleTech.Data;
+using Harmony;
+using HBS.Collections;
+using HumanResources.Helper;
 using IRBTModUtils.Logging;
 using Newtonsoft.Json;
 using System;
@@ -86,6 +89,9 @@ namespace HumanResources
             // Initialize harmony
             var harmony = HarmonyInstance.Create(HarmonyPackage);
             harmony.PatchAll(Assembly.GetExecutingAssembly());
+
+
+
         }
 
     }
