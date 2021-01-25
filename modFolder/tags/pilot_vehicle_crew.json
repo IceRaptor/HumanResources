@@ -1,0 +1,7 @@
+{
+	"Name" : "pilot_vehicle_crew",
+	"Important" : false,
+	"PlayerVisible" : false,
+	"FriendlyName" : "Vehicle Crew (CU)",
+	"Description" : "This mechwarrior can pilot vehicles (per Custom Units)"
+}       

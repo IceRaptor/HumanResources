@@ -1,0 +1,7 @@
+{
+	"Name" : "HR_CREWTYPE_MECH_TECH",
+	"Important" : false,
+	"PlayerVisible" : true,
+	"FriendlyName" : "MechTech Crew",
+	"Description" : "A bunch of unruly mech and vehicle techs that know how to keep your gear running smoothly. Just don't ask them to look presentable for social functions."
+}       

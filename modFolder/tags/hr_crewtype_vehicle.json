@@ -1,0 +1,7 @@
+{
+	"Name" : "HR_CREWTYPE_VEHICLE",
+	"Important" : false,
+	"PlayerVisible" : true,
+	"FriendlyName" : "Vehicle Crew",
+	"Description" : "Pilots, gunners and navigators that take to the field in all manner of vehicles. They are willing to go toe-to-toe with a Mech, so long as they get paid."
+}       

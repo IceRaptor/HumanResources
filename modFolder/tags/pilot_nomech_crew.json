@@ -1,0 +1,7 @@
+{
+	"Name" : "pilot_nomech_crew",
+	"Important" : false,
+	"PlayerVisible" : false,
+	"FriendlyName" : "Vehicle Pilot (CU)",
+	"Description" : "This crew lacks the skills to pilot a Mech and may not serve as a mechwarrior"
+}       

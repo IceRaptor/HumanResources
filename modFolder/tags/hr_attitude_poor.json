@@ -1,0 +1,7 @@
+{
+	"Name" : "HR_CREW_ATTITUDE_POOR",
+	"Important" : false,
+	"PlayerVisible" : true,
+	"FriendlyName" : "Disloyal",
+	"Description" : "The crew doesn't like your leadership, the food in the mess, or any number of little things. They aren't ready to jump ship at the first planet, but they don't consider this place a highlight of their career."
+}       

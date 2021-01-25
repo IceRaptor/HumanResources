@@ -1,0 +1,7 @@
+{
+	"Name" : "HR_CREWTYPE_MED_TECH",
+	"Important" : false,
+	"PlayerVisible" : true,
+	"FriendlyName" : "MedTech Crew",
+	"Description" : "Combat medics, barely competent surgeons, and doctors that can't find more stable employment. At least they keep your pilots patched up enough to fight."
+}       

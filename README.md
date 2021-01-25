@@ -291,6 +291,7 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 * Add slackers event for support; reduces their value for N days has a change in attitude
 * Add motivated event for support; increases their value for N days if you fund it 
 * Add feud event; two crews are fighting with each other.
+* Can click hire even if at max berths
 	
 * (REJECTED) Expense costs should be exponential? 
 * (REJECTED) Expense changes should have personnel costs (luxury cost, maybe tied to 	

@@ -1,7 +1,7 @@
 {
     "Name": "HumanResources",
     "Enabled": true,
-    "Version": "0.1.0",
+    "Version": "0.3.0",
     "Description": "Allows you to hire MechTech, MedTech, and Vehicle crews.",
     "Author": "IceRaptor",
     "Website": "https://github.com/IceRaptor/HumanResources",
@@ -10,12 +10,14 @@
     "DLLEntryPoint" : "HumanResources.Mod.Init",
     "DependsOn" : [ "IRBTModUtils" ],
     "OptionallyDependsOn" :  [ ],
-	"CustomResourceTypes": [ "CustomSVGIcon" ],
+	"CustomResourceTypes": [ ],
     "Manifest": [ 
         { "Type": "BaseDescriptionDef", "Path": "tooltip/" },
         { "Type": "SimGameEventDef", "Path": "events/" },
         { "Type": "SimGameStatDescDef", "Path": "statDescriptions/" },
-        { "Type": "SVGAsset", "Path": "icons/"} 
+        { "Type": "SVGAsset", "Path": "icons/" },
+		{ "Type": "CustomTag", "Path": "tags/" },
+		{ "Type": "CustomTagSet", "Path": "tagSets/" }
     ],
     "Settings": {
         "Debug" : true,
@@ -71,6 +73,24 @@
                 "HatedEmployerIsEmployerMod" : -3,
                 "HatedEmployerIsTargetMod" : 3
             }
+        },
+		"HeadHunting" : {
+            "Enabled" : true,
+            "EconMods" :  [ 0.35, 0.2, -0.2, -0.35 ],
+            "ChanceBySkill" : [ 0.05, 0.1, 0.15, 0.3, 0.6 ],
+			
+			"FailedCooldownIntervalMin" : 3,
+			"FailedCooldownIntervalMax" : 7,
+			
+			"SuccessCooldownIntervalMin" : 15,
+			"SuccessCooldownIntervalMax" : 45,
+
+			"CrewCooldownIntervalMin" : 60,
+			"CrewCooldownIntervalMax" : 120,
+
+			"CounterOfferVariance" : 1.5,
+
+			"PlanetBlacklist" : [ "planet_civ_primitive", "planet_other_plague", "planet_pop_none" ]
         },
         "HiringHall" : {
             "Scarcity" : {
@@ -142,79 +162,98 @@
 
             "AerospaceWings" : {
                 "Enabled" : true,
+				
                 "BaseDaysInContract" : 15,
                 "MinContractDaysMulti" : 6,
                 "MaxContractDaysMulti" : 12,
+				
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+				
                 "HazardPayRatio" : 0.05,
                 "HazardPayUnits" : 500,
+				
                 "ValueThresholdForMRBLevel" : [ 8, 16, 24, 32, 99 ],
                 "MaxOfType" : 1
             },
             "MechTechCrews" : {
                 "Enabled" : true,
+				
                 "BaseDaysInContract" : 15,
                 "MinContractDaysMulti" : 6,
                 "MaxContractDaysMulti" : 12,
+				
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+				
                 "HazardPayRatio" : 0,
                 "HazardPayUnits" : 0,
+				
                 "ValueThresholdForMRBLevel" : [ 8, 16, 24, 32, 99 ],
                 "MaxOfType" : -1
             },
             "MedTechCrews" : {
                 "Enabled" : true,
+				
                 "BaseDaysInContract" : 15,
                 "MinContractDaysMulti" : 6,
                 "MaxContractDaysMulti" : 12,
+				
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+				
                 "HazardPayRatio" : 0,
                 "HazardPayUnits" : 0,
+				
                 "ValueThresholdForMRBLevel" : [ 8, 16, 24, 32, 99 ],
                 "MaxOfType" : 2
             },
             "MechWarriors" : {
                 "Enabled" : true,
+				
                 "BaseDaysInContract" : 15,
                 "MinContractDaysMulti" : 6,
                 "MaxContractDaysMulti" : 12,
+				
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+				
                 "HazardPayRatio" : 0.05,
                 "HazardPayUnits" : 500,
+				
                 "ValueThresholdForMRBLevel" : [ 10, 17, 24, 31, 99 ],
+				"SkillToExpertiseThresholds" : [ 10, 18, 27, 35, 99 ],
+				
                 "MaxOfType" : -1
             },
             "VehicleCrews" : {
                 "Enabled" : true,
+				
                 "BaseDaysInContract" : 15,
                 "MinContractDaysMulti" : 6,
                 "MaxContractDaysMulti" : 12,
+				
                 "SalaryMulti" : 30000,
                 "SalaryExponent" : 1.1,
                 "SalaryVariance" : 1.1, 
                 "BonusVariance" : 1.5,
+				
                 "HazardPayRatio" : 0.05,
                 "HazardPayUnits" : 500,
+				
                 "ValueThresholdForMRBLevel" : [ 10, 17, 24, 31, 99 ],
+				"SkillToExpertiseThresholds" : [ 10, 18, 27, 35, 99 ],
+				
                 "MaxOfType" : -1
             }
-        },
-        "HeadHunting" : {
-            "Enabled" : true,
-            "LifeStyleMods" :  [ 0.35, 0.2, -0.2, -0.35 ],
-            "PoachingChance" : [ 0.05, 0.1, 0.15, 0.3, 0.6 ]
         }
     }
 }
