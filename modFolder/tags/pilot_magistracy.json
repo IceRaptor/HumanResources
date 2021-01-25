@@ -1,0 +1,7 @@
+{
+	"Name" : "pilot_magistracy",
+	"Important" : false,
+	"PlayerVisible" : true,
+	"FriendlyName" : "Magistracy origin",
+	"Description" : "This crew was born in, is a citizen of, or considers the Magistracy of Canopus their home."
+}       
