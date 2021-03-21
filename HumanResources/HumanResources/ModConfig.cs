@@ -12,7 +12,7 @@ namespace HumanResources
         public int Mu = 0;
 
         // Breakpoints on the PDF (Probability distribution function), from worst to best. Must be 4 values.
-        public float[] Breakpoints = new float[] { -1.0f, 1.0f, 2.0f, 3.0f };
+        public float[] Breakpoints = new float[] { };
     }
 
     public class CrewOpts
@@ -39,11 +39,11 @@ namespace HumanResources
 
         // Value by MRB level. Should be one less than MRBRepCap in SimGameConstants, as you can always hire below the first value
         //                                                  MRB: 1, 2, 3,  4,  5
-        public float[] ValueThresholdForMRBLevel = new float[] { 8, 16, 24, 32, 99 };
+        public float[] ValueThresholdForMRBLevel = new float[] {};
 
         // For Combat units only; map skill levels to expertise boundaires (Green, Regular, Veteran, Elite, Legendary)
         // Does not apply to units w/o combat skills
-        public float[] SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+        public float[] SkillToExpertiseThresholds = new float[] {};
 
         // -1 indicates no limit
         public float MaxOfType = -1;
@@ -51,8 +51,6 @@ namespace HumanResources
         public string[] originTags = new string[] { };
 
         public string[] traitTags = new string[] { };
-
-
     }
 
     public class CrewScarcity
@@ -122,12 +120,6 @@ namespace HumanResources
 
         public Dictionary<string, CrewScarcity> PlanetTagModifiers = new Dictionary<string, CrewScarcity>()
         {
-            {  "planet_civ_innersphere",
-                new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 2f, MechTechs = 1f, MedTechs = 1f, Aerospace = 1f } },
-            {  "planet_civ_periphery",
-                new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 1f, MechTechs = 0f, MedTechs = 0f, Aerospace = 1f } },
-            {  "planet_civ_primitive",
-                new CrewScarcity() { MechWarriors = -2f, VehicleCrews = 1f, MechTechs = -2f, MedTechs = -4f, Aerospace = -4f } }
         };
     }
 
@@ -136,13 +128,13 @@ namespace HumanResources
         public DistributionOpts SkillDistribution = new DistributionOpts() 
         {
             // Rookie, Regular, Veteran, Elite, Legendary
-            Breakpoints = new float[] { -0.5f, 1f, 1.75f, 2.5f  }
+            Breakpoints = new float[] {}
         };
         
         public DistributionOpts SizeDistribution = new DistributionOpts()
         {
             // Tiny, Small, Medium, Large, Huge
-            Breakpoints = new float[] { -0.25f, 0.25f, 1.25f, 2f }
+            Breakpoints = new float[] {}
         };
 
         public ScarcityOps Scarcity = new ScarcityOps();
@@ -202,7 +194,6 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 },
             HazardPayRatio = 0.05f
         };
 
@@ -217,7 +208,6 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 },
             HazardPayRatio = 0.05f
         };
 
@@ -225,41 +215,17 @@ namespace HumanResources
 
     public class PointsBySkillAndSizeOpts
     {
-
-        public int[][] Aerospace = new int[][]
-{
-            new int[] { 1, 2, 3, 5, 8 },
-            new int[] { 2, 4, 6, 10, 16 },
-            new int[] { 3, 6, 9, 15, 24 },
-            new int[] { 4, 8, 12, 20, 32 },
-            new int[] { 5, 10, 15, 25, 40 }
-        };
-
-        public int[][] MechTech = new int[][]
-        {
-            new int[] { 1, 2, 3, 5, 8 },
-            new int[] { 2, 4, 6, 10, 16 },
-            new int[] { 3, 6, 9, 15, 24 },
-            new int[] { 4, 8, 12, 20, 32 },
-            new int[] { 5, 10, 15, 25, 40 }
-        };
-
-        public int[][] MedTech = new int[][]
-        {
-            new int[] { 1, 2, 3, 5, 8 },
-            new int[] { 2, 4, 6, 10, 16 },
-            new int[] { 3, 6, 9, 15, 24 },
-            new int[] { 4, 8, 12, 20, 32 },
-            new int[] { 5, 10, 15, 25, 40 }
-        };
+        public int[][] Aerospace = new int[][] {};
+        public int[][] MechTech = new int[][] {};
+        public int[][] MedTech = new int[][] {};
     }
 
     public class HeadHuntingOpts
     {
         public bool Enabled = true;
 
-        public float[] EconMods = { 0.35f, 0.2f, 0f, -0.2f, -0.35f };
-        public float[] ChanceBySkill = { 0.05f, 0.1f, 0.15f, 0.3f, 0.6f };
+        public float[] EconMods = new float[] { };
+        public float[] ChanceBySkill = new float[] { };
 
         // Check for poaching N times per month. On a failed check (nobody was poached, wait this many days)
         public int FailedCooldownIntervalMin = 3;
@@ -276,7 +242,7 @@ namespace HumanResources
         // Determine a random amount between the bonus and bonus x CounterOfferVariance to determine is their 'counter-offer' to keep them
         public float CounterOfferVariance = 1.5f;
 
-        public List<string> PlanetBlacklist = new List<string>() { "planet_civ_primitive", "planet_other_plague", "planet_pop_none" };
+        public List<string> PlanetBlacklist = new List<string>() { };
 
         // Poaching goes from most legendary to least ?
 
@@ -333,11 +299,99 @@ namespace HumanResources
         {
             Mod.Log.Info?.Write("=== MOD CONFIG BEGIN ===");
             Mod.Log.Info?.Write($"  DEBUG: {this.Debug} Trace: {this.Trace}");
+            Mod.Log.Info?.Write($"  DebugCommands: {this.DebugCommands}");
+            Mod.Log.Info?.Write($"");
+
+            Mod.Log.Info?.Write("--- Icons ---");
+            Mod.Log.Info?.Write($"  CrewPortrait_Aerospace: {this.Icons.CrewPortrait_Aerospace}  CrewPortrait_MedTech: {this.Icons.CrewPortrait_MedTech}");
+            Mod.Log.Info?.Write($"  CrewPortrait_MechTech: {this.Icons.CrewPortrait_MechTech}  CrewPortrait_Vehicle: {this.Icons.CrewPortrait_Vehicle}");
+            Mod.Log.Info?.Write($"");
+
+            Mod.Log.Info?.Write("--- Crew Config ---");
+            Mod.Log.Info?.Write($"  AerospaceRGB: {this.Crew.AerospaceRGB}  AerospaceColor: {this.Crew.AerospaceColor}");
+            Mod.Log.Info?.Write($"  MechTechCrewRGB: {this.Crew.MechTechCrewRGB}  MechTechCrewColor: {this.Crew.MechTechCrewColor}");
+            Mod.Log.Info?.Write($"  MedTechCrewRGB: {this.Crew.MedTechCrewRGB}  MedTechCrewColor: {this.Crew.MedTechCrewColor}");
+            Mod.Log.Info?.Write($"  VehicleCrewRGB: {this.Crew.VehicleCrewRGB}  VehicleCrewColor: {this.Crew.VehicleCrewColor}");
+            Mod.Log.Info?.Write($"  MechwarriorRGB: {this.Crew.MechwarriorRGB}  MechwarriorColor: {this.Crew.MechwarriorColor}");
+            Mod.Log.Info?.Write($"");
+
+            Mod.Log.Info?.Write("--- Hiring Hall Config---");
+            Mod.Log.Info?.Write($"  SkillDistribution: { string.Join(", ", this.HiringHall.SkillDistribution) }");
+            Mod.Log.Info?.Write($"  SizeDistribution: { string.Join(", ", this.HiringHall.SizeDistribution) }");
+            Mod.Log.Info?.Write($"");
+            
+            Mod.Log.Info?.Write($"  -- Scarcity --");
+            Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.Scarcity.Enabled}");
+            Mod.Log.Info?.Write($"  - Default Planet Scarcity -");
+            Mod.Log.Info?.Write($"  Aerospace: {this.HiringHall.Scarcity.Defaults.Aerospace}  MechTechs: {this.HiringHall.Scarcity.Defaults.MechTechs}  " +
+                $"MedTechs: {this.HiringHall.Scarcity.Defaults.MedTechs}  MechWarriors: {this.HiringHall.Scarcity.Defaults.MechWarriors}  " +
+                $"VehicleCrews: {this.HiringHall.Scarcity.Defaults.VehicleCrews} ");
+            Mod.Log.Info?.Write($"  - Planet Tag Modifiers -");
+            foreach (KeyValuePair<string, CrewScarcity> kvp in this.HiringHall.Scarcity.PlanetTagModifiers)
+            {
+                Mod.Log.Info?.Write($"  Tag: {kvp.Key} => Aerospace: {this.HiringHall.Scarcity.Defaults.Aerospace}  MechTechs: {this.HiringHall.Scarcity.Defaults.MechTechs}  " +
+                $"MedTechs: {this.HiringHall.Scarcity.Defaults.MedTechs}  MechWarriors: {this.HiringHall.Scarcity.Defaults.MechWarriors}  " +
+                $"VehicleCrews: {this.HiringHall.Scarcity.Defaults.VehicleCrews} ");
+            }
+            Mod.Log.Info?.Write($"");
+
+            Mod.Log.Info?.Write($"  -- PointsBySkillAndSize --");
+            Mod.Log.Info?.Write($"  Aerospace Points");
+            for (int i = 0; i < this.HiringHall.PointsBySkillAndSize.Aerospace.Length; i++)
+                Mod.Log.Info?.Write("[" + string.Join(", ", this.HiringHall.PointsBySkillAndSize.Aerospace[i]) + "]");
+            Mod.Log.Info?.Write($"  MechTech Points");
+            for (int i = 0; i < this.HiringHall.PointsBySkillAndSize.MechTech.Length; i++)
+                Mod.Log.Info?.Write("[" + string.Join(", ", this.HiringHall.PointsBySkillAndSize.MechTech[i]) + "]");
+            Mod.Log.Info?.Write($"  MedTech Points");
+            for (int i = 0; i < this.HiringHall.PointsBySkillAndSize.MedTech.Length; i++)
+                Mod.Log.Info?.Write("[" + string.Join(", ", this.HiringHall.PointsBySkillAndSize.MedTech[i]) + "]");
+            Mod.Log.Info?.Write($"");
+
+            Mod.Log.Info?.Write($"  -- AerospaceWings --");
+            Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.AerospaceWings.Enabled}");
+            Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.AerospaceWings.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.AerospaceWings.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.AerospaceWings.MaxContractDaysMulti}");
+            Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.AerospaceWings.SalaryMulti}  SalaryExponent: {this.HiringHall.AerospaceWings.SalaryExponent}  " +
+                $"SalaryVariance: {this.HiringHall.AerospaceWings.SalaryVariance}  BonusVariance: {this.HiringHall.AerospaceWings.BonusVariance}");
+            Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.AerospaceWings.MaxOfType}  HazardPayRatio: {this.HiringHall.AerospaceWings.HazardPayRatio}");
+
+            Mod.Log.Info?.Write($"  -- MechTechCrews --");
+            Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.MechTechCrews.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.MechTechCrews.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.MechTechCrews.MaxContractDaysMulti}");
+            Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.MechTechCrews.SalaryMulti}  SalaryExponent: {this.HiringHall.MechTechCrews.SalaryExponent}  " +
+                $"SalaryVariance: {this.HiringHall.MechTechCrews.SalaryVariance}  BonusVariance: {this.HiringHall.MechTechCrews.BonusVariance}");
+            Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.MechTechCrews.MaxOfType}  HazardPayRatio: {this.HiringHall.MechTechCrews.HazardPayRatio}");
+
+            Mod.Log.Info?.Write($"  -- MedTechCrews --");
+            Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.MedTechCrews.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.MedTechCrews.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.MedTechCrews.MaxContractDaysMulti}");
+            Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.MedTechCrews.SalaryMulti}  SalaryExponent: {this.HiringHall.MedTechCrews.SalaryExponent}  " +
+                $"SalaryVariance: {this.HiringHall.MedTechCrews.SalaryVariance}  BonusVariance: {this.HiringHall.MedTechCrews.BonusVariance}");
+            Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.MedTechCrews.MaxOfType}  HazardPayRatio: {this.HiringHall.MedTechCrews.HazardPayRatio}");
+
+            Mod.Log.Info?.Write($"  -- MechWarriors --");
+            Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.MechWarriors.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.MechWarriors.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.MechWarriors.MaxContractDaysMulti}");
+            Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.MechWarriors.SalaryMulti}  SalaryExponent: {this.HiringHall.MechWarriors.SalaryExponent}  " +
+                $"SalaryVariance: {this.HiringHall.MechWarriors.SalaryVariance}  BonusVariance: {this.HiringHall.MechWarriors.BonusVariance}");
+            Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.MechWarriors.MaxOfType}  HazardPayRatio: {this.HiringHall.MechWarriors.HazardPayRatio}");
+
+            Mod.Log.Info?.Write($"  -- VehicleCrews --");
+            Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.VehicleCrews.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.VehicleCrews.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.VehicleCrews.MaxContractDaysMulti}");
+            Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.VehicleCrews.SalaryMulti}  SalaryExponent: {this.HiringHall.VehicleCrews.SalaryExponent}  " +
+                $"SalaryVariance: {this.HiringHall.VehicleCrews.SalaryVariance}  BonusVariance: {this.HiringHall.VehicleCrews.BonusVariance}");
+            Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.VehicleCrews.MaxOfType}  HazardPayRatio: {this.HiringHall.VehicleCrews.HazardPayRatio}");
+
+            Mod.Log.Info?.Write($"");
+
+
+            Mod.Log.Info?.Write("--- Crew Config ---");
+            Mod.Log.Info?.Write($"  AerospaceRGB: {this.Crew.AerospaceRGB}  AerospaceColor: {this.Crew.AerospaceColor}");
+            Mod.Log.Info?.Write($"");
+
+
             Mod.Log.Info?.Write("=== MOD CONFIG END ===");
         }
 
         public void Init()
         {
+            // Translate color values into Color objects
             if (this.Crew.MechTechCrewRGB != null && this.Crew.MechTechCrewRGB.Length == 3)
             {
                 this.Crew.MechTechCrewColor = new Color(this.Crew.MechTechCrewRGB[0], this.Crew.MechTechCrewRGB[1], this.Crew.MechTechCrewRGB[2]);
@@ -361,6 +415,116 @@ namespace HumanResources
 
             // TODO: Validate the hiring hall distributions
 
+            // Add any missing default values
+            InitHiringHallDefaults();
+            InitHeadHuntingDefaults();
+        }
+
+        private void InitHiringHallDefaults()
+        {
+            // SkillDistribution
+            // Rookie, Regular, Veteran, Elite, Legendary
+            if (this.HiringHall.SkillDistribution.Breakpoints.Length == 0)
+                this.HiringHall.SkillDistribution.Breakpoints = new float[] { -0.5f, 1f, 1.75f, 2.5f };
+
+            // SizeDistribution
+            // Tiny, Small, Medium, Large, Huge
+            if (this.HiringHall.SizeDistribution.Breakpoints.Length == 0)
+                this.HiringHall.SizeDistribution.Breakpoints = new float[] { -0.25f, 0.25f, 1.25f, 2f };
+            
+            // Scarcity
+            if (this.HiringHall.Scarcity.PlanetTagModifiers.Count == 0)
+            {
+                this.HiringHall.Scarcity.PlanetTagModifiers.Add("planet_civ_innersphere",
+                    new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 2f, MechTechs = 1f, MedTechs = 1f, Aerospace = 1f }
+                );
+                this.HiringHall.Scarcity.PlanetTagModifiers.Add("planet_civ_periphery",
+                    new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 1f, MechTechs = 0f, MedTechs = 0f, Aerospace = 1f }
+                );
+                this.HiringHall.Scarcity.PlanetTagModifiers.Add("planet_civ_primitive",
+                    new CrewScarcity() { MechWarriors = -2f, VehicleCrews = 1f, MechTechs = -2f, MedTechs = -4f, Aerospace = -4f }
+                );
+            }
+
+            // PointsBySkillAndSize
+            if (this.HiringHall.PointsBySkillAndSize.Aerospace.Length == 0)
+            {
+                this.HiringHall.PointsBySkillAndSize.Aerospace = new int[][]
+                {
+                    new int[] { 1, 2, 3, 5, 8 },
+                    new int[] { 2, 4, 6, 10, 16 },
+                    new int[] { 3, 6, 9, 15, 24 },
+                    new int[] { 4, 8, 12, 20, 32 },
+                    new int[] { 5, 10, 15, 25, 40 }
+                };
+            }
+            if (this.HiringHall.PointsBySkillAndSize.MechTech.Length == 0)
+            {
+                this.HiringHall.PointsBySkillAndSize.MechTech = new int[][]
+                {
+                    new int[] { 1, 2, 3, 5, 8 },
+                    new int[] { 2, 4, 6, 10, 16 },
+                    new int[] { 3, 6, 9, 15, 24 },
+                    new int[] { 4, 8, 12, 20, 32 },
+                    new int[] { 5, 10, 15, 25, 40 }
+                };
+            }
+            if (this.HiringHall.PointsBySkillAndSize.MedTech.Length == 0)
+            {
+                this.HiringHall.PointsBySkillAndSize.MedTech = new int[][]
+                {
+                    new int[] { 1, 2, 3, 5, 8 },
+                    new int[] { 2, 4, 6, 10, 16 },
+                    new int[] { 3, 6, 9, 15, 24 },
+                    new int[] { 4, 8, 12, 20, 32 },
+                    new int[] { 5, 10, 15, 25, 40 }
+                };
+            }
+
+            // AerospaceWings
+            if (this.HiringHall.AerospaceWings.ValueThresholdForMRBLevel.Length == 0)
+                this.HiringHall.AerospaceWings.ValueThresholdForMRBLevel = new float[] { 8, 16, 24, 32, 99 };
+            if (this.HiringHall.AerospaceWings.SkillToExpertiseThresholds.Length == 0)
+                this.HiringHall.AerospaceWings.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+
+            // MechTechCrews
+            if (this.HiringHall.MechTechCrews.ValueThresholdForMRBLevel.Length == 0)
+                this.HiringHall.MechTechCrews.ValueThresholdForMRBLevel = new float[] { 8, 16, 24, 32, 99 };
+            if (this.HiringHall.MechTechCrews.SkillToExpertiseThresholds.Length == 0)
+                this.HiringHall.MechTechCrews.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+
+            // MedTechCrews
+            if (this.HiringHall.MedTechCrews.ValueThresholdForMRBLevel.Length == 0)
+                this.HiringHall.MedTechCrews.ValueThresholdForMRBLevel = new float[] { 8, 16, 24, 32, 99 };
+            if (this.HiringHall.MedTechCrews.SkillToExpertiseThresholds.Length == 0)
+                this.HiringHall.MedTechCrews.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+
+            // MechWarriors
+            if (this.HiringHall.MechWarriors.ValueThresholdForMRBLevel.Length == 0)
+                this.HiringHall.MechWarriors.ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 };
+            if (this.HiringHall.MechWarriors.SkillToExpertiseThresholds.Length == 0)
+                this.HiringHall.MechWarriors.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+
+            // VehicleCrews
+            if (this.HiringHall.MechWarriors.ValueThresholdForMRBLevel.Length == 0)
+                this.HiringHall.MechWarriors.ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 };
+            if (this.HiringHall.MechWarriors.SkillToExpertiseThresholds.Length == 0)
+                this.HiringHall.MechWarriors.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+
+        }
+        private void InitHeadHuntingDefaults()
+        {
+            // EconMods
+            if (this.HeadHunting.EconMods.Length == 0)
+                this.HeadHunting.EconMods = new float[] { 0.35f, 0.2f, 0f, -0.2f, -0.35f };
+
+            // ChanceBySkill
+            if (this.HeadHunting.ChanceBySkill.Length == 0)
+                this.HeadHunting.ChanceBySkill = new float[] { 0.05f, 0.1f, 0.15f, 0.3f, 0.6f };
+
+            // PlanetBlacklist
+            if (this.HeadHunting.PlanetBlacklist.Count == 0)
+                this.HeadHunting.PlanetBlacklist = new List<string>() { "planet_civ_primitive", "planet_other_plague", "planet_pop_none" };
         }
     }
 }

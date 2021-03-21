@@ -12,6 +12,21 @@ namespace HumanResources
 
     public class ModText
     {
+        public const string DT_CrewType_Aerospace = "CREW_TYPE_AEROSPACE";
+        public const string DT_CrewType_MechTech = "CREW_TYPE_MECH_TECH";
+        public const string DT_CrewType_MechWarrior = "CREW_TYPE_MECHWARRIOR";
+        public const string DT_CrewType_MedTech = "CREW_TYPE_MED_TECH";
+        public const string DT_CrewType_Vehicle = "CREW_TYPE_VEHICLE";
+
+        public static Dictionary<string, string> Descriptions = new Dictionary<string, string>()
+        {
+            { DT_CrewType_Aerospace, "" },
+            { DT_CrewType_MechTech, "" },
+            { DT_CrewType_MechWarrior, "" },
+            { DT_CrewType_MedTech, "" },
+            { DT_CrewType_Vehicle, "" }
+        };
+
         // === Labels text ====
         public const string LT_Crew_Skill_1 = "SKILL_LEVEL_1";
         public const string LT_Crew_Skill_2 = "SKILL_LEVEL_2";
@@ -132,3 +147,4 @@ namespace HumanResources
 
     }
 }
+

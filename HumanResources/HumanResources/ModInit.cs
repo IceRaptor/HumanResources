@@ -39,7 +39,7 @@ namespace HumanResources
                 settingsE = e;
                 Mod.Config = new ModConfig();
             }
-            Mod.Config.Init(); // Initialize color conversion
+            Mod.Config.Init(); // Initialize color conversion & defaults
 
             Log = new DeferringLogger(modDirectory, LogName, "HR", Mod.Config.Debug, Mod.Config.Trace);
 
