@@ -243,11 +243,41 @@ This feature can be completely disabled by setting `HeadHunting.Enabled=false` i
 
 Many vanilla events target MechWarriors, and this mod's 'crews' are all considered MechWarriors by the game code. For this reason the mod does a prefix=false patch on `SimGameEventTracker.IsEventValid` and prohibits any crews from being targeted by vanilla events. This means vehicle crews won't get into fights, MechTech crews won't get low spirits, and Aerospace pilots can't get injured.
 
-# TODO
+## New Pilot Tags
+
+This mod adds several pilot tags to the MDDB. They function like normal pilot tags in all respects, and can be used with other mods that tie pilot tags to mechanical advantages.   
+  
+(!) Pilot tags are not removed when the mod is disabled or uninstalled. They will persist throughout the save. It's not safe to remove them without cleaning up every pilot that has them, so they remain in the system for all current and future saves to use. To completely remove them, you must wipe out your Mods/.modtek directory and start a new save.
+
+| Vanilla Behavior Tags | Vanilla Origin Tags | HR Behavior Tags | HR Origin Tags | 
+| -- | -- | -- | -- |
+| pilot\_athletic<br>pilot\_assassin<br>pilot\_brave<br>pilot\_bookish<br>pilot\_cautious<br>pilot\_criminal<br>pilot\_command<br>pilot\_comstar<br>pilot\_dependable<br>pilot\_disgraced<br>pilot\_dishonest<br>pilot\_drunk<br>pilot\_gladiator<br>pilot\_honest<br>pilot\_jinxed<br>pilot\_klutz<br>pilot\_lostech<br>pilot\_lucky<br>pilot\_mechwarrior<br>pilot\_military<br>pilot\_naive<br>pilot\_officer<br>pilot\_rebellious<br>pilot\_reckless<br>pilot\_spacer<br>pilot\_tech<br>pilot\_unstable<br>pilot\_wealthy | pilot\_aurigan<br>pilot\_davion<br>pilot\_kurita<br>pilot\_liao<br>pilot\_innersphere<br>pilot\_magistracy<br>pilot\_marik<br>pilot\_noble<br>pilot\_periphery<br>pilot\_steiner<br>pilot\_taurian<br>pilot\_tortuga |
+
+### Internal Tags
+
+Some tags are not displayed to the player, and are used....
+		
+## Dev Notes
+
+### Lifepaths
+  
+Start: Commoner (by faction), noble (by faction)
+
+Level1: convict, criminal enforcer, petty criminal, corp merchant, merchant crew, merc. trader, enlisted infantry, enlisted navy, merc recruit, officer training, noble heir, noble supernumerary, pirate recruit, comstar tech, tech school, tinkerer
+
+level2: crim. hitman, crim. smuggler, merc. corp, merc. officer, enlisted inf, enlisted navy, miliary mechwarrior, military merc corporal, mil. officier. infan, mil. officer navy, noble diplo, noble fallen, noble landed, pirate crew, solaris gladiator, comstar tech, mechTech
+
+level 3: crim. assassin, merc. captain, merch. corp, mil. captain. inf, mil. enlisted inf, mil enlisted navy, mil. mechwarrior, mil merc LCorp, mil. officer navy, mil. spec ops, noble admin, noble ruling, pirate captain, pirate MW, solaris trainer, tech jumpship, tech researchers
+
+themes: criminal, merchant, military, noble, pirate, technician
+
+
+## TODO
 
 * Descriptions for MedTechs/MercTechs
   * Background
   * Attributes
+* Add dropship maintenance crew; reduces Argo maintenance cost?
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
 * skill distribution mu and sigma modified by planet tags
@@ -255,13 +285,8 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 * MechWarrior skill distribution to reflect our distribution
 * Mercenary loyalty
   * After AAR report, will complain if you work against their faction
-* Max injuries should be hidden on hiring screen
-* BUG: Colors not updating when you first look at screen
-* BUG: Colors not updating for Mechs in list
-* Contract desc / pilot isn't getting reset between events
 * Allow mod-makers to set faction hatred/favors on pre-generated pilots
 * Add pilot favor/hatred to pre-generated pilots
-* Compound faction names aren't whitespace separated (in events?)
 * I'm not updating pilots value, etc as their skills change; need to ensure that getzs addressed at least at contract renegotiation
 * Context tooltip from events needs to account for crews
 * Optional kill bonus where each unit killed gives a bonus to the pilot
@@ -287,12 +312,24 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 	- Auto-eject at worst from time to time (I'm not getting paid enough for this)
 	- Attack bonus if they are really happy?
 	- Chance of a better health outcome?
-* BD: Allow tags that let him set salaryMulti, salaryExponent on a pilot. Allow him to set a tag that defines how many re-hires happen before this is lost. After that, use normal values
-* Add slackers event for support; reduces their value for N days has a change in attitude
-* Add motivated event for support; increases their value for N days if you fund it 
-* Add feud event; two crews are fighting with each other.
-* Can click hire even if at max berths
+
+* EVENT: Add slackers event for support; reduces their value for N days has a change in attitude
+* EVENT: Add motivated event for support; increases their value for N days if you fund it 
+* EVENT: Add feud event; two crews are fighting with each other.
+ 
+* BUG: Max injuries should be hidden on hiring screen
+* BUG: Contract desc / pilot isn't getting reset between events
+* BUG: Can click hire even if at max berths
+* BUG: Colors not updating when you first look at screen
+* BUG: Colors not updating for Mechs in list
+* BUG: Compound faction names aren't whitespace separated (in events?)
+
+* IDEA: Age based interactions... for combat, younger pilots have less value but heal quicker? Older pilots take longer to heal?
+
+* REQUEST (BD): Allow tags that let him set salaryMulti, salaryExponent on a pilot. Allow him to set a tag that defines how many re-hires happen before this is lost. After that, use normal values
 	
 * (REJECTED) Expense costs should be exponential? 
 * (REJECTED) Expense changes should have personnel costs (luxury cost, maybe tied to 	
 * (REJECTED) Company reputation feels like a step too far; too much to manage but it's damn compelling. How would I make your aggregate reputation make sense?
+
+* IDEA: Disorderly Withdrawal - add strafing using aerospace assets on a combat drop? 
