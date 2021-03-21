@@ -1,0 +1,1066 @@
+{
+  "criminal" : {
+	"weight" : 10,
+	"lifepaths" : {
+		"convict" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_CRIMINAL_CONVICT",
+			"requiredTags" : [ "pilot_dishonest" ],
+			"randomTags" : [ "pilot_brave", "pilot_drunk" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"reformedCriminal" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_CRIMINAL_REFORMED",
+			"requiredTags" : [ "pilot_honest" ],
+			"randomTags" : [ "pilot_drunk" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"pettyCriminal" : {
+			"descriptionKey" : "LIFEPATH_CRIMINAL_PETTY",
+			"requiredTags" : [ "pilot_rebellious", "pilot_reckless" ],
+			"randomTags" : [ "pilot_brave", "pilot_cautious" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"enforcer" : {
+			"descriptionKey" : "LIFEPATH_CRIMINAL_ENFORCER",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"hitman" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"smuggler" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"streetThug" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}		
+		}
+	}  
+  },
+  "noble" : {
+	"weight" : 10,
+	"lifepaths" : {
+		"heir" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},			
+		"supernumerary" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},				
+		"diplomat" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},					
+		"fallen" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},					
+		"landed" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},					
+		"admin" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},				
+		"ruling" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}  
+  },
+  "solaris" : {
+	"weight" : 5,
+	"lifepaths" : {
+		"solarisGladiator" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"solarisChampion" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"solarisTrainer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"solarisMechbunny" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"solarisSycophant" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"solarisWannabe" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"solarisScientist" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"solarisReporter" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}
+  },
+  "mercenary" : {
+	"weight" : 10,
+	"lifepaths" : {
+		"mercInfantry" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"mercMechwarrior" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"mercAerospace" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"mercOfficer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}
+  },
+  "military" : {
+	"weight" : 20,
+	"lifepaths" : {
+		"infantryEnlisted" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"infantryOfficer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"navalEnlisted" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"navalOfficer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"mechwarriorEnlisted" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"mechwarriorOfficer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"specOps" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"insurgent" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}
+  },
+  "medical": {
+	"weight" : 5,
+	"lifepaths" : {
+		"doctor" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"hospitalist" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"nurse" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"medicalTechnician" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}		
+	}
+  },
+  "miscellanous" : {
+	"weight" : 5,
+	"lifepaths" : {
+		"orphan" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"clergy" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"cloistered" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"journalist" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}
+  },
+  "merchant" : {
+	"weight" : 20,
+	"lifepaths" : {
+		 "independentTrader" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		 
+		 "corporateDrone" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		 
+		 "corporateOfficer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		 
+		 "merchantCaptain" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}		 
+	}
+  },
+  "intelligence" : {
+	"weight" : 10,
+	"lifepaths" : {
+		"contact" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"spy" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"deepCoverOperative" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"analyst" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}		
+	}
+  },
+  "spacer" : {
+	"weight" : 10,
+	"lifepaths" : {
+		"explorer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"spaceNomad" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"spaceScrapper" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"asteroidMiner" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"dropshipTech" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"jumpshipCrew" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"navigator" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}		
+	}
+  },
+  "civilian" : {
+	"weight" : 30,
+	"lifepaths" : {
+		"mechanic" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"factoryWorker" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"construction" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"airlinePilot" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"airlineCrew" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"fastFoodWorker" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"customerService" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"lawyer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"farmer" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"scientist" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"banker" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"publicRelations" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"police" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"diplomat" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}		
+	}
+  },
+  "comstar" : {
+	"weight" : 5,
+	"lifepaths" : {
+		"comstarTechnician" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"comstarAcolyte" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"comstarScientist" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"hpgTech" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"comstarAnalyst" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}
+  },
+  "pirate" : {
+	"weight" : 15,
+	"lifepaths": {	
+		"pirateInfantry" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"pirateRecruit" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"pirateCrew" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"pirateCaptain" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"pirateMechwarrior" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"pirateAerospacePilot" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},		
+		"pirateJumpshipCrew" : {
+			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"requiredTags" : [  ],
+			"randomTags" : [ ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}		
+	}
+  }
+  
+}

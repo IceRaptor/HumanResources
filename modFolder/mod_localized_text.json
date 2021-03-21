@@ -1,4 +1,12 @@
 {
+	"Descriptions" : {
+		"CREW_TYPE_AEROSPACE" : "Aerospace crews represent one to two aerospace fighters, combat pilots, and the support crew necessary to keep them flying. Pilots will not be injuried and aerospace assets do not need time to repair or rearm. They provide bonuses to your withdrawal speed and reduce the amount of damage you take. ",
+		"CREW_TYPE_DROPSHIP" : "Dropship crews are spacers that know how to keep dropships and jumpships running at peak efficiency. They reduce the maintenance costs of the Argo and its attached dropships, as well as helping with engineering efforts.",
+		"CREW_TYPE_MECH_TECH" : "Mech Tech crews represent any technician that can keep a BattleMech or vehicle running after eating a laser or three. Their value is added to your MechTech points value, which determines repair and refit times for units.",
+		"CREW_TYPE_MECHWARRIOR" : "MechWarriors are combat pilots trained to overcome the unique challenges of a neurohelmet linkup. This allows them to pilot BattleMechs but their training doesn't cover vehicles. ",
+		"CREW_TYPE_MED_TECH" : "Med Techs crews represent any medically trained individuals. Their value is added to your MedTech points value, which determines the healing time for pilots that are hurt. This healing only applies to MechWarriors and Vehicle Crews, who are the only crew types that can take injuries.",
+		"CREW_TYPE_VEHICLE" : "Vehicle crews pilot the myraid vehicles you posses in combat. Vehicles tend to be less automated than BattleMechs, requiring several pilots for each vehicle. These pilots lack the training necessary to pilot BattleMechs though many of them undoubtedly aspire to that goal."
+	},
     "Labels" : {
         "SKILL_LEVEL_1" : "Rookie" ,
         "SKILL_LEVEL_2" : "Regular" ,
@@ -53,5 +61,15 @@
 		"PLANET_MECH_TECH_BOUNDS" : "<color=red>Hirable MechTechs</color> - {0} to {1}",
 		"PLANET_MED_TECH_BOUNDS" : "<color=red>Hirable MedTechs</color> - {0} to {1}",
 		"PLANET_VEHICLE_CREW_BOUNDS" : "<color=red>Hirable Vehicle Crews</color> - {0} to {1}"
+	},
+	"LifePathDescriptions" : {
+		"LIFEPATH_CRIMINAL_CONVICT" : "For some prison time is something to be ashamed of, a low period in their life. For this crew it is a high point in their life. They challenges they overcame made them tougher, smarter, and more equipped for the mercenary life. Or so they claim. ",
+		"LIFEPATH_CRIMINAL_REFORMED" : "Everyone makes mistakes. Some make mistakes serious enough that they are incarcerated. This crew has learned from their past mistakes and seeks to make a better life than them came from. Mercenary work seems like an odd way to seek redemption, but here they are.",
+		"LIFEPATH_CRIMINAL_PETTY" : "Constantly looking for an angle, this crew has been busted for more petty crimes than they can count. They have avoided serious crimes, or perhaps more accurately never been caught in the act of one. If you want someone who knows someone who knows someone, this is the crew you come ask.",
+		"LIFEPATH_CRIMINAL_ENFORCER" : "Coming from a world where loyalty is everything, people who violated that trust came to fear a visit from this crew. Either quietly menancing or loudly aggressive they radiate danger and demand obedience.",
+		"LIFEPATH_CRIMINAL_HITMAN" : "Gangs, organized crime, and mercenary groups all look for people willing to kill their fellow man. Whether for money, glory, or thrills this crew is more than willing to handle any disposal needs you may have. Just don't get on their bad side. ",
+		"LIFEPATH_CRIMINAL_SMUGGLER" : "Governments inevitably ban something that people want. In those cases, enterprising crews like this one make sure the people get what they want. Some excel in the arts of bribery and stealth, while others go for the 'fast is best' approach. Either way, if you need something acquired this crew can help... for a price.",
+		"LIFEPATH_CRIMINAL_STREET_THUG" : "Not all planets have functional law enforcement, often leaving a gap that simple street thugs quickly exploit. This crew lived in that world for a long time, learning that a strong word and visible club sometimes were the best thing for making new friends. Or keeping old ones in line.",
+		"LIFEPATH_DEFAULT" : "Somebody add some background crunch, please!"
 	}
 }
