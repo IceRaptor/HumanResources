@@ -32,21 +32,12 @@ namespace HumanResources.Patches
             else
                 battleStats.SetActive(true);
 
-            // Reinitialize the tag viewer, stripping any tags that are HR centric
             Mod.Log.Debug?.Write($"Iterating tags for pilot: {p.Name}");
-            TagSet baseTags = new TagSet();
+            // Filter the HR GUID tag out
+            List<string> filteredTags = p.pilotDef.PilotTags.Where(t => !t.StartsWith(ModTags.Tag_GUID)).ToList();
+            TagSet baseTags = new TagSet(filteredTags);
             foreach (string tag in p.pilotDef.PilotTags)
-            {
-                bool isHrTag = tag.StartsWith("HR_") || tag.StartsWith("hr_");
-                bool isCUTag = String.Equals(ModTags.Tag_CU_NoMech_Crew, tag, StringComparison.InvariantCultureIgnoreCase) ||
-                    String.Equals(ModTags.Tag_CU_Vehicle_Crew, tag, StringComparison.InvariantCultureIgnoreCase);
-                Mod.Log.Debug?.Write($" -- tag: {tag}");
-                //if (!isHrTag && !isCUTag)
-                //{
-                //    baseTags.Add(tag);
-                //}
-            }
-            //___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
+            ___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
 
             Mod.Log.Debug?.Write("Updating attitude fields.");
 

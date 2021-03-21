@@ -9,7 +9,6 @@ using Localize;
 using SVGImporter;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -36,21 +35,6 @@ namespace HumanResources.Patches
             // Reinitialize state
             ModState.Reset();
             ModState.SimGameState = __instance;
-
-            // Reinitialize tags; has to be done here b/c ModTek munges MDDB after modinit
-            // If we made it past here, initialize our tagset by wiping out the old one and applying a new one
-            TagSet newTagSet = new TagSet();
-
-            Tag_MDD aerospaceTag = new Tag_MDD(ModTags.Tag_CrewType_Aerospace, false, true, "Aerospace Crew", "Loreum ipsum - flyers");
-            Tag_MDD mechTechTag = new Tag_MDD(ModTags.Tag_CrewType_MechTech, false, true, "MechTech Crew", "Loreum ipsum - mech fixas");
-            Tag_MDD medTechTag = new Tag_MDD(ModTags.Tag_CrewType_MedTech, false, true, "MedTechCrew", "Loreum ipsum - healers");
-
-            MetadataDatabase.Instance.AddOrUpdate(aerospaceTag);
-            Tag_MDD aerospaceCheck = MetadataDatabase.Instance.GetTagIfExists(ModTags.Tag_CrewType_Aerospace);
-            Mod.Log.Info?.Write($"Refetch of added tag: {ModTags.Tag_CrewType_Aerospace} has Tag_MDD: {aerospaceCheck != null}");
-
-            MetadataDatabase.Instance.AddOrUpdate(mechTechTag);
-            MetadataDatabase.Instance.AddOrUpdate(medTechTag);
         }
     }
 
