@@ -315,7 +315,7 @@ namespace HumanResources
             Mod.Log.Info?.Write($"  MechwarriorRGB: {this.Crew.MechwarriorRGB}  MechwarriorColor: {this.Crew.MechwarriorColor}");
             Mod.Log.Info?.Write($"");
 
-            Mod.Log.Info?.Write("--- Hiring Hall Config---");
+            Mod.Log.Info?.Write("--- Hiring Hall Config ---");
             Mod.Log.Info?.Write($"  SkillDistribution: { string.Join(", ", this.HiringHall.SkillDistribution) }");
             Mod.Log.Info?.Write($"  SizeDistribution: { string.Join(", ", this.HiringHall.SizeDistribution) }");
             Mod.Log.Info?.Write($"");
@@ -355,24 +355,28 @@ namespace HumanResources
             Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.AerospaceWings.MaxOfType}  HazardPayRatio: {this.HiringHall.AerospaceWings.HazardPayRatio}");
 
             Mod.Log.Info?.Write($"  -- MechTechCrews --");
+            Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.MechTechCrews.Enabled}");
             Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.MechTechCrews.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.MechTechCrews.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.MechTechCrews.MaxContractDaysMulti}");
             Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.MechTechCrews.SalaryMulti}  SalaryExponent: {this.HiringHall.MechTechCrews.SalaryExponent}  " +
                 $"SalaryVariance: {this.HiringHall.MechTechCrews.SalaryVariance}  BonusVariance: {this.HiringHall.MechTechCrews.BonusVariance}");
             Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.MechTechCrews.MaxOfType}  HazardPayRatio: {this.HiringHall.MechTechCrews.HazardPayRatio}");
 
             Mod.Log.Info?.Write($"  -- MedTechCrews --");
+            Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.MedTechCrews.Enabled}");
             Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.MedTechCrews.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.MedTechCrews.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.MedTechCrews.MaxContractDaysMulti}");
             Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.MedTechCrews.SalaryMulti}  SalaryExponent: {this.HiringHall.MedTechCrews.SalaryExponent}  " +
                 $"SalaryVariance: {this.HiringHall.MedTechCrews.SalaryVariance}  BonusVariance: {this.HiringHall.MedTechCrews.BonusVariance}");
             Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.MedTechCrews.MaxOfType}  HazardPayRatio: {this.HiringHall.MedTechCrews.HazardPayRatio}");
 
             Mod.Log.Info?.Write($"  -- MechWarriors --");
+            Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.MechWarriors.Enabled}");
             Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.MechWarriors.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.MechWarriors.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.MechWarriors.MaxContractDaysMulti}");
             Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.MechWarriors.SalaryMulti}  SalaryExponent: {this.HiringHall.MechWarriors.SalaryExponent}  " +
                 $"SalaryVariance: {this.HiringHall.MechWarriors.SalaryVariance}  BonusVariance: {this.HiringHall.MechWarriors.BonusVariance}");
             Mod.Log.Info?.Write($"  MaxOfType: {this.HiringHall.MechWarriors.MaxOfType}  HazardPayRatio: {this.HiringHall.MechWarriors.HazardPayRatio}");
 
             Mod.Log.Info?.Write($"  -- VehicleCrews --");
+            Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.VehicleCrews.Enabled}");
             Mod.Log.Info?.Write($"  BaseDaysInContract: {this.HiringHall.VehicleCrews.BaseDaysInContract}  MinContractDaysMulti: {this.HiringHall.VehicleCrews.MinContractDaysMulti}  MaxContractDaysMulti: {this.HiringHall.VehicleCrews.MaxContractDaysMulti}");
             Mod.Log.Info?.Write($"  SalaryMulti: {this.HiringHall.VehicleCrews.SalaryMulti}  SalaryExponent: {this.HiringHall.VehicleCrews.SalaryExponent}  " +
                 $"SalaryVariance: {this.HiringHall.VehicleCrews.SalaryVariance}  BonusVariance: {this.HiringHall.VehicleCrews.BonusVariance}");
@@ -381,10 +385,38 @@ namespace HumanResources
             Mod.Log.Info?.Write($"");
 
 
-            Mod.Log.Info?.Write("--- Crew Config ---");
-            Mod.Log.Info?.Write($"  AerospaceRGB: {this.Crew.AerospaceRGB}  AerospaceColor: {this.Crew.AerospaceColor}");
+            Mod.Log.Info?.Write("--- HeadHunting Config ---");
+            Mod.Log.Info?.Write($"  Enabled: {this.HeadHunting.Enabled}");
+            Mod.Log.Info?.Write($"  EconMods: [ { string.Join(", ", this.HeadHunting.EconMods) } ]");
+            Mod.Log.Info?.Write($"  ChanceBySkill: [ { string.Join(", ", this.HeadHunting.ChanceBySkill) } ]");
+            Mod.Log.Info?.Write($"  FailedCooldownIntervalMin: {this.HeadHunting.FailedCooldownIntervalMin}  FailedCooldownIntervalMax: {this.HeadHunting.FailedCooldownIntervalMax}");
+            Mod.Log.Info?.Write($"  SuccessCooldownIntervalMin: {this.HeadHunting.SuccessCooldownIntervalMin}  SuccessCooldownIntervalMax: {this.HeadHunting.SuccessCooldownIntervalMax}");
+            Mod.Log.Info?.Write($"  CrewCooldownIntervalMin: {this.HeadHunting.CrewCooldownIntervalMin}  CrewCooldownIntervalMax: {this.HeadHunting.CrewCooldownIntervalMax}");
+            Mod.Log.Info?.Write($"  CounterOfferVariance: {this.HeadHunting.CounterOfferVariance}");
+            Mod.Log.Info?.Write($"  PlanetBlacklist: [ { string.Join(", ", this.HeadHunting.PlanetBlacklist) } ]");
+
             Mod.Log.Info?.Write($"");
 
+            Mod.Log.Info?.Write("--- Attitude Config ---");
+            Mod.Log.Info?.Write($"  ThresholdMax: {this.Attitude.ThresholdMax}  ThresholdBest: {this.Attitude.ThresholdBest}  ThresholdGood: {this.Attitude.ThresholdGood}");
+            Mod.Log.Info?.Write($"  ThresholdPoor: {this.Attitude.ThresholdPoor}  ThresholdWorst: {this.Attitude.ThresholdWorst}  ThresholdMin: {this.Attitude.ThresholdMin}");
+            Mod.Log.Info?.Write($"  FavoredFactionChance: {this.Attitude.FavoredFactionChance}  HatedFactionChance: {this.Attitude.HatedFactionChance}");
+            Mod.Log.Info?.Write($"  RehireBonusMod: {this.Attitude.RehireBonusMod}");
+            Mod.Log.Info?.Write("   -- Monthly Mods --");
+            Mod.Log.Info?.Write($"  FavoredEmployerAlliedMod: {this.Attitude.Monthly.FavoredEmployerAlliedMod}  HatedEmployerAlliedMod: {this.Attitude.Monthly.HatedEmployerAlliedMod}");
+            Mod.Log.Info?.Write($"  Decay: {this.Attitude.Monthly.Decay}");
+            Mod.Log.Info?.Write($"  EconSpartanMod: {this.Attitude.Monthly.EconSpartanMod}  EconRestrictiveMod: {this.Attitude.Monthly.EconRestrictiveMod}  " +
+                $"EconomyNormalMod: {this.Attitude.Monthly.EconomyNormalMod}  EconomyGenerousMod: {this.Attitude.Monthly.EconomyGenerousMod}  " +
+                $"EconomyExtravagantMod: {this.Attitude.Monthly.EconomyExtravagantMod}");
+            Mod.Log.Info?.Write("   -- PerMission Mods --");
+            Mod.Log.Info?.Write($"  ContractSuccessMod: {this.Attitude.PerMission.ContractSuccessMod}  ContractFailedGoodFaithMod: {this.Attitude.PerMission.ContractFailedGoodFaithMod}  " +
+                $"ContractFailedMod: {this.Attitude.PerMission.ContractFailedMod}");
+            Mod.Log.Info?.Write($"  PilotKilledMod: {this.Attitude.PerMission.PilotKilledMod}");
+            Mod.Log.Info?.Write($"  DeployedOnMissionMod: {this.Attitude.PerMission.DeployedOnMissionMod}  BenchedOnMissionMod: {this.Attitude.PerMission.BenchedOnMissionMod}");
+            Mod.Log.Info?.Write($"  FavoredFactionIsEmployerMod: {this.Attitude.PerMission.FavoredFactionIsEmployerMod}  FavoredFactionIsTargetMod: {this.Attitude.PerMission.FavoredFactionIsTargetMod}");
+            Mod.Log.Info?.Write($"  HatedEmployerIsEmployerMod: {this.Attitude.PerMission.HatedEmployerIsEmployerMod}  HatedEmployerIsTargetMod: {this.Attitude.PerMission.HatedEmployerIsTargetMod}");
+
+            Mod.Log.Info?.Write($"");
 
             Mod.Log.Info?.Write("=== MOD CONFIG END ===");
         }
