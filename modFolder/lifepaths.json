@@ -29,6 +29,7 @@
 			}
 		},
 		"pettyCriminal" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CRIMINAL_PETTY",
 			"requiredTags" : [ "pilot_rebellious", "pilot_reckless" ],
 			"randomTags" : [ "pilot_brave", "pilot_cautious" ],
@@ -41,6 +42,7 @@
 			}
 		},
 		"enforcer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CRIMINAL_ENFORCER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -53,6 +55,7 @@
 			}
 		},
 		"hitman" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_CRIMINAL_HITMAN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -65,6 +68,7 @@
 			}
 		},
 		"smuggler" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_CRIMINAL_SMUGGLER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -77,6 +81,7 @@
 			}
 		},
 		"streetThug" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_CRIMINAL_STREET_THUG",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -94,6 +99,7 @@
 	"weight" : 10,
 	"lifepaths" : {
 		"heir" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_HEIR",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -106,6 +112,7 @@
 			}
 		},			
 		"supernumerary" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_SUPERNUMERARY",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -118,6 +125,7 @@
 			}
 		},				
 		"diplomat" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_DIPLOMAT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -130,6 +138,7 @@
 			}
 		},					
 		"fallen" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_FALLEN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -142,6 +151,7 @@
 			}
 		},					
 		"landed" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_LANDED",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -154,6 +164,7 @@
 			}
 		},					
 		"admin" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_ADMIN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -166,6 +177,7 @@
 			}
 		},				
 		"ruling" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_NOBLE_RULING",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -183,7 +195,8 @@
 	"weight" : 5,
 	"lifepaths" : {
 		"solarisGladiator" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_SOLARIS_GLADIATOR",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -195,7 +208,8 @@
 			}
 		},
 		"solarisChampion" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_CHAMPION",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -207,7 +221,8 @@
 			}
 		},		
 		"solarisTrainer" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_TRAINER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -219,7 +234,8 @@
 			}
 		},		
 		"solarisMechbunny" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_MECHBUNNY",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -231,7 +247,8 @@
 			}
 		},		
 		"solarisSycophant" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_SYCOPHANT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -243,7 +260,8 @@
 			}
 		},		
 		"solarisWannabe" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_WANNABE",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -255,7 +273,8 @@
 			}
 		},		
 		"solarisScientist" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_SCIENTIST",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -267,7 +286,8 @@
 			}
 		},		
 		"solarisReporter" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"weight" : 5,		
+			"descriptionKey" : "LIFEPATH_SOLARIS_REPORTER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -284,6 +304,7 @@
 	"weight" : 10,
 	"lifepaths" : {
 		"mercInfantry" : {
+			"weight" : 5,		
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -296,6 +317,7 @@
 			}
 		},		
 		"mercMechwarrior" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -308,6 +330,7 @@
 			}
 		},		
 		"mercAerospace" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -320,6 +343,7 @@
 			}
 		},		
 		"mercOfficer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -337,6 +361,7 @@
 	"weight" : 20,
 	"lifepaths" : {
 		"infantryEnlisted" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -349,6 +374,7 @@
 			}
 		},
 		"infantryOfficer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -361,6 +387,7 @@
 			}
 		},
 		"navalEnlisted" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -373,6 +400,7 @@
 			}
 		},
 		"navalOfficer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -385,6 +413,7 @@
 			}
 		},
 		"mechwarriorEnlisted" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -397,6 +426,7 @@
 			}
 		},		
 		"mechwarriorOfficer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -409,6 +439,7 @@
 			}
 		},		
 		"specOps" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -421,6 +452,7 @@
 			}
 		},		
 		"insurgent" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -438,6 +470,7 @@
 	"weight" : 5,
 	"lifepaths" : {
 		"doctor" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -450,6 +483,7 @@
 			}
 		},		
 		"hospitalist" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -462,6 +496,7 @@
 			}
 		},		
 		"nurse" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -474,6 +509,7 @@
 			}
 		},		
 		"medicalTechnician" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -491,6 +527,7 @@
 	"weight" : 5,
 	"lifepaths" : {
 		"orphan" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -503,6 +540,7 @@
 			}
 		},		
 		"clergy" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -515,6 +553,7 @@
 			}
 		},		
 		"cloistered" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -527,6 +566,7 @@
 			}
 		},		
 		"journalist" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -544,6 +584,7 @@
 	"weight" : 20,
 	"lifepaths" : {
 		 "independentTrader" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -556,6 +597,7 @@
 			}
 		},		 
 		 "corporateDrone" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -568,6 +610,7 @@
 			}
 		},		 
 		 "corporateOfficer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -580,6 +623,7 @@
 			}
 		},		 
 		 "merchantCaptain" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -597,6 +641,7 @@
 	"weight" : 10,
 	"lifepaths" : {
 		"contact" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -609,6 +654,7 @@
 			}
 		},		
 		"spy" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -621,6 +667,7 @@
 			}
 		},		
 		"deepCoverOperative" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -633,6 +680,7 @@
 			}
 		},		
 		"analyst" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -650,6 +698,7 @@
 	"weight" : 10,
 	"lifepaths" : {
 		"explorer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -662,6 +711,7 @@
 			}
 		},		
 		"spaceNomad" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -674,6 +724,7 @@
 			}
 		},		
 		"spaceScrapper" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -686,6 +737,7 @@
 			}
 		},		
 		"asteroidMiner" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -698,6 +750,7 @@
 			}
 		},		
 		"dropshipTech" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -710,6 +763,7 @@
 			}
 		},		
 		"jumpshipCrew" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -722,6 +776,7 @@
 			}
 		},		
 		"navigator" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -739,6 +794,7 @@
 	"weight" : 30,
 	"lifepaths" : {
 		"mechanic" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -751,6 +807,7 @@
 			}
 		},		
 		"factoryWorker" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -763,6 +820,7 @@
 			}
 		},		
 		"construction" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -775,6 +833,7 @@
 			}
 		},		
 		"airlinePilot" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -787,6 +846,7 @@
 			}
 		},		
 		"airlineCrew" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -799,6 +859,7 @@
 			}
 		},		
 		"fastFoodWorker" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -811,6 +872,7 @@
 			}
 		},		
 		"customerService" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -823,6 +885,7 @@
 			}
 		},		
 		"lawyer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -835,6 +898,7 @@
 			}
 		},		
 		"farmer" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -847,6 +911,7 @@
 			}
 		},		
 		"scientist" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -859,6 +924,7 @@
 			}
 		},		
 		"banker" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -871,6 +937,7 @@
 			}
 		},		
 		"publicRelations" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -883,6 +950,7 @@
 			}
 		},		
 		"police" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -895,6 +963,7 @@
 			}
 		},		
 		"diplomat" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -912,6 +981,7 @@
 	"weight" : 5,
 	"lifepaths" : {
 		"comstarTechnician" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -924,6 +994,7 @@
 			}
 		},		
 		"comstarAcolyte" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -936,6 +1007,7 @@
 			}
 		},		
 		"comstarScientist" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -948,6 +1020,7 @@
 			}
 		},		
 		"hpgTech" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -960,6 +1033,7 @@
 			}
 		},		
 		"comstarAnalyst" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -977,6 +1051,7 @@
 	"weight" : 15,
 	"lifepaths": {	
 		"pirateInfantry" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -989,6 +1064,7 @@
 			}
 		},		
 		"pirateRecruit" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -1001,6 +1077,7 @@
 			}
 		},		
 		"pirateCrew" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -1013,6 +1090,7 @@
 			}
 		},		
 		"pirateCaptain" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -1025,6 +1103,7 @@
 			}
 		},		
 		"pirateMechwarrior" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -1037,6 +1116,7 @@
 			}
 		},		
 		"pirateAerospacePilot" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -1049,6 +1129,7 @@
 			}
 		},		
 		"pirateJumpshipCrew" : {
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_DEFAULT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],

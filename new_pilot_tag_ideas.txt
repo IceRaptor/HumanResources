@@ -10,6 +10,16 @@ bribery_master - knows how to deliver bribes
 well_networked - knows how to know people
 snitch - reputation for selling out people
 
+bureaucrat - knows how the bureauacy works
+lawyer - trained in legal proceedings
+diplomatic - knows how to talk in formal diplomacy talks
+persuasive - knows how to convince people to do what they want
+disgraced - has violated a taboo in their home
+hunter - enjoys hunting wild animals for sport or pleasure
+monotone - speaks in a boring fashion, hard to pay attention 
+spoiled - expects a high standard of living
+patient - has a deep well of patience, can defer gratification for a long time
+
 depraved - known for enjoying taboos
 psychopath - does not care about others
 
