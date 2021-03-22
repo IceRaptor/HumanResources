@@ -53,7 +53,7 @@
 			}
 		},
 		"hitman" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_CRIMINAL_HITMAN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -65,7 +65,7 @@
 			}
 		},
 		"smuggler" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_CRIMINAL_SMUGGLER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -77,7 +77,7 @@
 			}
 		},
 		"streetThug" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_CRIMINAL_STREET_THUG",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -94,7 +94,7 @@
 	"weight" : 10,
 	"lifepaths" : {
 		"heir" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_HEIR",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -106,7 +106,7 @@
 			}
 		},			
 		"supernumerary" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_SUPERNUMERARY",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -118,7 +118,7 @@
 			}
 		},				
 		"diplomat" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_DIPLOMAT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -130,7 +130,7 @@
 			}
 		},					
 		"fallen" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_FALLEN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -142,7 +142,7 @@
 			}
 		},					
 		"landed" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_LANDED",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -154,7 +154,7 @@
 			}
 		},					
 		"admin" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_ADMIN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -166,7 +166,7 @@
 			}
 		},				
 		"ruling" : {
-			"descriptionKey" : "LIFEPATH_DEFAULT",
+			"descriptionKey" : "LIFEPATH_NOBLE_RULING",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
