@@ -34,11 +34,11 @@
         "CREW_CONTRACT_TERM" : "The contract term for this mercenary is {0} days. " ,
 
         "CREW_NAME_FORMAT" : "{0} {1}" ,
-    
+
         "CREW_DOSSIER_CONTRACT_TERM" : "Contract End" ,
         "CREW_DOSSIER_DAYS_REMAINING" : "{0} days",
 
-        "CREW_DOSSIER_BIO_ATTITUDE" : "<b>Attitude towards the Company:</b>  {0} ({1})", 
+        "CREW_DOSSIER_BIO_ATTITUDE" : "<b>Attitude towards the Company:</b>  {0} ({1})",
         "CREW_DOSSIER_BIO_FACTION_FAVORED" : "<b>Favored Faction:</b>  {0}",
         "CREW_DOSSIER_BIO_FACTION_HATED" : "<b>Hated Faction:</b>  {0}",
 
@@ -54,7 +54,7 @@
 	"Events" : {
 		"HEADHUNTED_RETENTION" : " Retention Bonus: {0}\n\n",
 		"HEADHUNTED_CONTRACT_BUYOUT" : " Buyout Payment: {0}\n\n"
-	},	
+	},
 	"PlanetStrings" : {
 		"PLANET_AEROSPACE_BOUNDS" : "<color=red>Hirable Aerospace Pilots</color> - {0} to {1}",
 		"PLANET_MECHWARRIOR_BOUNDS" : "<color=red>Hirable MechWarriors</color> - {0} to {1}",
@@ -63,7 +63,7 @@
 		"PLANET_VEHICLE_CREW_BOUNDS" : "<color=red>Hirable Vehicle Crews</color> - {0} to {1}"
 	},
 	"LifePathDescriptions" : {
-	
+
 		"LIFEPATH_CRIMINAL_CONVICT" : "For some prison time is shameful. For this crew member it was instead a high point in their life. They challenges they overcame made them tougher, smarter, and more equipped for the mercenary life. Or so they claim.",
 		"LIFEPATH_CRIMINAL_REFORMED" : "Everyone makes mistakes. Some make mistakes serious enough that they are incarcerated. This crew member has learned from their past mistakes and seeks to make a better life than them came from. Mercenary work seems like an odd way to seek redemption, but here they are.",
 		"LIFEPATH_CRIMINAL_PETTY" : "Constantly looking for an angle, this crew member has been busted for more petty crimes than they can count. They have avoided serious crimes, or perhaps more accurately never been caught in the act of one. If you want someone who knows someone who knows someone, this is the crew you come ask.",
@@ -71,7 +71,7 @@
 		"LIFEPATH_CRIMINAL_HITMAN" : "Gangs, organized crime, and mercenary groups all look for people willing to kill their fellow man. Whether for money, glory, or thrills this crew member is more than willing to handle any disposal needs you may have. Just don't get on their bad side. ",
 		"LIFEPATH_CRIMINAL_SMUGGLER" : "Governments inevitably ban something that people want. In those cases, this enterprising crew member made sure people got what they want. Some excel in the arts of bribery and stealth, while others go for the 'fast is best' approach. Either way, if you need something acquired this crew can help... for a price.",
 		"LIFEPATH_CRIMINAL_STREET_THUG" : "Not all planets have functional law enforcement, often leaving a gap that simple street thugs quickly exploit. This crew member lived in that world for a long time, learning that a strong word and visible club sometimes were the best thing for making new friends. Or keeping old ones in line.",
-		
+
 		"LIFEPATH_NOBLE_HEIR" : "The inner sphere has innumerable royalty both major and minor. Not all find the intrigues of court enticing and seek their fortune elsewhere. Whether this crew member keeps their heritage secret or flaunts it, a mercenary company can do worse than have friends in high places. ",
 		"LIFEPATH_NOBLE_SUPERNUMERARY" : "Distant heirs can often find themselves unwanted, forced into dangerous or boring assignments intended to drive them out of the noble caste. Often bitter at their loss of station or power, this crew member has little patience for the nobility and enjoys watching them stumble",
 		"LIFEPATH_NOBLE_DIPLOMAT" : "While not as prestigous as military service, minor nobles may elevate their status through the various diplomatic cores. In both the war-torn Inner Sphere and the wild periphery states this task requires depths of patience and cunning few possess. This crew member served in such a capacity in the past, but not aren't afraid to turn to violence to achieve their goals.",
@@ -79,7 +79,7 @@
 		"LIFEPATH_NOBLE_LANDED" : "Even nobles are separated into the haves and have nots. Those who have landed are quick to remind those who are not. Whether running from their responsiblities or seeking to build support to entrench their hereditary fiefs, this crew member has claim to some portion of a distant world.",
 		"LIFEPATH_NOBLE_ADMIN" : "Perhaps the most dreadful fate for any noble is to be mired in the bowels of the beauracy. Carrying the weight of a title, and bearing the responsibilities, but carrying none of the authority  administrative nobles either see their soul die or embrace a life of endless reports and spreadsheets. This crew member chose to leave their safe but boring life behind and embrace the chaos of mercenary work.",
 		"LIFEPATH_NOBLE_RULING" : "The nobility often reserves the power of the courts to themselves, ensuring that any laws are applied by peers sympathetic to their needs. This crew member was one such noble, trained in the laws of their land and the art of persuasion. Some event long ago subverted their view of justice, and now they embrace the more lawless life of a mercenary.",
-		
+
 		"LIFEPATH_SOLARIS_GLADIATOR" : "The gladiatorial pits of Solaris 7 are uncompromising, and the fact that this crew member made it into the ranks is impressive in its own right. Regardless of how their career went, they are all to happy to launch into stories of their glory days and regale audiences with triumphs both real and imagined. Wise commanders know better than to question the legimitacy of these tales - at least while in earshot.",
 		"LIFEPATH_SOLARIS_CHAMPION" : "Few mechwarriors survive their first round on Solaris 7, and fewer still ascend through the ranks to be recognized as a champion. While the lessons learned in the arenas may not be immediately applicable to the varied battlefields a mercenary company treads upon, the skill with which this crew member serves makes them a valuable asset. Or dangerously self-absorbed. Sometimes, even - both.",
 		"LIFEPATH_SOLARIS_TRAINER" : "Recognized as both a fearsome pilot and someone able to share their knowledge with others, this crew member once served as a trainer in the Solaris 7 stables. Physical conditioning, mech-piloting and gunnery skills, or even the economics of being a star are all in high demand among the elite Solaris 7 jocks. Undoutedly their skills will be put to good use by any mercenary crew able to handle their steep fees.",
@@ -88,15 +88,15 @@
 		"LIFEPATH_SOLARIS_WANNABE" : "All over the Inner Sphere children grow up fantasizing about the life of a Solaris 7 fighter. The fame and glory stand in stark contrast to the many sacrifices and failures that must be overcome to achieve success on the game planet. This crew member still believes their name will be chanted from roaring crowds in the future. Their stint is a mercenary company is just one way to build a compelling backstory for their rise into glory.",
 		"LIFEPATH_SOLARIS_SCIENTIST" : "Solaris 7 runs on money, and both champions and their investors alike know that it takes money to make money. Anyone that can provide a competitive edge, no matter how slight, can find a long list of buyers on the game planet. This crew member once made a living researching and tweaking equipment for even greater performance in the arenas, and now seek out mercenary employment to apply their 'advanced practical experimentation'.",
 		"LIFEPATH_SOLARIS_REPORTER" : "There is a constant press for more details and innuendo about every aspect of Solaris 7. In the past this crew member helped fill that need as a tabloid reporter, sports commentator, or other unsavory adjunct to the main event of mech-combat. While their ethics may be questionable, their love of money is not. Given their links to the darker side of the press, keeping them busy ",
-		
-		"LIFEPATH_MERCENARY_INFANTRY" : "",
-		"LIFEPATH_MERCENARY_MECHWARRIOR" : "",
-		"LIFEPATH_MERCENARY_AEROSPACE" : "",
-		"LIFEPATH_MERCENARY_WASHED_UP" : "",
-		"LIFEPATH_MERCENARY_SUPPORT_SATFF" : "",
-		"LIFEPATH_MERCENARY_LIASON" : "",
-		"LIFEPATH_MERCENARY_OFFICER" : "",
-		
+
+		"LIFEPATH_MERCENARY_INFANTRY" : "Although the battlefields of the 31st century are ruled by BattleMechs and armored vehicles, no amount of hardware removes the need for boots on the ground. This crew member got their start with the short end of the mercenary stick - holding rifle worth almost nothing and with a pay stub to match. Any step is is a step up from there.",
+		"LIFEPATH_MERCENARY_MECHWARRIOR" : "For a person that dreams of piloting a mech, the options are limited - be born wealthy, join the military and get lucky enough to find a patron willing to trust you with a million c-bills worth of equipment, or join a mercenary company. This crew member chose the final option, joining a mercenary compny as their best bet towards wearing a neurohelmet.",
+		"LIFEPATH_MERCENARY_AEROSPACE" : "Few mercenary companies can afford aerospace assets, but this crew member is one of the lucky few, learning their trade as a mercenary with a company with the luxury of air support. Pilot or mechanic makes no difference - they know their way around a fighter plane.",
+		"LIFEPATH_MERCENARY_WASHED_UP" : "The life of a mercenary is not an easy one, and one streak of bad break can leave you crippled, broke, a wanted criminal, or all three. This crew member has at least avoided becoming a cripple, though there's still more a planetary government - and dozens of debt collectors - who'd love to change that if given the chance.",
+		"LIFEPATH_MERCENARY_SUPPORT_SATFF" : "Though pilots, techs, doctors and commanders get all the glory, every organization needs support staff. Whether that be cook, accountant, deck hand or engineer's mate, this crew member's first job with a mercenary crew fell firmly in the \"miscellaneous\" category.",
+		"LIFEPATH_MERCENARY_LIAISON" : "Mercenary companies live and die by their reputation and contacts - a dropship full of whoop-ass is only as valuable as the contracts it can secure. This crew member made their living as liaison for a mercenary company, keeping their ear to the ground for potential clients, extracting payment from those reluctant to pay and smoothing ruffled feathers when things went wrong.",
+		"LIFEPATH_MERCENARY_OFFICER" : "From their low level enlistment with a mercenary company, this crew member rose through the ranks to become an officer - and minor shareholder - of a mercenary company. Why they left that potentially lucrative position (or lost it) is a mystery, but now they're freelance and ready to work for you.",
+
 		"LIFEPATH_MILITARY_INFANTRY_ENLISTED" : "",
 		"LIFEPATH_MILITARY_INFANTRY_OFFICER" : "",
 		"LIFEPATH_MILITARY_NAVAL_ENLISTED" : "",
@@ -105,26 +105,26 @@
 		"LIFEPATH_MILITARY_MECHWARRIOR_OFFICER" : "",
 		"LIFEPATH_MILITARY_SPEC_OPS" : "",
 		"LIFEPATH_MILITARY_INSURGENT" : "",
-		
+
 		"LIFEPATH_MEDICAL_DOCTOR" : "Trained to an extremely high level in the medical sciences, this crew member is no stranger to the gory details of the human body. Whether a generalist on a frontier world a researcher used to a lab expect them to act as though they know everything. But don't worry if you forget that fact. They'll remind you anytime their expertise is questioned.",
 		"LIFEPATH_MEDICAL_HOSPITALIST" : "Modern medicine relies heavily on computerization, AI, and advanced equipment. In a past life this crew member knew how all of those worked, and could use them to diagnose exotic ills with their patients. Now they find themselves on the frontier, using year-old military surplus pharmaceuticals and wondering what went wrong with their life. Despite their grumbling their work speaks for itself and fortunate is the mercenary crew that finds them in their employ.",
 		"LIFEPATH_MEDICAL_NURSE" : "While doctors get the glory, nurses get rewarded with blood and shit. Close to their patients and self-assured to a fault, this crew member could give drill sargents lessons on how to stare down an uncooperative person. Just never ask them to talk about their work, unless you have an iron stomach. Gross is not a word they are familiar with.",
 		"LIFEPATH_MEDICAL_MED_TECH" : "While nurses know everything, technicians are the ones that often do all the repetitive, thankless tasks that nobody wants to take credit for. This crew member could have discarded that life of drudgery for the uncertainity of mercenary work, or they could be seeking better opportunities on the fields of battle. In a pinch they can serve as a medic, but don't expect miracles from them.",
-		
+
 		"LIFEPATH_MISC_ORPHAN" : "War, pestilence, and famine claim millions across the Inner Sphere. Survivors fight for advantages others take for granted, but in return become self reliant. The mercenary life calls many of these individuals, just like this crew member, who seek a new family among the stars. Or perhaps just thick stacks of c-bills.",
 		"LIFEPATH_MISC_CLERGY" : "When mankind took to the stars, do did religion. This crew member was once a member of a religious order, but lost their faith in some incident long ago. The topic of their faith is rarely a friendly discussion, but few doubt their skills. As the old terran saying goes - god is on the side with the biggest guns.",
 		"LIFEPATH_MISC_CLOISTERED" : "Raised for most of their life in a sheltered religious setting, the 'real world' came as an unpleasant shock to this crew member. They have long since cast off the worst of their naivety and have embraced the mercenary creed. They are willing to listen to whatever you have to say, or do a job that needs doing - for a price.",
-		
+
 		"LIFEPATH_MERCHANT_TRADER" : "",
 		"LIFEPATH_MERCHANT_CORPORATE_DRONE" : "",
 		"LIFEPATH_MERCHANT_CORPORATE_OFFICER" : "",
 		"LIFEPATH_MERCHANT_CAPTAIN" : "",
-		
+
 		"LIFEPATH_INTELLIGENCE_CONTACT" : "",
 		"LIFEPATH_INTELLIGENCE_SPY" : "",
 		"LIFEPATH_INTELLIGENCE_DEEP_COVER_OP" : "",
 		"LIFEPATH_INTELLIGENCE_ANALYST" : "",
-		
+
 		"LIFEPATH_SPACER_EXPLORER" : "",
 		"LIFEPATH_SPACER_NOMAD" : "",
 		"LIFEPATH_SPACER_SCRAPPER" : "",
@@ -132,35 +132,35 @@
 		"LIFEPATH_SPACER_DROPSHIP_TECH" : "",
 		"LIFEPATH_SPACER_JUMPSHIP_CREW" : "",
 		"LIFEPATH_SPACER_NAVIGATOR" : "",
-		
+
 		"LIFEPATH_CIVILIAN_MECHANIC" : "",
 		"LIFEPATH_CIVILIAN_FACTORY_WORKER" : "",
 		"LIFEPATH_CIVILIAN_CONSTRUCTION" : "",
 		"LIFEPATH_CIVILIAN_AIRLINE_CREW" : "",
 		"LIFEPATH_CIVILIAN_FAST_FOOD_WORKER" : "",
-		"LIFEPATH_CIVILIAN_CUSTOMER_SERVICE" : "",				
-		"LIFEPATH_CIVILIAN_LAWYER" : "",	
-		"LIFEPATH_CIVILIAN_FARMER" : "",	
-		"LIFEPATH_CIVILIAN_SCIENTIST" : "",	
-		"LIFEPATH_CIVILIAN_BANKER" : "",	
-		"LIFEPATH_CIVILIAN_PUBLIC_RELATIONS" : "",	
-		"LIFEPATH_CIVILIAN_POLICE" : "",	
-		"LIFEPATH_CIVILIAN_JOURNALIST" : "",	
-		
-		"LIFEPATH_COMSTAR_TECHNICIAN" : "",	
-		"LIFEPATH_COMSTAR_ACOLYTE" : "",	
-		"LIFEPATH_COMSTAR_SCIENTIST" : "",	
-		"LIFEPATH_COMSTAR_HPG_TECHNICIAN" : "",	
-		"LIFEPATH_COMSTAR_ANALYST" : "",	
+		"LIFEPATH_CIVILIAN_CUSTOMER_SERVICE" : "",
+		"LIFEPATH_CIVILIAN_LAWYER" : "",
+		"LIFEPATH_CIVILIAN_FARMER" : "",
+		"LIFEPATH_CIVILIAN_SCIENTIST" : "",
+		"LIFEPATH_CIVILIAN_BANKER" : "",
+		"LIFEPATH_CIVILIAN_PUBLIC_RELATIONS" : "",
+		"LIFEPATH_CIVILIAN_POLICE" : "",
+		"LIFEPATH_CIVILIAN_JOURNALIST" : "",
 
-		"LIFEPATH_PIRATE_INFANTRY" : "",	
-		"LIFEPATH_PIRATE_RECRUIT" : "",	
-		"LIFEPATH_PIRATE_CREW" : "",	
-		"LIFEPATH_PIRATE_CAPTAIN" : "",	
-		"LIFEPATH_PIRATE_MECHWARRIOR" : "",	
-		"LIFEPATH_PIRATE_AEROSPACE" : "",	
-		"LIFEPATH_PIRATE_JUMPSHIP_CREW" : "",	
-		
+		"LIFEPATH_COMSTAR_TECHNICIAN" : "",
+		"LIFEPATH_COMSTAR_ACOLYTE" : "",
+		"LIFEPATH_COMSTAR_SCIENTIST" : "",
+		"LIFEPATH_COMSTAR_HPG_TECHNICIAN" : "",
+		"LIFEPATH_COMSTAR_ANALYST" : "",
+
+		"LIFEPATH_PIRATE_INFANTRY" : "",
+		"LIFEPATH_PIRATE_RECRUIT" : "",
+		"LIFEPATH_PIRATE_CREW" : "",
+		"LIFEPATH_PIRATE_CAPTAIN" : "",
+		"LIFEPATH_PIRATE_MECHWARRIOR" : "",
+		"LIFEPATH_PIRATE_AEROSPACE" : "",
+		"LIFEPATH_PIRATE_JUMPSHIP_CREW" : "",
+
 		"LIFEPATH_DEFAULT" : "Somebody add some background fluff, please!"
 	}
 }

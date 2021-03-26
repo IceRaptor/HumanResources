@@ -55,7 +55,7 @@
 			}
 		},
 		"hitman" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CRIMINAL_HITMAN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -68,7 +68,7 @@
 			}
 		},
 		"smuggler" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CRIMINAL_SMUGGLER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -81,7 +81,7 @@
 			}
 		},
 		"streetThug" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CRIMINAL_STREET_THUG",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -91,15 +91,15 @@
 				"aerospace" : 0,
 				"mechtech" : 0,
 				"medtech" : 0
-			}		
+			}
 		}
-	}  
+	}
   },
   "noble" : {
 	"weight" : 10,
 	"lifepaths" : {
 		"heir" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_HEIR",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -110,9 +110,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},			
+		},
 		"supernumerary" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_SUPERNUMERARY",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -123,9 +123,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},				
+		},
 		"diplomat" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_DIPLOMAT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -136,9 +136,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},					
+		},
 		"fallen" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_FALLEN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -149,9 +149,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},					
+		},
 		"landed" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_LANDED",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -162,9 +162,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},					
+		},
 		"admin" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_ADMIN",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -175,9 +175,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},				
+		},
 		"ruling" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_NOBLE_RULING",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -189,7 +189,7 @@
 				"medtech" : 0
 			}
 		}
-	}  
+	}
   },
   "solaris" : {
 	"weight" : 5,
@@ -208,7 +208,7 @@
 			}
 		},
 		"solarisChampion" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_CHAMPION",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -219,9 +219,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"solarisTrainer" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_TRAINER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -232,9 +232,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"solarisMechbunny" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_MECHBUNNY",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -245,9 +245,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"solarisSycophant" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_SYCOPHANT",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -258,9 +258,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"solarisWannabe" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_WANNABE",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -271,9 +271,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"solarisScientist" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_SCIENTIST",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -284,9 +284,9 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"solarisReporter" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SOLARIS_REPORTER",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -304,7 +304,7 @@
 	"weight" : 10,
 	"lifepaths" : {
 		"mercInfantry" : {
-			"weight" : 5,		
+			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCENARY_INFANTRY",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
@@ -315,7 +315,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"mercMechwarrior" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCENARY_MECHWARRIOR",
@@ -328,7 +328,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"mercAerospace" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCENARY_AEROSPACE",
@@ -341,7 +341,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},	
+		},
 		"mercWashedUp" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCENARY_WASHED_UP",
@@ -354,7 +354,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},	
+		},
 		"mercSupportStaff" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCENARY_SUPPORT_SATFF",
@@ -367,10 +367,10 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},	
+		},
 		"mercLiason" : {
 			"weight" : 5,
-			"descriptionKey" : "LIFEPATH_MERCENARY_LIASON",
+			"descriptionKey" : "LIFEPATH_MERCENARY_LIAISON",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
@@ -380,7 +380,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},	
+		},
 		"mercOfficer" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCENARY_OFFICER",
@@ -463,7 +463,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"mechwarriorOfficer" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MILITARY_MECHWARRIOR_OFFICER",
@@ -476,7 +476,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"specOps" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MILITARY_SPEC_OPS",
@@ -489,7 +489,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"insurgent" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MILITARY_INSURGENT",
@@ -520,7 +520,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"hospitalist" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MEDICAL_HOSPITALIST",
@@ -533,7 +533,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"nurse" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MEDICAL_NURSE",
@@ -546,7 +546,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"medicalTechnician" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MEDICAL_MED_TECH",
@@ -559,7 +559,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		}		
+		}
 	}
   },
   "miscellanous" : {
@@ -577,7 +577,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"clergy" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MISC_CLERGY",
@@ -590,7 +590,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"cloistered" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MISC_CLOISTERED",
@@ -621,7 +621,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		 
+		},
 		 "corporateDrone" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCHANT_CORPORATE_DRONE",
@@ -634,7 +634,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		 
+		},
 		 "corporateOfficer" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCHANT_CORPORATE_OFFICER",
@@ -647,7 +647,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		 
+		},
 		 "merchantCaptain" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_MERCHANT_CAPTAIN",
@@ -660,7 +660,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		}		 
+		}
 	}
   },
   "intelligence" : {
@@ -678,7 +678,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"spy" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_INTELLIGENCE_SPY",
@@ -691,7 +691,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"deepCoverOperative" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_INTELLIGENCE_DEEP_COVER_OP",
@@ -704,7 +704,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"analyst" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_INTELLIGENCE_ANALYST",
@@ -717,7 +717,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		}		
+		}
 	}
   },
   "spacer" : {
@@ -735,7 +735,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"spaceNomad" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SPACER_NOMAD",
@@ -748,7 +748,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"spaceScrapper" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SPACER_SCRAPPER",
@@ -761,7 +761,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"asteroidMiner" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SPACER_ASTEROID_MINER",
@@ -774,7 +774,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"dropshipTech" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SPACER_DROPSHIP_TECH",
@@ -787,7 +787,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"jumpshipCrew" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SPACER_JUMPSHIP_CREW",
@@ -800,7 +800,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"navigator" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_SPACER_NAVIGATOR",
@@ -813,7 +813,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		}		
+		}
 	}
   },
   "civilian" : {
@@ -831,7 +831,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"factoryWorker" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_FACTORY_WORKER",
@@ -844,7 +844,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"construction" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_CONSTRUCTION",
@@ -857,7 +857,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"airlineCrew" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_AIRLINE_CREW",
@@ -870,7 +870,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"fastFoodWorker" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_FAST_FOOD_WORKER",
@@ -883,7 +883,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"customerService" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_CUSTOMER_SERVICE",
@@ -896,7 +896,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"lawyer" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_LAWYER",
@@ -909,7 +909,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"farmer" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_FARMER",
@@ -922,7 +922,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"scientist" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_SCIENTIST",
@@ -935,7 +935,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"banker" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_BANKER",
@@ -948,7 +948,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"publicRelations" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_PUBLIC_RELATIONS",
@@ -961,7 +961,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"police" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_CIVILIAN_POLICE",
@@ -987,7 +987,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		}		
+		}
 	}
   },
   "comstar" : {
@@ -1005,7 +1005,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"comstarAcolyte" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_COMSTAR_ACOLYTE",
@@ -1018,7 +1018,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"comstarScientist" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_COMSTAR_SCIENTIST",
@@ -1031,7 +1031,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"hpgTech" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_COMSTAR_HPG_TECHNICIAN",
@@ -1044,7 +1044,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"comstarAnalyst" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_COMSTAR_ANALYST",
@@ -1062,7 +1062,7 @@
   },
   "pirate" : {
 	"weight" : 15,
-	"lifepaths": {	
+	"lifepaths": {
 		"pirateInfantry" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_INFANTRY",
@@ -1075,7 +1075,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"pirateRecruit" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_RECRUIT",
@@ -1088,7 +1088,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"pirateCrew" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_CREW",
@@ -1101,7 +1101,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"pirateCaptain" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_CAPTAIN",
@@ -1114,7 +1114,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"pirateMechwarrior" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_MECHWARRIOR",
@@ -1127,7 +1127,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"pirateAerospacePilot" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_AEROSPACE",
@@ -1140,7 +1140,7 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		},		
+		},
 		"pirateJumpshipCrew" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_PIRATE_JUMPSHIP_CREW",
@@ -1153,8 +1153,8 @@
 				"mechtech" : 0,
 				"medtech" : 0
 			}
-		}		
+		}
 	}
   }
-  
+
 }
