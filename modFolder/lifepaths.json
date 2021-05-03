@@ -777,7 +777,7 @@
 		},
 		"dropshipTech" : {
 			"weight" : 5,
-			"descriptionKey" : "LIFEPATH_SPACER_DROPSHIP_TECH",
+			"descriptionKey" : "LIFEPATH_SPACER_DROPSHIP_CREW",
 			"requiredTags" : [  ],
 			"randomTags" : [ ],
 			"skillMod" : {
