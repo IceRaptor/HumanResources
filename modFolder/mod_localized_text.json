@@ -125,8 +125,8 @@
 		"LIFEPATH_INTELLIGENCE_DEEP_COVER_OP" : "",
 		"LIFEPATH_INTELLIGENCE_ANALYST" : "",
 
-		"LIFEPATH_SPACER_EXPLORER" : "",
-		"LIFEPATH_SPACER_NOMAD" : "",
+		"LIFEPATH_SPACER_EXPLORER" : "So long as there was the unknown, mankind has sought to understand it. Even with widespread space travel their remains a seemingly endless supply of rocks, planets and systems to categorize and survey. This crew member once served aboard an exploration fleet, making a living finding scientifically interesting or profitable discoveries to exploit. Their curiosity remains high even as a mercenary, which causes them to get into trouble as often as it helps.",
+		"LIFEPATH_SPACER_NOMAD" : "Not everyone finds the stability of a permanent home enjoyable, or is willing to settle for less than what they believe they are worth. Some individuals find a life traveling from planet to planet best speaks to them, and this crew member once lived such an existence. They wandered from place to place freely, and even to this day aren't quite sure what they search for. They are clear they won't remain in your employ forever, but while they remain you'll find them quite reliable. Until the day they are no longer here, that is.",
 		"LIFEPATH_SPACER_SCRAPPER" : "",
 		"LIFEPATH_SPACER_ASTEROID_MINER" : "",
 		"LIFEPATH_SPACER_DROPSHIP_TECH" : "",
