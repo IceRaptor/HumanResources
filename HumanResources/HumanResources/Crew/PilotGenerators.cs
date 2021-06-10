@@ -1,8 +1,10 @@
 ﻿using BattleTech;
+using BattleTech.Data;
 using BattleTech.Portraits;
 using HBS.Collections;
 using HumanResources.Helper;
 using HumanResources.Lifepath;
+using IRBTModUtils;
 using Localize;
 using System;
 using System.Collections.Generic;
@@ -78,6 +80,7 @@ namespace HumanResources.Crew
             {
                 voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
             }
+            string voice = RandomUnusedVoice(voiceGender);
             string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
             string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
             Mod.Log.Debug?.Write($" - gender: {newGender}  voiceGender: {voiceGender}  firstName: {newFirstName}  lastName: {newLastName}");
@@ -86,9 +89,8 @@ namespace HumanResources.Crew
 
             // Determine crew size and skill
             crewSize  = GaussianHelper.RandomCrewSize(0, 0);
-            Mod.Log.Debug?.Write($"Generated random crewSize: {crewSize}");
             crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
-            Mod.Log.Debug?.Write($"Generated random crewSkill: {crewSkill}");
+            Mod.Log.Debug?.Write($" - random crewSize: {crewSize}  crewSkill: {crewSkill}");
 
             // TODO: Add crew size, etc to description
             StringBuilder lifepathDescParagraphs = new StringBuilder();
@@ -96,23 +98,36 @@ namespace HumanResources.Crew
             string backgroundDesc = new Text(lifePath.Description.Description).ToString();
             // DETAILS string is EXTREMELY picky, see HumanDescriptionDef.GetLocalizedDetails. There format must be followed *exactly*
             string formattedBackground = $"{Environment.NewLine}<b>{backgroundTitle}:</b>  {backgroundDesc}";
-            Mod.Log.Debug?.Write($"Generated background: {formattedBackground}");
+            Mod.Log.Debug?.Write($" - Background: {formattedBackground}");
             lifepathDescParagraphs.Append(formattedBackground);
 
-            TagSet tagSet = new TagSet();
             // Add tags from the lifepath
+            TagSet tagSet = new TagSet();
             tagSet.AddRange(lifePath.RequiredTags);
 
             foreach (string tag in lifePath.RandomTags)
             {
-                double tagRoll = Mod.Random.NextDouble;
-                tagSet.Add
+                double tagRoll = Mod.Random.NextDouble();
+                if (tagRoll <= Mod.Config.HiringHall.LifePath.RandomTagChance)
+                {
+                    tagSet.Add(tag);
+                }
+            }
+            Mod.Log.Debug?.Write($" - Tags: {String.Join(", ", tagSet)}");
+
+            // Add tags to the background
+            foreach (string tagId in tagSet)
+            {
+                Tag_MDD tagIfExists = MetadataDatabase.Instance.GetTagIfExists(tagId);
+                if (tagIfExists != null)
+                {
+                    TagDataStruct tagStruct = new TagDataStruct(tagId, tagIfExists.PlayerVisible, tagIfExists.Important, tagIfExists.Name, tagIfExists.FriendlyName, tagIfExists.Description);
+                    string formattedTag = $"<b><color=#ff8c00>{tagStruct.FriendlyName}:</b>  <color=#ffffff>{tagStruct.DescriptionTag}";
+                    lifepathDescParagraphs.Append(formattedTag);
+                }
             }
 
-
             string id = GenerateID();
-            string voice = RandomUnusedVoice(voiceGender);
-
             HumanDescriptionDef descriptionDef = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender, 
                 FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
 
