@@ -20,12 +20,12 @@ namespace HumanResources.Crew
 
 
 
-        public static PilotDef GenerateMechTechCrew()
+        public static PilotDef GenerateMechTechCrew(StarSystem starSystem)
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count - 1);
             string newCallsign = Mod.CrewNames.MechTech[callsignIdx];
 
-            PilotDef def = GenerateSupportCrew(newCallsign, out int crewSize, out int crewSkill);
+            PilotDef def = GenerateSkillessCrew(starSystem, newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
             CrewDetails details = new CrewDetails(def, CrewType.MechTechCrew, crewSize, crewSkill);
@@ -34,12 +34,12 @@ namespace HumanResources.Crew
             return def;
         }
 
-        public static PilotDef GenerateMedTechCrew()
+        public static PilotDef GenerateMedTechCrew(StarSystem starSystem)
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count - 1);
             string newCallsign = Mod.CrewNames.MedTech[callsignIdx];
 
-            PilotDef def = GenerateSupportCrew(newCallsign, out int crewSize, out int crewSkill);
+            PilotDef def = GenerateSkillessCrew(starSystem, newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
             CrewDetails details = new CrewDetails(def, CrewType.MedTechCrew, crewSize, crewSkill);
@@ -48,12 +48,12 @@ namespace HumanResources.Crew
             return def;
         }
 
-        public static PilotDef GenerateAerospaceCrew()
+        public static PilotDef GenerateAerospaceCrew(StarSystem starSystem)
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.Aerospace.Count - 1);
             string newCallsign = Mod.CrewNames.Aerospace[callsignIdx];
 
-            PilotDef def = GenerateSupportCrew(newCallsign, out int crewSize, out int crewSkill);
+            PilotDef def = GenerateSkillessCrew(starSystem, newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
             CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
@@ -61,8 +61,57 @@ namespace HumanResources.Crew
 
             return def;
         }
+        public static PilotDef GenerateSkillessCrew(StarSystem starSystem, string callsign, out int crewSize, out int crewSkill)
+        {
+            // Determine crew size and skill
+            crewSize = GaussianHelper.RandomCrewSize(0, 0);
+            crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
+            Mod.Log.Debug?.Write($" - random crewSize: {crewSize}  crewSkill: {crewSkill}");
 
-        public static PilotDef GenerateSupportCrew(string callsign, out int crewSize, out int crewSkill)
+            PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
+
+            return GenerateCrew(starSystem, callsign, pilotDef);
+        }
+
+        public static PilotDef GenerateSkilledCrew(StarSystem starSystem, bool isMechWarrior)
+        {
+            string callsign = RandomUnusedCallsign();
+
+            CrewTagModifier planetModifiers = starSystem.GetPlanetSkillDistModifier();
+            float planetMod = isMechWarrior ? planetModifiers.MechWarriors : planetModifiers.VehicleCrews;
+            int skillIdx = GaussianHelper.RandomCrewSkill(planetMod, 0);
+            Mod.Log.Debug?.Write($" - generated skillIdx: {skillIdx} using planetModifier: {planetMod}");
+
+            // Divide skill points by 4 to generate a median for each skill
+            float totalSkillPoints = isMechWarrior ?
+                Mod.Config.HiringHall.MechWarriors.SkillToExpertiseThresholds[skillIdx] :
+                Mod.Config.HiringHall.VehicleCrews.SkillToExpertiseThresholds[skillIdx];
+            // Normalize to the basic 10/10/10/10 max if we pull the highest index
+            if (totalSkillPoints > 40) totalSkillPoints = 40;
+            float medianSkillPoints = totalSkillPoints / 4;
+            // Reduce the median by -2 to allow for random add below
+            float adjustedMedian = (float)Math.Max(0, medianSkillPoints - 2);
+            Mod.Log.Debug?.Write($" - skillPoints =>  total: {totalSkillPoints} median: {medianSkillPoints}  adjusted: {adjustedMedian}");
+
+            // Each skill can vary +2.0 from adjusted, then rounded to an integer.
+            int piloting = (int)Math.Round(adjustedMedian + (Mod.Random.NextDouble() * 2));
+            int gunnery = (int)Math.Round(adjustedMedian + (Mod.Random.NextDouble() * 2));
+            int guts = (int)Math.Round(adjustedMedian + (Mod.Random.NextDouble() * 2));
+            int tactics = (int)Math.Round(adjustedMedian + (Mod.Random.NextDouble() * 2));
+            Mod.Log.Debug?.Write($" - skills =>  piloting: {piloting}  gunnery: {gunnery}  guts: {guts}  tactics: {tactics}");
+
+            // TODO: randomize health +/- 1?
+            int health = 3;
+
+            // TODO: Randomize ability selections
+
+            PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), gunnery, piloting, guts, tactics, injuries: 0, health, 
+                lethalInjury: false, morale: 1, voice: "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
+
+            return GenerateCrew(starSystem, callsign, pilotDef);
+        }
+
+        public static PilotDef GenerateCrew(StarSystem starSystem, string callsign, PilotDef pilotDef)
         {
             Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}");
 
@@ -84,15 +133,8 @@ namespace HumanResources.Crew
             string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
             string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
             Mod.Log.Debug?.Write($" - gender: {newGender}  voiceGender: {voiceGender}  firstName: {newFirstName}  lastName: {newLastName}");
+            pilotDef.SetVoice(voice);
 
-            PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
-
-            // Determine crew size and skill
-            crewSize  = GaussianHelper.RandomCrewSize(0, 0);
-            crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
-            Mod.Log.Debug?.Write($" - random crewSize: {crewSize}  crewSkill: {crewSkill}");
-
-            // TODO: Add crew size, etc to description
             StringBuilder lifepathDescParagraphs = new StringBuilder();
             string backgroundTitle = new Text(lifePath.Description.Title).ToString();
             string backgroundDesc = new Text(lifePath.Description.Description).ToString();
@@ -160,62 +202,63 @@ namespace HumanResources.Crew
             return pilotDef2;
         }
 
+
         // Piloting = crew size
         // Gunnery = crew skill
         // Morale =  crew loyalty    
         // Adapted from BattleTech.PilotGenerator.GenerateRandomPilot
-        public static PilotDef GenerateVehicleCrew(int systemDifficulty)
-        {
-            int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
+        //public static PilotDef GenerateVehicleCrew(int systemDifficulty)
+        //{
+        //    int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
 
-            Gender newGender = RandomGender();
-            string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
-            string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
-            string newCallsign = RandomUnusedCallsign();
-            Mod.Log.Debug?.Write($"Generating vehicleCrew with callsign: {newCallsign}");
+        //    Gender newGender = RandomGender();
+        //    string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
+        //    string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
+        //    string newCallsign = RandomUnusedCallsign();
+        //    Mod.Log.Debug?.Write($"Generating vehicleCrew with callsign: {newCallsign}");
 
-            int currentAge;
-            PilotDef pilotDef;
-            TagSet tagSet;
-            StringBuilder lifepathDescParagraphs;
-            GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
+        //    int currentAge;
+        //    PilotDef pilotDef;
+        //    TagSet tagSet;
+        //    StringBuilder lifepathDescParagraphs;
+        //    GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
 
-            string id = GenerateID();
-            Gender voiceGender = newGender;
-            if (voiceGender == Gender.NonBinary)
-            {
-                voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
-            }
-            string voice = RandomUnusedVoice(voiceGender);
-            HumanDescriptionDef description = new HumanDescriptionDef(id, newCallsign, newFirstName, newLastName, newCallsign, newGender, FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
+        //    string id = GenerateID();
+        //    Gender voiceGender = newGender;
+        //    if (voiceGender == Gender.NonBinary)
+        //    {
+        //        voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
+        //    }
+        //    string voice = RandomUnusedVoice(voiceGender);
+        //    HumanDescriptionDef description = new HumanDescriptionDef(id, newCallsign, newFirstName, newLastName, newCallsign, newGender, FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
 
-            StatCollection statCollection = pilotDef.GetStats();
-            int spentXPPilot = GetSpentXPPilot(statCollection);
+        //    StatCollection statCollection = pilotDef.GetStats();
+        //    int spentXPPilot = GetSpentXPPilot(statCollection);
 
-            List<string> alreadyAssignedPortraits = new List<string>();
-            if (ModState.SimGameState.Commander != null && ModState.SimGameState.Commander.pilotDef.PortraitSettings != null)
-            {
-                alreadyAssignedPortraits.Add(ModState.SimGameState.Commander.pilotDef.PortraitSettings.Description.Id);
-            }
-            foreach (BattleTech.Pilot activePilot in ModState.SimGameState.PilotRoster)
-            {
-                if (activePilot.pilotDef.PortraitSettings != null)
-                {
-                    alreadyAssignedPortraits.Add(activePilot.pilotDef.PortraitSettings.Description.Id);
-                }
-            }
+        //    List<string> alreadyAssignedPortraits = new List<string>();
+        //    if (ModState.SimGameState.Commander != null && ModState.SimGameState.Commander.pilotDef.PortraitSettings != null)
+        //    {
+        //        alreadyAssignedPortraits.Add(ModState.SimGameState.Commander.pilotDef.PortraitSettings.Description.Id);
+        //    }
+        //    foreach (Pilot activePilot in ModState.SimGameState.PilotRoster)
+        //    {
+        //        if (activePilot.pilotDef.PortraitSettings != null)
+        //        {
+        //            alreadyAssignedPortraits.Add(activePilot.pilotDef.PortraitSettings.Description.Id);
+        //        }
+        //    }
 
-            PilotDef pilotDef2 = new PilotDef(description, pilotDef.BaseGunnery, pilotDef.BasePiloting, pilotDef.BaseGuts, pilotDef.BaseTactics, 0,
-                ModState.SimGameState.CombatConstants.PilotingConstants.DefaultMaxInjuries, lethalInjury: false, 0, voice, pilotDef.abilityDefNames,
-                AIPersonality.Undefined, 0, tagSet, spentXPPilot, 0)
-            {
-                DataManager = ModState.SimGameState.DataManager,
-                PortraitSettings = GetPortraitForGenderAndAge(voiceGender, currentAge, alreadyAssignedPortraits)
-            };
-            pilotDef2.ForceRefreshAbilityDefs();
-            ModState.SimGameState.pilotGenCallsignDiscardPile.Add(pilotDef2.Description.Callsign);
-            return pilotDef2;
-        }
+        //    PilotDef pilotDef2 = new PilotDef(description, pilotDef.BaseGunnery, pilotDef.BasePiloting, pilotDef.BaseGuts, pilotDef.BaseTactics, 0,
+        //        ModState.SimGameState.CombatConstants.PilotingConstants.DefaultMaxInjuries, lethalInjury: false, 0, voice, pilotDef.abilityDefNames,
+        //        AIPersonality.Undefined, 0, tagSet, spentXPPilot, 0)
+        //    {
+        //        DataManager = ModState.SimGameState.DataManager,
+        //        PortraitSettings = GetPortraitForGenderAndAge(voiceGender, currentAge, alreadyAssignedPortraits)
+        //    };
+        //    pilotDef2.ForceRefreshAbilityDefs();
+        //    ModState.SimGameState.pilotGenCallsignDiscardPile.Add(pilotDef2.Description.Callsign);
+        //    return pilotDef2;
+        //}
 
         // A fairly complex method adapted from HBS code. In short it attempts to walk a node tree and find conditions
         //   that would end the creation of the character.
