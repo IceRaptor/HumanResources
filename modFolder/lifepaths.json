@@ -1032,19 +1032,6 @@
 				"medtech" : 0
 			}
 		},
-		"hpgTech" : {
-			"weight" : 5,
-			"descriptionKey" : "LIFEPATH_COMSTAR_HPG_TECHNICIAN",
-			"requiredTags" : [  ],
-			"randomTags" : [ ],
-			"skillMod" : {
-				"mechwarrior" : 0,
-				"vehicle" : 0,
-				"aerospace" : 0,
-				"mechtech" : 0,
-				"medtech" : 0
-			}
-		},
 		"comstarAnalyst" : {
 			"weight" : 5,
 			"descriptionKey" : "LIFEPATH_COMSTAR_ANALYST",
