@@ -1,0 +1,78 @@
+{
+  "criminal" : {
+	"weight" : 15,
+	"lifepaths" : {
+		"convict" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_CRIMINAL_CONVICT",
+			"requiredTags" : [ "pilot_dishonest" ],
+			"randomTags" : [ "pilot_brave", "pilot_drunk" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"reformedCriminal" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_CRIMINAL_REFORMED",
+			"requiredTags" : [ "pilot_honest" ],
+			"randomTags" : [ "pilot_drunk" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}
+	}
+  },	
+  "noble" : {
+	"weight" : 5,
+	"lifepaths" : {
+		"heir" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_NOBLE_HEIR",
+			"requiredTags" : [ "pilot_bookish" ],
+			"randomTags" : [ "pilot_lucky", "pilot_brave", "pilot_wealthy" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"supernumerary" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_NOBLE_SUPERNUMERARY",
+			"requiredTags" : [ "pilot_cautious" ],
+			"randomTags" : [ "pilot_lucky", "pilot_brave", "pilot_wealthy" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		},
+		"diplomat" : {
+			"weight" : 5,
+			"descriptionKey" : "LIFEPATH_NOBLE_DIPLOMAT",
+			"requiredTags" : [ "pilot_jinxed" ],
+			"randomTags" : [ "pilot_lucky", "pilot_brave", "pilot_wealthy" ],
+			"skillMod" : {
+				"mechwarrior" : 0,
+				"vehicle" : 0,
+				"aerospace" : 0,
+				"mechtech" : 0,
+				"medtech" : 0
+			}
+		}	
+	}
+  }
+
+}
