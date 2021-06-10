@@ -3,6 +3,7 @@ using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
 using HumanResources.Crew;
+using HumanResources.Helper;
 using Localize;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,7 @@ namespace HumanResources.Patches.UI
             Mod.Log.Debug?.Write("Updating system description with scarcity");
             
             StarSystem selectedSystem = ModState.SimGameState.Starmap.CurSelected.System;
-            PlanetScarcity scarcity = CrewHelper.GetScarcityForPlanet(selectedSystem);
+            PlanetScarcity scarcity = selectedSystem.GetScarcityForPlanet();
 
             StringBuilder sb = new StringBuilder(selectedSystem.Def.Description.Details);
             sb.Append("\n");

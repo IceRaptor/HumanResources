@@ -8,77 +8,7 @@ namespace HumanResources.Crew
     public static class CrewHelper
     {
 
-        public static PlanetScarcity GetScarcityForPlanet(StarSystem currentSystem)
-        {
-            float aerospaceUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.Aerospace;
-            float mechTechsUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.MechTechs;
-            float mechWarriorsUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.MechWarriors;
-            float medTechsUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.MedTechs;
-            float vehicleCrewsUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.VehicleCrews;
-
-            foreach (string tag in currentSystem.Tags)
-            {
-                Mod.Config.HiringHall.Scarcity.PlanetTagModifiers.TryGetValue(tag, out CrewScarcity scarcity);
-                if (scarcity != null)
-                {
-                    Mod.Log.Debug?.Write($"  tag: {tag} has scarcity =>  " +
-                        $"aerospace: {scarcity.Aerospace}  mechTechs: {scarcity.MechTechs}  mechwarriors: {scarcity.MechWarriors}  medTechs: {scarcity.MedTechs}  vehicleCrews: {scarcity.VehicleCrews}");
-                    aerospaceUpperBound += scarcity.Aerospace;
-                    mechWarriorsUpperBound += scarcity.MechWarriors;
-                    mechTechsUpperBound += scarcity.MechTechs;
-                    medTechsUpperBound += scarcity.MedTechs;
-                    vehicleCrewsUpperBound += scarcity.VehicleCrews;
-                }
-            }
-
-            // Ceiling everything
-            aerospaceUpperBound = (float)Math.Ceiling(aerospaceUpperBound);
-            mechTechsUpperBound = (float)Math.Ceiling(mechTechsUpperBound);
-            mechWarriorsUpperBound = (float)Math.Ceiling(mechWarriorsUpperBound);
-            medTechsUpperBound = (float)Math.Ceiling(medTechsUpperBound);
-            vehicleCrewsUpperBound = (float)Math.Ceiling(vehicleCrewsUpperBound);
-
-            PlanetScarcity pilotScarcity = new PlanetScarcity();
-
-            if (aerospaceUpperBound > 0)
-            {
-                int aerospaceLowerBound = (int)Math.Max(0, aerospaceUpperBound / 2);
-                pilotScarcity.Aerospace = (aerospaceLowerBound, (int)aerospaceUpperBound);
-            }
-
-            if (mechTechsUpperBound > 0)
-            {
-                int mechTechLowerBound = (int)Math.Max(0, mechTechsUpperBound / 2);
-                pilotScarcity.MechTechs = (mechTechLowerBound, (int)mechTechsUpperBound);
-            }
-
-            if (mechWarriorsUpperBound > 0)
-            {
-                int mechWarriorsLowerBound = (int)Math.Max(0, mechWarriorsUpperBound / 2);
-                pilotScarcity.MechWarriors = (mechWarriorsLowerBound, (int)mechWarriorsUpperBound);
-            }
-
-            if (medTechsUpperBound > 0)
-            {
-                int medTechsLowerBound = (int)Math.Max(0, medTechsUpperBound / 2);
-                pilotScarcity.MedTechs = (medTechsLowerBound, (int)medTechsUpperBound);
-            }
-
-            if (vehicleCrewsUpperBound > 0)
-            {
-                int vehicleCrewsLowerBound = (int)Math.Max(0, vehicleCrewsUpperBound / 2);
-                pilotScarcity.Vehicles = (vehicleCrewsLowerBound, (int)vehicleCrewsUpperBound);
-            }
-
-            Mod.Log.Debug?.Write($"Planet: {currentSystem.Name} has final bounds:");
-            Mod.Log.Debug?.Write($"  mechwarriors:  {pilotScarcity.MechWarriors.Lower} to {pilotScarcity.MechWarriors.Upper}");
-            Mod.Log.Debug?.Write($"  vehicles:      {pilotScarcity.Vehicles.Lower} to {pilotScarcity.Vehicles.Upper}");
-            Mod.Log.Debug?.Write($"  aerospace:     {pilotScarcity.Aerospace.Lower} to {pilotScarcity.Aerospace.Upper}");
-            Mod.Log.Debug?.Write($"  mechTechs:     {pilotScarcity.MechTechs.Lower} to {pilotScarcity.MechTechs.Upper}");
-            Mod.Log.Debug?.Write($"  medTechs:      {pilotScarcity.MedTechs.Lower} to {pilotScarcity.MedTechs.Upper}");
-
-            return pilotScarcity;
-        }
+        
 
         public static int UsedBerths(IEnumerable<Pilot> pilots)
         {

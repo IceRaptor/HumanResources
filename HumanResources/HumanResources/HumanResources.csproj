@@ -83,6 +83,7 @@
     <Compile Include="Helper\LifePathHelper.cs" />
     <Compile Include="Helper\EventHelper.cs" />
     <Compile Include="Helper\HeadHuntingHelper.cs" />
+    <Compile Include="Helper\PlanetExtensions.cs" />
     <Compile Include="Helper\SalaryHelper.cs" />
     <Compile Include="Lifepath\LifePath.cs" />
     <Compile Include="Patches\AARContractObjectivesWidgetPatches.cs" />

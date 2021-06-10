@@ -13,6 +13,9 @@ namespace HumanResources
 
         // Breakpoints on the PDF (Probability distribution function), from worst to best. Must be 4 values.
         public float[] Breakpoints = new float[] { };
+
+        // Distribution mu adjustments based upon planet tag
+        public Dictionary<string, CrewTagModifier> PlanetTagModifiers = new Dictionary<string, CrewTagModifier>() { };
     }
 
     public class CrewOpts
@@ -53,7 +56,7 @@ namespace HumanResources
         public string[] traitTags = new string[] { };
     }
 
-    public class CrewScarcity
+    public class CrewTagModifier
     {
         public float Aerospace = 0f;
         public float MechTechs = 0f;
@@ -121,25 +124,28 @@ namespace HumanResources
     {
         public bool Enabled = true;
 
-        public CrewScarcity Defaults = new CrewScarcity();
+        public CrewTagModifier Defaults = new CrewTagModifier();
 
-        public Dictionary<string, CrewScarcity> PlanetTagModifiers = new Dictionary<string, CrewScarcity>()
+        public Dictionary<string, CrewTagModifier> PlanetTagModifiers = new Dictionary<string, CrewTagModifier>()
         {
         };
+
     }
 
     public class HiringHallOpts
     {
-        public DistributionOpts SkillDistribution = new DistributionOpts() 
+        public DistributionOpts SkillDistribution = new DistributionOpts()
         {
             // Rookie, Regular, Veteran, Elite, Legendary
-            Breakpoints = new float[] {}
+            Breakpoints = new float[] {},
+            PlanetTagModifiers = new Dictionary<string, CrewTagModifier>()
         };
         
         public DistributionOpts SizeDistribution = new DistributionOpts()
         {
             // Tiny, Small, Medium, Large, Huge
-            Breakpoints = new float[] {}
+            Breakpoints = new float[] {},
+            PlanetTagModifiers = new Dictionary<string, CrewTagModifier>()
         };
 
         public LifePathOps LifePath = new LifePathOps();
@@ -217,6 +223,8 @@ namespace HumanResources
             MaxOfType = -1,
             HazardPayRatio = 0.05f
         };
+
+        public float RoninChance = 0.3f;
 
     }
 
@@ -334,7 +342,7 @@ namespace HumanResources
                 $"MedTechs: {this.HiringHall.Scarcity.Defaults.MedTechs}  MechWarriors: {this.HiringHall.Scarcity.Defaults.MechWarriors}  " +
                 $"VehicleCrews: {this.HiringHall.Scarcity.Defaults.VehicleCrews} ");
             Mod.Log.Info?.Write($"  - Planet Tag Modifiers -");
-            foreach (KeyValuePair<string, CrewScarcity> kvp in this.HiringHall.Scarcity.PlanetTagModifiers)
+            foreach (KeyValuePair<string, CrewTagModifier> kvp in this.HiringHall.Scarcity.PlanetTagModifiers)
             {
                 Mod.Log.Info?.Write($"  Tag: {kvp.Key} => Aerospace: {this.HiringHall.Scarcity.Defaults.Aerospace}  MechTechs: {this.HiringHall.Scarcity.Defaults.MechTechs}  " +
                 $"MedTechs: {this.HiringHall.Scarcity.Defaults.MedTechs}  MechWarriors: {this.HiringHall.Scarcity.Defaults.MechWarriors}  " +
@@ -475,13 +483,13 @@ namespace HumanResources
             if (this.HiringHall.Scarcity.PlanetTagModifiers.Count == 0)
             {
                 this.HiringHall.Scarcity.PlanetTagModifiers.Add("planet_civ_innersphere",
-                    new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 2f, MechTechs = 1f, MedTechs = 1f, Aerospace = 1f }
+                    new CrewTagModifier() { MechWarriors = 1f, VehicleCrews = 2f, MechTechs = 1f, MedTechs = 1f, Aerospace = 1f }
                 );
                 this.HiringHall.Scarcity.PlanetTagModifiers.Add("planet_civ_periphery",
-                    new CrewScarcity() { MechWarriors = 1f, VehicleCrews = 1f, MechTechs = 0f, MedTechs = 0f, Aerospace = 1f }
+                    new CrewTagModifier() { MechWarriors = 1f, VehicleCrews = 1f, MechTechs = 0f, MedTechs = 0f, Aerospace = 1f }
                 );
                 this.HiringHall.Scarcity.PlanetTagModifiers.Add("planet_civ_primitive",
-                    new CrewScarcity() { MechWarriors = -2f, VehicleCrews = 1f, MechTechs = -2f, MedTechs = -4f, Aerospace = -4f }
+                    new CrewTagModifier() { MechWarriors = -2f, VehicleCrews = 1f, MechTechs = -2f, MedTechs = -4f, Aerospace = -4f }
                 );
             }
 
@@ -545,10 +553,10 @@ namespace HumanResources
                 this.HiringHall.MechWarriors.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
 
             // VehicleCrews
-            if (this.HiringHall.MechWarriors.ValueThresholdForMRBLevel.Length == 0)
-                this.HiringHall.MechWarriors.ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 };
-            if (this.HiringHall.MechWarriors.SkillToExpertiseThresholds.Length == 0)
-                this.HiringHall.MechWarriors.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
+            if (this.HiringHall.VehicleCrews.ValueThresholdForMRBLevel.Length == 0)
+                this.HiringHall.VehicleCrews.ValueThresholdForMRBLevel = new float[] { 10, 17, 24, 31, 99 };
+            if (this.HiringHall.VehicleCrews.SkillToExpertiseThresholds.Length == 0)
+                this.HiringHall.VehicleCrews.SkillToExpertiseThresholds = new float[] { 10, 18, 27, 35, 99 };
 
         }
         private void InitHeadHuntingDefaults()
