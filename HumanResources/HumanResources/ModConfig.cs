@@ -112,6 +112,11 @@ namespace HumanResources
         public int HatedEmployerIsTargetMod = 3;
     }
 
+    public class LifePathOps
+    {
+        public double RandomTagChance = 0.2;
+    }
+
     public class ScarcityOps
     {
         public bool Enabled = true;
@@ -136,6 +141,8 @@ namespace HumanResources
             // Tiny, Small, Medium, Large, Huge
             Breakpoints = new float[] {}
         };
+
+        public LifePathOps LifePath = new LifePathOps();
 
         public ScarcityOps Scarcity = new ScarcityOps();
         

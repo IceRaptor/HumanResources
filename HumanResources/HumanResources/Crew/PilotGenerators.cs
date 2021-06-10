@@ -69,15 +69,20 @@ namespace HumanResources.Crew
 
             int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + 
                 ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
+            int currentAge = Mod.Random.Next(initialAge, 70);
+            Mod.Log.Debug?.Write($" - currentAge: {currentAge}");
 
             Gender newGender = RandomGender();
+            Gender voiceGender = newGender;
+            if (voiceGender == Gender.NonBinary)
+            {
+                voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
+            }
             string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
             string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
+            Mod.Log.Debug?.Write($" - gender: {newGender}  voiceGender: {voiceGender}  firstName: {newFirstName}  lastName: {newLastName}");
 
-            int currentAge = Mod.Random.Next(initialAge, 70);
             PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
-            
-            TagSet tagSet = new TagSet();
 
             // Determine crew size and skill
             crewSize  = GaussianHelper.RandomCrewSize(0, 0);
@@ -85,24 +90,29 @@ namespace HumanResources.Crew
             crewSkill = GaussianHelper.RandomCrewSkill(0, 0);
             Mod.Log.Debug?.Write($"Generated random crewSkill: {crewSkill}");
 
-            // TODO: Build jibberish history
-
             // TODO: Add crew size, etc to description
             StringBuilder lifepathDescParagraphs = new StringBuilder();
             string backgroundTitle = new Text(lifePath.Description.Title).ToString();
             string backgroundDesc = new Text(lifePath.Description.Description).ToString();
             // DETAILS string is EXTREMELY picky, see HumanDescriptionDef.GetLocalizedDetails. There format must be followed *exactly*
-            string formattedBackground = $"{Environment.NewLine}<b>{backgroundTitle}</b>:  {backgroundDesc}";
+            string formattedBackground = $"{Environment.NewLine}<b>{backgroundTitle}:</b>  {backgroundDesc}";
             Mod.Log.Debug?.Write($"Generated background: {formattedBackground}");
             lifepathDescParagraphs.Append(formattedBackground);
 
-            string id = GenerateID();
-            Gender voiceGender = newGender;
-            if (voiceGender == Gender.NonBinary)
+            TagSet tagSet = new TagSet();
+            // Add tags from the lifepath
+            tagSet.AddRange(lifePath.RequiredTags);
+
+            foreach (string tag in lifePath.RandomTags)
             {
-                voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
+                double tagRoll = Mod.Random.NextDouble;
+                tagSet.Add
             }
+
+
+            string id = GenerateID();
             string voice = RandomUnusedVoice(voiceGender);
+
             HumanDescriptionDef descriptionDef = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender, 
                 FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
 
@@ -114,7 +124,7 @@ namespace HumanResources.Crew
             {
                 alreadyAssignedPortraits.Add(ModState.SimGameState.Commander.pilotDef.PortraitSettings.Description.Id);
             }
-            foreach (BattleTech.Pilot activePilot in ModState.SimGameState.PilotRoster)
+            foreach (Pilot activePilot in ModState.SimGameState.PilotRoster)
             {
                 if (activePilot.pilotDef.PortraitSettings != null)
                 {

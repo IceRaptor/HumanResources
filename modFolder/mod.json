@@ -127,6 +127,10 @@
                     "planet_event_pox" :                { "MechWarriors" : -6.0, "VehicleCrews" : -6.0, "MechTechs" : -6.0, "MedTechs" : 1.0, "Aerospace" : 0.0 }
                 }
             },
+			
+			"LifePath" : {
+				"RandomTagChance" : 0.2
+			},
 
             "SkillDistribution" : {
                 "Breakpoints" : [ -0.5, 1, 1.75, 2.5 ]
