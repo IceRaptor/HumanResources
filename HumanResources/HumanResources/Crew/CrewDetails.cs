@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace HumanResources.Extensions
+namespace HumanResources.Crew
 {
     public enum CrewType
     {
@@ -136,7 +136,7 @@ namespace HumanResources.Extensions
             {
                 IsPlayer = false;
                 Mod.Log.Debug?.Write("Generating contract length, new expiration day");
-                this.ContractTerm = PilotHelper.RandomContractLength(config);
+                this.ContractTerm = CrewHelper.RandomContractLength(config);
                 this.ExpirationDay = ModState.SimGameState.DaysPassed + ContractTerm;
             }
 

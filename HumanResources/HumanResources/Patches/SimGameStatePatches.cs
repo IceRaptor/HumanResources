@@ -3,7 +3,7 @@ using BattleTech.Data;
 using BattleTech.UI;
 using Harmony;
 using HBS.Collections;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using HumanResources.Helper;
 using Localize;
 using SVGImporter;

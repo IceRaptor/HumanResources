@@ -2,13 +2,10 @@
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
-using HumanResources.Helper;
+using HumanResources.Crew;
 using Localize;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace HumanResources.Patches.UI
 {
@@ -20,7 +17,7 @@ namespace HumanResources.Patches.UI
             Mod.Log.Debug?.Write("Updating system description with scarcity");
             
             StarSystem selectedSystem = ModState.SimGameState.Starmap.CurSelected.System;
-            PilotScarcity scarcity = PilotHelper.GetScarcityForPlanet(selectedSystem);
+            PlanetScarcity scarcity = CrewHelper.GetScarcityForPlanet(selectedSystem);
 
             StringBuilder sb = new StringBuilder(selectedSystem.Def.Description.Details);
             sb.Append("\n");

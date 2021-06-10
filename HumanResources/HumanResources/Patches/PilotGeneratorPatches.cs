@@ -12,14 +12,14 @@ namespace HumanResources.Patches
         static void Postfix(SimGameState sim, List<LifepathNodeDef> ___lifepaths, List<LifepathNodeDef> ___startingPaths,
             List<LifepathNodeDef> ___advanceStartingPaths, GenderedOptionsListDef ___voiceList)
         {
-            ModState.PilotCreate.NameGenerator = new PilotNameGenerator();
+            ModState.CrewCreateState.NameGenerator = new PilotNameGenerator();
 
-            ModState.PilotCreate.LifePaths = ___lifepaths;
-            ModState.PilotCreate.StartingPaths = ___startingPaths;
-            ModState.PilotCreate.AdvancePaths = ___advanceStartingPaths;
-            ModState.PilotCreate.Voices = ___voiceList;
+            ModState.CrewCreateState.LifePaths = ___lifepaths;
+            ModState.CrewCreateState.StartingPaths = ___startingPaths;
+            ModState.CrewCreateState.AdvancePaths = ___advanceStartingPaths;
+            ModState.CrewCreateState.Voices = ___voiceList;
 
-            ModState.PilotCreate.GenderWeights = new List<int>()
+            ModState.CrewCreateState.GenderWeights = new List<int>()
             {
                 sim.Constants.Pilot.FemaleGenerationWeight,
                 sim.Constants.Pilot.MaleGenerationWeight,

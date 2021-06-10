@@ -1,16 +1,14 @@
 ﻿using BattleTech;
-using HumanResources.Extensions;
 using System;
 using System.Collections.Generic;
 
-namespace HumanResources.Helper
+namespace HumanResources.Crew
 {
-
     
-    public static class PilotHelper
+    public static class CrewHelper
     {
 
-        public static PilotScarcity GetScarcityForPlanet(StarSystem currentSystem)
+        public static PlanetScarcity GetScarcityForPlanet(StarSystem currentSystem)
         {
             float aerospaceUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.Aerospace;
             float mechTechsUpperBound = Mod.Config.HiringHall.Scarcity.Defaults.MechTechs;
@@ -40,7 +38,7 @@ namespace HumanResources.Helper
             medTechsUpperBound = (float)Math.Ceiling(medTechsUpperBound);
             vehicleCrewsUpperBound = (float)Math.Ceiling(vehicleCrewsUpperBound);
 
-            PilotScarcity pilotScarcity = new PilotScarcity();
+            PlanetScarcity pilotScarcity = new PlanetScarcity();
 
             if (aerospaceUpperBound > 0)
             {
@@ -143,7 +141,7 @@ namespace HumanResources.Helper
         }
     }
 
-    public class PilotScarcity
+    public class PlanetScarcity
     {
         public (int Lower, int Upper) Aerospace = (0, 0);
         public (int Lower, int Upper) MechWarriors = (0, 0);

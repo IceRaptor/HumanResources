@@ -1,5 +1,5 @@
 ﻿using BattleTech;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -80,9 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comparable\SGBarracksRosterSlotComparisons.cs" />
+    <Compile Include="Helper\LifePathHelper.cs" />
     <Compile Include="Helper\EventHelper.cs" />
     <Compile Include="Helper\HeadHuntingHelper.cs" />
     <Compile Include="Helper\SalaryHelper.cs" />
+    <Compile Include="Lifepath\LifePath.cs" />
     <Compile Include="Patches\AARContractObjectivesWidgetPatches.cs" />
     <Compile Include="Patches\AARContractResultsScreenPatches.cs" />
     <Compile Include="Patches\ContractPatches.cs" />
@@ -92,10 +94,10 @@
     <Compile Include="Patches\SGCaptainsQuartersStatusScreen.cs" />
     <Compile Include="Patches\SGTravelManagerPatches.cs" />
     <Compile Include="Patches\SimGameEventTrackerPatches.cs" />
-    <Compile Include="Pilot\CrewDetails.cs" />
+    <Compile Include="Crew\CrewDetails.cs" />
     <Compile Include="Helper\GuassianHelper.cs" />
-    <Compile Include="Pilot\PilotGenerators.cs" />
-    <Compile Include="Pilot\PilotStatics.cs" />
+    <Compile Include="Crew\PilotGenerators.cs" />
+    <Compile Include="Crew\PilotStatics.cs" />
     <Compile Include="ModConfig.cs" />
     <Compile Include="ModConsts.cs" />
     <Compile Include="ModInit.cs" />
@@ -112,6 +114,7 @@
     <Compile Include="Patches\SGNavigationScreenPatches.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -1,6 +1,6 @@
 ﻿using BattleTech;
 using Harmony;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using HumanResources.Helper;
 using System;
 using System.Collections.Generic;
@@ -40,7 +40,7 @@ namespace HumanResources.Patches
             int systemDiff = __instance.Def.GetDifficulty(SimGameState.SimGameType.CAREER);
             Mod.Log.Info?.Write($"Generating pilots for system: {__instance.Name} with difficulty: {systemDiff}");
 
-            PilotScarcity scarcity = PilotHelper.GetScarcityForPlanet(__instance);
+            PlanetScarcity scarcity = CrewHelper.GetScarcityForPlanet(__instance);
 
             int aerospace = scarcity.Aerospace.Upper > 0 ?
                 Math.Max(0, Mod.Random.Next(scarcity.Aerospace.Lower, scarcity.Aerospace.Upper)) : 0;
@@ -111,7 +111,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < aerospace; i++)
                 {
-                    PilotDef pDef = PilotGen.GenerateAerospaceCrew();
+                    PilotDef pDef = CrewGenerator.GenerateAerospaceCrew();
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
@@ -120,7 +120,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < mechTechs; i++)
                 {
-                    PilotDef pDef = PilotGen.GenerateMechTechCrew();
+                    PilotDef pDef = CrewGenerator.GenerateMechTechCrew();
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
@@ -129,7 +129,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < medTechs; i++)
                 {
-                    PilotDef pDef = PilotGen.GenerateMedTechCrew();
+                    PilotDef pDef = CrewGenerator.GenerateMedTechCrew();
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
@@ -138,7 +138,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < vehicleCrews; i++)
                 {
-                    PilotDef pDef = PilotGen.GenerateVehicleCrew(systemDiff);
+                    PilotDef pDef = CrewGenerator.GenerateVehicleCrew(systemDiff);
 
                     Mod.Log.Debug?.Write($"CREATED VEHICLE CREW");
                     // Before returning, initialize the cache value

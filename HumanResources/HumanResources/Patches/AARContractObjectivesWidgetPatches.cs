@@ -2,13 +2,11 @@
 using BattleTech.Framework;
 using BattleTech.UI;
 using Harmony;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using Localize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HumanResources.Patches
 {

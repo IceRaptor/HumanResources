@@ -2,7 +2,7 @@
 using BattleTech.Data;
 using Harmony;
 using HBS.Collections;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,7 +3,7 @@ using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using Harmony;
 using HumanResources.Comparable;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using HumanResources.Helper;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -83,7 +83,7 @@ namespace HumanResources.Patches
         static bool Prefix(SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
         {
             
-            int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
+            int usedBerths = CrewHelper.UsedBerths(ModState.SimGameState.PilotRoster);
             Mod.Log.Debug?.Write($"Berths => used: {usedBerths}  available: {ModState.SimGameState.GetMaxMechWarriors()}");
 
             string text = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Berths_Used],

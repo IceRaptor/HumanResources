@@ -1,7 +1,7 @@
 ﻿using BattleTech;
 using BattleTech.UI;
 using Harmony;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using HumanResources.Helper;
 using System;
 using System.Collections.Generic;

@@ -1,6 +1,6 @@
 ﻿
 using BattleTech;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,13 +9,19 @@ using us.frostraptor.modUtils.Redzen;
 namespace HumanResources
 {
 
-    public class PilotCreateState
+    public class CrewCreateState
     {
         public PilotNameGenerator NameGenerator = null;
 
+        // TODO: Old, HBS style - remove!
         public List<LifepathNodeDef> LifePaths = null;
         public List<LifepathNodeDef> StartingPaths = null;
         public List<LifepathNodeDef> AdvancePaths = null;
+
+        // public static Dictionary<string, LifePathFamily> LifePaths = new Dictionary<string, LifePathFamily>();
+        public Dictionary<string, (int, int)> LifePathFamilyBounds = new Dictionary<string, (int, int)>();
+        public Dictionary<string, Dictionary<string, (int, int)>> LifePathBounds = new Dictionary<string, Dictionary<string, (int, int)>>();
+
 
         public GenderedOptionsListDef Voices = null;
 
@@ -25,7 +31,7 @@ namespace HumanResources
 
     public static class ModState
     {
-        public static PilotCreateState PilotCreate = new PilotCreateState();
+        public static CrewCreateState CrewCreateState = new CrewCreateState();
         public static SimGameState SimGameState = null;
         public static bool IsHiringFlow = false;
 
@@ -40,7 +46,7 @@ namespace HumanResources
             // Reinitialize state
             Mod.Log.Info?.Write("CLEARING ALL MOD STATE DATA");
             SimGameState = null;
-            PilotCreate = new PilotCreateState();
+            CrewCreateState = new CrewCreateState();
             
             ExpiredContracts.Clear();
             HeadHuntedPilot = null;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HumanResources.Lifepath;
+using System.Collections.Generic;
 
 namespace HumanResources
 {
@@ -144,6 +145,9 @@ namespace HumanResources
             { PT_MED_TECH_BOUNDS,   "<color=red>Hirable MedTechs</color> - {0} to {1}" },
             { PT_VEHICLE_BOUNDS,    "<color=red>Hirable Vehicle Crews</color> - {0} to {1}" },
         };
+
+        // == Lifepaths ==
+        public Dictionary<string, LifePathDescription> LifePathDescriptions = new Dictionary<string, LifePathDescription>();
 
     }
 }

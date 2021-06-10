@@ -1,5 +1,5 @@
 ﻿using BattleTech.UI;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 
 namespace HumanResources.Comparable
 {

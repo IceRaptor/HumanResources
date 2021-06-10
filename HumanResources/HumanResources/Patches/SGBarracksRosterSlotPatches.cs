@@ -4,7 +4,7 @@ using BattleTech.UI.TMProWrapper;
 using BattleTech.UI.Tooltips;
 using Harmony;
 using HBS.Extensions;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using HumanResources.Helper;
 using SVGImporter;
 using TMPro;
@@ -25,7 +25,7 @@ namespace HumanResources.Patches
             CrewDetails details = ModState.GetCrewDetails(___pilot.pilotDef);
             Mod.Log.Debug?.Write($"  -- pilot requires: {details.Size} berths");
 
-            int usedBerths = PilotHelper.UsedBerths(ModState.SimGameState.PilotRoster);
+            int usedBerths = CrewHelper.UsedBerths(ModState.SimGameState.PilotRoster);
             int availableBerths = ModState.SimGameState.GetMaxMechWarriors() - usedBerths;
             Mod.Log.Debug?.Write($"AvailableBerths: {availableBerths} = max: {ModState.SimGameState.GetMaxMechWarriors()} - used: {usedBerths}");
 
@@ -42,7 +42,7 @@ namespace HumanResources.Patches
             }
 
             // Check type limitations
-            if (!PilotHelper.CanHireMoreCrewOfType(details))
+            if (!CrewHelper.CanHireMoreCrewOfType(details))
             {
                 Mod.Log.Info?.Write($"Pilot {___pilot.Name} cannot be hired, too many of type already employed.");
 

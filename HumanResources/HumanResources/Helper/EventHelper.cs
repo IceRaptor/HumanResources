@@ -1,5 +1,5 @@
 ﻿using BattleTech;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using Localize;
 using System;
 using System.Text;

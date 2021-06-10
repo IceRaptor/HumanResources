@@ -5,7 +5,7 @@ using BattleTech.UI.TMProWrapper;
 using Harmony;
 using HBS.Collections;
 using HBS.Extensions;
-using HumanResources.Extensions;
+using HumanResources.Crew;
 using Localize;
 using System;
 using System.Collections.Generic;

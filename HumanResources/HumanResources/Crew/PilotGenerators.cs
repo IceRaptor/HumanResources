@@ -1,27 +1,29 @@
 ﻿using BattleTech;
 using BattleTech.Portraits;
 using HBS.Collections;
-using HumanResources.Extensions;
+using HumanResources.Helper;
+using HumanResources.Lifepath;
+using Localize;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace HumanResources.Helper
+namespace HumanResources.Crew
 {
 
-    public static class PilotGen
+    public static class CrewGenerator
     {
+
+
 
         public static PilotDef GenerateMechTechCrew()
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count - 1);
             string newCallsign = Mod.CrewNames.MechTech[callsignIdx];
 
-            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MECH TECH";
-
-            PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
+            PilotDef def = GenerateSupportCrew(newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
             CrewDetails details = new CrewDetails(def, CrewType.MechTechCrew, crewSize, crewSkill);
@@ -35,9 +37,7 @@ namespace HumanResources.Helper
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MedTech.Count - 1);
             string newCallsign = Mod.CrewNames.MedTech[callsignIdx];
 
-            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS MED TECH";
-
-            PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
+            PilotDef def = GenerateSupportCrew(newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
             CrewDetails details = new CrewDetails(def, CrewType.MedTechCrew, crewSize, crewSkill);
@@ -51,9 +51,7 @@ namespace HumanResources.Helper
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.Aerospace.Count - 1);
             string newCallsign = Mod.CrewNames.Aerospace[callsignIdx];
 
-            string description = $"{Environment.NewLine}<b>Crew:</b>CREW IS AEROSPACE";
-
-            PilotDef def = GenerateSupportCrew(newCallsign, description, out int crewSize, out int crewSkill);
+            PilotDef def = GenerateSupportCrew(newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
             CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
@@ -62,16 +60,19 @@ namespace HumanResources.Helper
             return def;
         }
 
-        public static PilotDef GenerateSupportCrew(string callsign, string backgroundDesc, out int crewSize, out int crewSkill)
+        public static PilotDef GenerateSupportCrew(string callsign, out int crewSize, out int crewSkill)
         {
-            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign} backgroundDesc: {backgroundDesc}");
+            Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}");
+
+            // Generate the lifepath we'll use
+            LifePath lifePath = LifePathHelper.GetRandomLifePath();
 
             int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + 
                 ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
 
             Gender newGender = RandomGender();
-            string newFirstName = ModState.PilotCreate.NameGenerator.GetFirstName(newGender);
-            string newLastName = ModState.PilotCreate.NameGenerator.GetLastName();
+            string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
+            string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
 
             int currentAge = Mod.Random.Next(initialAge, 70);
             PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
@@ -88,9 +89,12 @@ namespace HumanResources.Helper
 
             // TODO: Add crew size, etc to description
             StringBuilder lifepathDescParagraphs = new StringBuilder();
-
-            // DETAILS string is EXTREMELY picky, see HumanDescriptionDef.GetLocalizedDetails
-            lifepathDescParagraphs.Append(backgroundDesc);
+            string backgroundTitle = new Text(lifePath.Description.Title).ToString();
+            string backgroundDesc = new Text(lifePath.Description.Description).ToString();
+            // DETAILS string is EXTREMELY picky, see HumanDescriptionDef.GetLocalizedDetails. There format must be followed *exactly*
+            string formattedBackground = $"{Environment.NewLine}<b>{backgroundTitle}</b>:  {backgroundDesc}";
+            Mod.Log.Debug?.Write($"Generated background: {formattedBackground}");
+            lifepathDescParagraphs.Append(formattedBackground);
 
             string id = GenerateID();
             Gender voiceGender = newGender;
@@ -99,7 +103,7 @@ namespace HumanResources.Helper
                 voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
             }
             string voice = RandomUnusedVoice(voiceGender);
-            HumanDescriptionDef description = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender, 
+            HumanDescriptionDef descriptionDef = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender, 
                 FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
 
             StatCollection statCollection = pilotDef.GetStats();
@@ -110,7 +114,7 @@ namespace HumanResources.Helper
             {
                 alreadyAssignedPortraits.Add(ModState.SimGameState.Commander.pilotDef.PortraitSettings.Description.Id);
             }
-            foreach (Pilot activePilot in ModState.SimGameState.PilotRoster)
+            foreach (BattleTech.Pilot activePilot in ModState.SimGameState.PilotRoster)
             {
                 if (activePilot.pilotDef.PortraitSettings != null)
                 {
@@ -118,7 +122,7 @@ namespace HumanResources.Helper
                 }
             }
 
-            PilotDef pilotDef2 = new PilotDef(description, pilotDef.BaseGunnery, pilotDef.BasePiloting, pilotDef.BaseGuts, pilotDef.BaseTactics, 0,
+            PilotDef pilotDef2 = new PilotDef(descriptionDef, pilotDef.BaseGunnery, pilotDef.BasePiloting, pilotDef.BaseGuts, pilotDef.BaseTactics, 0,
                 ModState.SimGameState.CombatConstants.PilotingConstants.DefaultMaxInjuries, lethalInjury: false, 0, voice, pilotDef.abilityDefNames,
                 AIPersonality.Undefined, 0, tagSet, spentXPPilot, 0)
             {
@@ -140,8 +144,8 @@ namespace HumanResources.Helper
             int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
 
             Gender newGender = RandomGender();
-            string newFirstName = ModState.PilotCreate.NameGenerator.GetFirstName(newGender);
-            string newLastName = ModState.PilotCreate.NameGenerator.GetLastName();
+            string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
+            string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
             string newCallsign = RandomUnusedCallsign();
             Mod.Log.Debug?.Write($"Generating vehicleCrew with callsign: {newCallsign}");
 
@@ -168,7 +172,7 @@ namespace HumanResources.Helper
             {
                 alreadyAssignedPortraits.Add(ModState.SimGameState.Commander.pilotDef.PortraitSettings.Description.Id);
             }
-            foreach (Pilot activePilot in ModState.SimGameState.PilotRoster)
+            foreach (BattleTech.Pilot activePilot in ModState.SimGameState.PilotRoster)
             {
                 if (activePilot.pilotDef.PortraitSettings != null)
                 {
@@ -273,13 +277,13 @@ namespace HumanResources.Helper
                     if (!lifepathNodeEnding.EndNode && !flag)
                     {
                         List<LifepathNodeDef> list7 = new List<LifepathNodeDef>();
-                        for (int n = 0; n < ModState.PilotCreate.LifePaths.Count; n++)
+                        for (int n = 0; n < ModState.CrewCreateState.LifePaths.Count; n++)
                         {
-                            if (nextNodeTags != null && !ModState.PilotCreate.LifePaths[n].NodeTags.ContainsAll(nextNodeTags))
+                            if (nextNodeTags != null && !ModState.CrewCreateState.LifePaths[n].NodeTags.ContainsAll(nextNodeTags))
                             {
                                 continue;
                             }
-                            RequirementDef requirements2 = ModState.PilotCreate.LifePaths[n].Requirements;
+                            RequirementDef requirements2 = ModState.CrewCreateState.LifePaths[n].Requirements;
                             if (requirements2 != null)
                             {
                                 TagSet requirementTags = requirements2.RequirementTags;
@@ -290,7 +294,7 @@ namespace HumanResources.Helper
                                     continue;
                                 }
                             }
-                            list7.Add(ModState.PilotCreate.LifePaths[n]);
+                            list7.Add(ModState.CrewCreateState.LifePaths[n]);
                         }
                         if (list7.Count > 0)
                         {
@@ -318,7 +322,7 @@ namespace HumanResources.Helper
 
         private static string RandomUnusedCallsign()
         {
-            List<string> availableCallsigns = ModState.PilotCreate.NameGenerator.GetAllCallsigns();
+            List<string> availableCallsigns = ModState.CrewCreateState.NameGenerator.GetAllCallsigns();
             
             List<string> previouslyUsedCallsigns = new List<string>();
             for (int idx = availableCallsigns.Count - 1; idx >= 0; idx--)
@@ -349,8 +353,8 @@ namespace HumanResources.Helper
 
         private static Gender RandomGender()
         {
-            int weightedResult = SimGameState.GetWeightedResult(ModState.PilotCreate.GenderWeights, (float)Mod.Random.NextDouble());
-            Gender gender = ModState.PilotCreate.Genders[weightedResult];
+            int weightedResult = SimGameState.GetWeightedResult(ModState.CrewCreateState.GenderWeights, (float)Mod.Random.NextDouble());
+            Gender gender = ModState.CrewCreateState.Genders[weightedResult];
             return gender;
         }
 
@@ -363,7 +367,7 @@ namespace HumanResources.Helper
             float roll = (float)Mod.Random.NextDouble();
 
             bool isAdvancedPilot = advancedPilotChance > roll;
-            List<LifepathNodeDef> list = isAdvancedPilot ? ModState.PilotCreate.AdvancePaths : ModState.PilotCreate.StartingPaths;
+            List<LifepathNodeDef> list = isAdvancedPilot ? ModState.CrewCreateState.AdvancePaths : ModState.CrewCreateState.StartingPaths;
 
             int randomIdx = Mod.Random.Next(0, list.Count);
             LifepathNodeDef lifepathNode = list[randomIdx];
@@ -375,7 +379,7 @@ namespace HumanResources.Helper
         // Direct copy from BattleTech.PilotGenerator.GenerateVoiceForGender
         private static string RandomUnusedVoice(Gender gender)
         {
-            List<string> allOptionsForGender = ModState.PilotCreate.Voices.GetAllOptionsForGender(gender);
+            List<string> allOptionsForGender = ModState.CrewCreateState.Voices.GetAllOptionsForGender(gender);
             
             List<string> alreadyUsedVoices = new List<string>();
             for (int num = allOptionsForGender.Count - 1; num >= 0; num--)
