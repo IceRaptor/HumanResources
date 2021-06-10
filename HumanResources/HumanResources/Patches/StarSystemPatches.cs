@@ -40,7 +40,7 @@ namespace HumanResources.Patches
             int systemDiff = __instance.Def.GetDifficulty(SimGameState.SimGameType.CAREER);
             Mod.Log.Info?.Write($"Generating pilots for system: {__instance.Name} with difficulty: {systemDiff}");
 
-            PlanetScarcity scarcity = CrewHelper.GetScarcityForPlanet(__instance);
+            PlanetScarcity scarcity = __instance.GetScarcityForPlanet();
 
             int aerospace = scarcity.Aerospace.Upper > 0 ?
                 Math.Max(0, Mod.Random.Next(scarcity.Aerospace.Lower, scarcity.Aerospace.Upper)) : 0;
@@ -62,56 +62,44 @@ namespace HumanResources.Patches
             if (mechWarriors > 0)
             {
                 __instance.AvailablePilots.Clear();
-                float roninChance = __instance.Def.UseSystemRoninHiringChance ? 
-                    __instance.Def.RoninHiringChance : __instance.Sim.Constants.Story.DefaultRoninHiringChance;
-                List<PilotDef> roninList;
-                List<PilotDef> collection = 
-                    __instance.Sim.PilotGenerator.GeneratePilots(count, systemDiff, roninChance, out roninList);
 
-                // For each pilot, set a contract length (handled for crews elsewhere)
-                foreach (PilotDef def in collection)
+                // Ronin DO NOT count against the system limits. Just add them, if the roll passes.
+                double roninRoll = Mod.Random.NextDouble();
+                if (roninRoll <= Mod.Config.HiringHall.RoninChance)
                 {
-                    // Determine contract length
-                    CrewDetails details = new CrewDetails(def, CrewType.MechWarrior);
-                    ModState.UpdateOrCreateCrewDetails(def, details);
-                }
-                
-                // Remove Ronins that have already been used
-                for (int num = roninList.Count - 1; num >= 0; num--)
-                {
-                    if (__instance.Sim.UsedRoninIDs.Contains(roninList[num].Description.Id))
+                    Mod.Log.Debug?.Write($"Ronin roll of {roninRoll} <= roninChance: {Mod.Config.HiringHall.RoninChance}. Adding one Ronin to hiring hall.");
+                    PilotDef unusedRonin = ModState.SimGameState.GetUnusedRonin();
+
+                    if (!ModState.SimGameState.UsedRoninIDs.Contains(unusedRonin.Description.Id))
                     {
-                        roninList.RemoveAt(num);
+                        Mod.Log.Debug?.Write($"Added ronin: {unusedRonin.Description.DisplayName} to available pilots.");
+                        __instance.AvailablePilots.Add(unusedRonin);
                     }
-                }
-
-                for (int num2 = __instance.PermanentRonin.Count - 1; num2 >= 0; num2--)
-                {
-                    if (__instance.Sim.UsedRoninIDs.Contains(__instance.PermanentRonin[num2].Description.Id))
+                    else
                     {
-                        __instance.PermanentRonin.RemoveAt(num2);
+                        Mod.Log.Debug?.Write($"Ronin: {unusedRonin.Description.DisplayName} already in use, skipping.");
                     }
+                    
                 }
 
-                // Add the pilot to the collection
-                __instance.AvailablePilots.AddRange(collection);
+                for (int i = 0; i < mechWarriors; i++)
+                {
+                    PilotDef pDef = CrewGenerator.GenerateSkilledCrew(__instance, false);
 
-                // Update the ronin tracking
-                if (roninList.Count > 0)
-                {
-                    __instance.AvailablePilots.AddRange(roninList);
+                    Mod.Log.Debug?.Write($"CREATED MECHWARRIOR CREW");
+                    CrewDetails details = new CrewDetails(pDef, CrewType.MechWarrior);
+                    ModState.UpdateOrCreateCrewDetails(pDef, details);
+
+                    __instance.AvailablePilots.Add(pDef);
                 }
-                if (__instance.PermanentRonin.Count > 0)
-                {
-                    __instance.AvailablePilots.AddRange(__instance.PermanentRonin);
-                }
+
             }
 
             if (Mod.Config.HiringHall.AerospaceWings.Enabled)
             {
                 for (int i = 0; i < aerospace; i++)
                 {
-                    PilotDef pDef = CrewGenerator.GenerateAerospaceCrew();
+                    PilotDef pDef = CrewGenerator.GenerateAerospaceCrew(__instance);
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
@@ -120,7 +108,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < mechTechs; i++)
                 {
-                    PilotDef pDef = CrewGenerator.GenerateMechTechCrew();
+                    PilotDef pDef = CrewGenerator.GenerateMechTechCrew(__instance);
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
@@ -129,7 +117,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < medTechs; i++)
                 {
-                    PilotDef pDef = CrewGenerator.GenerateMedTechCrew();
+                    PilotDef pDef = CrewGenerator.GenerateMedTechCrew(__instance);
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
@@ -138,7 +126,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < vehicleCrews; i++)
                 {
-                    PilotDef pDef = CrewGenerator.GenerateVehicleCrew(systemDiff);
+                    PilotDef pDef = CrewGenerator.GenerateSkilledCrew(__instance, false);
 
                     Mod.Log.Debug?.Write($"CREATED VEHICLE CREW");
                     // Before returning, initialize the cache value
