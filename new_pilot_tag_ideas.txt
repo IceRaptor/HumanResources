@@ -1,8 +1,8 @@
 Pilot tag concepts
 
-hardened - physically tough, hard-bitten con or military
-scarred - covered in physical scars and damage
-abstinent - refrains from chemicals and alcohol
+X hardened - physically tough, hard-bitten con or military
+X scarred - covered in physical scars and damage
+X abstinent - refrains from chemicals and alcohol
 intimidating - physically threatening
 fraudster - reputation for running scams, etc
 racer - loves to drive quickly
