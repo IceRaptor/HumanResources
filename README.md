@@ -14,9 +14,9 @@ This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life
  * (Optional) Crews may demand hazard-pay for combat drops
  * (Optional) Crews may demand kill-bonuses for units they destroy in a mission
 
-This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
+:warning: This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
 
-(i) This mod uses icons from (https://game-icons.net/)[https://game-icons.net/], which are distributed under (CC BY 3.0)[https://creativecommons.org/licenses/by/3.0/]
+:information_source: This mod uses icons from [https://game-icons.net/](https://game-icons.net/), which are distributed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). 
 
 **Combat Crews and Support Crews**
 
