@@ -16,6 +16,8 @@ This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life
 
 This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
 
+(i) This mod uses icons from (https://game-icons.net/)[https://game-icons.net/], which are distributed under (CC BY 3.0)[https://creativecommons.org/licenses/by/3.0/]
+
 **Combat Crews and Support Crews**
 
 This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews). Some configuration elements will be common across these two types.
@@ -169,7 +171,7 @@ If a mercenary is rehired, they experience a small attitude boost thanks to avoi
 
 Each quarter all crews experience an attitude change equal to the current _Expenses Level_ of the company (i.e. Spartan, Restricted, Normal, etc). The change is controlled through the following variables in `mod.json`:
 
-| Setting | Default Value | 
+| Setting | Default Value |
 | -- | -- |
 | Attitude.Monthly.EconSpartanMod | -6 |
 | Attitude.Monthly.EconRestrictiveMod | -3 |
@@ -208,7 +210,7 @@ The chance for a crew to have a loyalty or hatred is controlled through the `Att
 The amount of attitude gain or loss is controlled through several settings in `mod.json`:
 
 | Setting | Default Value |
-| -- | -- | 
+| -- | -- |
 | Attitude.Monthly.FavoredEmployerAlliedMod | 6 |
 | Attitude.Monthly.HatedEmployerAlliedMod | -30 |
 | Attitude.PerMission.FavoredFactionIsEmployerMod | 1 |
@@ -246,10 +248,10 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 ## New Pilot Tags
 
 This mod adds several pilot tags to the MDDB. They function like normal pilot tags in all respects, and can be used with other mods that tie pilot tags to mechanical advantages.   
-  
+
 (!) Pilot tags are not removed when the mod is disabled or uninstalled. They will persist throughout the save. It's not safe to remove them without cleaning up every pilot that has them, so they remain in the system for all current and future saves to use. To completely remove them, you must wipe out your Mods/.modtek directory and start a new save.
 
-| Vanilla Behavior Tags | Vanilla Origin Tags | HR Behavior Tags | HR Origin Tags | 
+| Vanilla Behavior Tags | Vanilla Origin Tags | HR Behavior Tags | HR Origin Tags |
 | -- | -- | -- | -- |
 | pilot\_athletic<br>pilot\_assassin<br>pilot\_brave<br>pilot\_bookish<br>pilot\_cautious<br>pilot\_criminal<br>pilot\_command<br>pilot\_comstar<br>pilot\_dependable<br>pilot\_disgraced<br>pilot\_dishonest<br>pilot\_drunk<br>pilot\_gladiator<br>pilot\_honest<br>pilot\_jinxed<br>pilot\_klutz<br>pilot\_lostech<br>pilot\_lucky<br>pilot\_mechwarrior<br>pilot\_military<br>pilot\_naive<br>pilot\_officer<br>pilot\_rebellious<br>pilot\_reckless<br>pilot\_spacer<br>pilot\_tech<br>pilot\_unstable<br>pilot\_wealthy | pilot\_aurigan<br>pilot\_davion<br>pilot\_kurita<br>pilot\_liao<br>pilot\_innersphere<br>pilot\_magistracy<br>pilot\_marik<br>pilot\_noble<br>pilot\_periphery<br>pilot\_steiner<br>pilot\_taurian<br>pilot\_tortuga |
 
@@ -260,7 +262,7 @@ Some tags are not displayed to the player, and are used....
 ## Dev Notes
 
 ### Lifepaths
-  
+
 Start: Commoner (by faction), noble (by faction)
 
 Level1: convict, criminal enforcer, petty criminal, corp merchant, merchant crew, merc. trader, enlisted infantry, enlisted navy, merc recruit, officer training, noble heir, noble supernumerary, pirate recruit, comstar tech, tech school, tinkerer
@@ -316,7 +318,7 @@ themes: criminal, merchant, military, noble, pirate, technician
 * EVENT: Add slackers event for support; reduces their value for N days has a change in attitude
 * EVENT: Add motivated event for support; increases their value for N days if you fund it 
 * EVENT: Add feud event; two crews are fighting with each other.
- 
+
 * BUG: Max injuries should be hidden on hiring screen
 * BUG: Contract desc / pilot isn't getting reset between events
 * BUG: Can click hire even if at max berths
