@@ -1,12 +1,12 @@
 # Human Resources
 This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life into the crews onboard the Argo. Aerospace pilots, MechTech crews, MedTech crews, and Vehicle crews can be acquired from the Hiring Hall. These crew require a hiring bonus in addition to their monthly salary, offer contracts of varying lengths, and will have their own loyalties to manage. These crews are mercenaries and will leave at the end of their contract, or when someone makes them a better offer. You'll always have Wang, Sumire and the rest - but otherwise you'll need to keep an eye on the people that form the backbone of your mercenary company.
 
-**Features**
+# **Features**
 
  * Hirable Aerospace, MechTech, MedTech, and Vehicle crews in the Hiring Hall
  * Fully customizable salary and hiring bonus calculations based upon an exponential formula
- * Scarcity of all hireable crews based upon planetary tags
- * Scarcity of all hireable crews driven by a gaussian distribution
+ * Scarcity of all hirable crews based upon planetary tags
+ * Scarcity of all hirable crews driven by a gaussian distribution
  * Crews have a contract length and must be re-hired periodically
  * Crews have an attitude towards the company and may leave if they become unhappy
  * Crews may have a loyalty or hatred for specific factions, which impacts their attitude
@@ -18,7 +18,7 @@ This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life
 
 :information_source: This mod uses icons from [https://game-icons.net/](https://game-icons.net/), which are distributed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). 
 
-**Combat Crews and Support Crews**
+## **Combat Crews and Support Crews**
 
 This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews). Some configuration elements will be common across these two types.
 
@@ -31,7 +31,9 @@ This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) a
 | Skill | Rookie | Regular | Veteran | Elite | Legendary |
 | Size | Tiny | Small | Medium | Large | Huge |
 
-:warning: This mod introduces new pilot tags. If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
+## Warnings
+
+* :warning: This mod introduces new pilot tags (see below). If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
 
 # Hiring 
 
