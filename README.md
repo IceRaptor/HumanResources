@@ -131,11 +131,61 @@ All the modifiers from all the tags on the planet are added together, the rounde
 
 
 
-## Size and Skill Distribution
+## Skill and Size Distribution
 
-Loreum
+Support Crew skill and size are randomly determined, using a [Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution. These distributions are customizable through the `SkillDistribution` and `SizeDistribution` values in mod.json. Each distribution is configured with a *Sigma* and *Mu* value, representing the standard deviation of the distribution and the center-point of the distribution. *Mu* represents the most common value in the distribution around which all other values will cluster.
+
+Each distribution also defines four breakpoints representing the progression from rating 1 to 5 for the values. Values below the first breakpoint will be treated as rating 1, values below the second breakpoint will be treated as rating 2, etc. These are defined in the `SkillDistribution.Breakpoints` and `SizeDistribution.Breakpoints` arrays.
+
+> Example: The skill distribution is setup with a sigma of 1, a mu of 0, and breakpoints of [ -1, 1, 2, 3 ]. Most random values will center around point 0. If a value of -3.8 is pulled from the distribution, it will be treated as rating of 1. If value of 1.3 is pulled from the distribution, it will be treated as a rating of 3. 
+
+### Crew Value
+
+#### Combat Crew Value
+
+The value of a combat crew is determined as the sum of all their skills. This value gets mapped to the 5 common categories (Rookie, Regular, Veteran, Elite, Legendary) of all crew types through the `Mechwarriors.SkillToExpertiseThresholds` and `VehicleCrews.SkillToExpertiseThresholds` settings. These are integer arrays with exactly five values, representing the progression given above. Each position determines the maximum value (i.e. sum of all skills) that applies to that index position. If the pilot has a greater value than the index position, the next index is evaluated.
+
+> Example: A pilot has Gunnery 5, Guts 4, Piloting 6 and Tactics 5. Their value is 5 + 4 + 6 + 5 = 20. If SkillToExpertiseThresholds : [ 10, 18, 27, 35, 99 ], the pilot is considered a Veteran. Their value of 20 is greater than 10 so they are not a rookie; it's greater than 18 so they are not a Regular. Their value is less than or equal to 27, so they are Veteran.
+
+#### AeroSpace Points
+
+Aerospace points are applied to the statistic `HR_AerospaceSkill`. It's not used directly by any mechanic in the HBS game, but may be used by other mods. The allocation of points are determined by the configuration in `PointsBySkillAndSize.Aerospace`.
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+#### MechTech Points
+
+MechTech points are applied to the CompanyStat `MechTechSkill`. This value determines how quickly the Mech workqueue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MechTech`.
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+#### MedTech Points
+
+MedTech points are applied to the CompanyStat `MedTechSkill`. This value determines how quickly the injuries work queue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MedTech`.
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
 
 
+
+## Salary and Bonuses 
 
 ### Salary
 
@@ -151,7 +201,7 @@ A crew's base salary is driven by an exponential function `ab^x` where a = `Sala
 
 Once the base salary is calculated, a variance is applied to randomize the amount. This is controlled by the `SalaryVariance` multiplier.  A random value between the base salary and the salary x `SalaryVariance` will be used as the final salary the mercenary asks for.
 
-#### Hiring Bonus
+### Hiring Bonus
 Each mercenary asks for a hiring bonus when their contract is renewed. This bonus is calculated using the same formula as the salary, but used `BonusVariance` multiplier instead. 
 
 > Example: A mercenary with base salary 95,000 has `SalaryVariance` = 1.1 and `BonusVariance` = 1.5. 
@@ -160,17 +210,28 @@ Each mercenary asks for a hiring bonus when their contract is renewed. This bonu
 >
 > Their bonus will be randomly chosen between 95,000 and 142,500 (i.e. 95,000 x 1.5)
 
+
+### Hazard Pay
+
+Combat crews (MechWarriors and Vehicle Pilots) often get paid a bonus simply for being exposed to enemy fire. At the end of a contract, the **Hazard Pay** for all combat crews is summed together and displayed as an objective result. The amount of hazard pay each merc requires is a function of their salary times *MechWarriors.HazardPayRatio* or *VehicleCrews.HazardPayRatio*. This ratio is a float percentage between 0 and 1, thus that 0.33 is 33%. The hazard pay will be rounded up to the nearest *HazardPayUnits* in c-bills.
+
+> Example: A mechwarrior has a salary of 11,500 and MechWarriors.HazardPayRatio is set to 0.15. Their hazard pay would be 11,500 x 0.15 = 1,725. Because HazardPayUnits is set to 500, this is rounded up to the nearest 500s value, or 2,000 c-bills.
+
+
+
+## Crew Configuration
+
 #### Contract Length
 
 When you sign a contract with a mercenary, it's only good for a certain number of days. When a crew is created, a random contract length is determined for them and they will always use this contract length no matter how many times they are hired. The length is determined by calculating a random integer between `MinContractDaysMulti` and `MaxContractDaysMulti`, and multiplying that random integer by `BaseDaysInContract`. 
 
 > Example: A crew has MinContractDaysMulti = 3, MaxContractDaysMulti = 12, and BaseDaysInContract 15. A random value between 3 and 12 will be chosen,  in this case 8. That's then multiplied by 15 for 8 x 15 = 120 days.
 
-## Hiring Limits
+### Hiring Limits
 
 There are several limitations in the mod that can restrict a player's ability to hire a crew. They are detailed in the sections below.
 
-### MRB Restriction
+#### MRB Restriction
 
 More experienced MechWarriors will not work for you until your company is well known, represented by your MRBC rating. Each crew has a **Value**, which is calculated differently for combat and support crews. This value is then compared against the `ValueThresholdForMRBLevel` for that crew type. This value must be an array of integers from least to greatest. Each array position is the maximum *crew value* that applies to the MRBC level of the array position. If the player's MRBC level is greater than the specified value, the next position is checked and so on.
 
@@ -179,75 +240,13 @@ More experienced MechWarriors will not work for you until your company is well k
 See the [Value](#Crew_Value) section below details on how each crew's value is calculated.
 
 
-### Crew Type Limits
+#### Crew Type Limits
 
 You may not want players to be able to acquire too many crews of the same time. If `MaxOfType` is set to -1, any number of crews can be hired up to the current berth limits. If `MaxOfType` is set to a value greater 0, the player won't be able to hire more than `MaxOfType` crews.
 
 > Example: If MedTechCrews.MaxOfType = 2, then the player cannot hire more than 2 MedTech crews.
 
-## Crew Value
 
-### Combat Crew Value
-
-The value of a combat crew is determined as the sum of all their skills. This value gets mapped to the 5 common categories (Rookie, Regular, Veteran, Elite, Legendary) of all crew types through the `Mechwarriors.SkillToExpertiseThresholds` and `VehicleCrews.SkillToExpertiseThresholds` settings. These are integer arrays with exactly five values, representing the progression given above. Each position determines the maximum value (i.e. sum of all skills) that applies to that index position. If the pilot has a greater value than the index position, the next index is evaluated.
-
-> Example: A pilot has Gunnery 5, Guts 4, Piloting 6 and Tactics 5. Their value is 5 + 4 + 6 + 5 = 20. If SkillToExpertiseThresholds : [ 10, 18, 27, 35, 99 ], the pilot is considered a Veteran. Their value of 20 is greater than 10 so they are not a rookie; it's greater than 18 so they are not a Regular. Their value is less than or equal to 27, so they are Veteran.
-
-### AeroSpace Points
-
-Aerospace points are applied to the statistic `HR_AerospaceSkill`. It's not used directly by any mechanic in the HBS game, but may be used by other mods. The allocation of points are determined by the configuration in `PointsBySkillAndSize.Aerospace`.
-
-| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
-| --------- | ------ | ------- | ------- | ----- | --------- |
-| Tiny      | 1      | 2       | 3       | 5     | 8         |
-| Small     | 2      | 4       | 6       | 10    | 16        |
-| Medium    | 3      | 6       | 9       | 15    | 24        |
-| Large     | 4      | 8       | 12      | 20    | 32        |
-| Huge      | 5      | 10      | 15      | 25    | 40        |
-
-### MechTech Points
-
-MechTech points are applied to the CompanyStat `MechTechSkill`. This value determines how quickly the Mech workqueue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MechTech`.
-
-| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
-| --------- | ------ | ------- | ------- | ----- | --------- |
-| Tiny      | 1      | 2       | 3       | 5     | 8         |
-| Small     | 2      | 4       | 6       | 10    | 16        |
-| Medium    | 3      | 6       | 9       | 15    | 24        |
-| Large     | 4      | 8       | 12      | 20    | 32        |
-| Huge      | 5      | 10      | 15      | 25    | 40        |
-
-### MedTech Points
-
-MedTech points are applied to the CompanyStat `MedTechSkill`. This value determines how quickly the injuries work queue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MedTech`.
-
-| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
-| --------- | ------ | ------- | ------- | ----- | --------- |
-| Tiny      | 1      | 2       | 3       | 5     | 8         |
-| Small     | 2      | 4       | 6       | 10    | 16        |
-| Medium    | 3      | 6       | 9       | 15    | 24        |
-| Large     | 4      | 8       | 12      | 20    | 32        |
-| Huge      | 5      | 10      | 15      | 25    | 40        |
-
-
-## Skill and Size Distribution
-
-Support Crew skill and size are randomly determined, using a [Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution. These distributions are customizable through the `SkillDistribution` and `SizeDistribution` values in mod.json. Each distribution is configured with a *Sigma* and *Mu* value, representing the standard deviation of the distribution and the center-point of the distribution. *Mu* represents the most common value in the distribution around which all other values will cluster.
-
-Each distribution also defines four breakpoints representing the progression from rating 1 to 5 for the values. Values below the first breakpoint will be treated as rating 1, values below the second breakpoint will be treated as rating 2, etc. These are defined in the `SkillDistribution.Breakpoints` and `SizeDistribution.Breakpoints` arrays.
-
-> Example: The skill distribution is setup with a sigma of 1, a mu of 0, and breakpoints of [ -1, 1, 2, 3 ]. Most random values will center around point 0. If a value of -3.8 is pulled from the distribution, it will be treated as rating of 1. If value of 1.3 is pulled from the distribution, it will be treated as a rating of 3. 
-
-
-
-> 
-
-
-## Hazard Pay
-
-Combat crews (MechWarriors and Vehicle Pilots) often get paid a bonus simply for being exposed to enemy fire. At the end of a contract, the **Hazard Pay** for all combat crews is summed together and displayed as an objective result. The amount of hazard pay each merc requires is a function of their salary times *MechWarriors.HazardPayRatio* or *VehicleCrews.HazardPayRatio*. This ratio is a float percentage between 0 and 1, thus that 0.33 is 33%. The hazard pay will be rounded up to the nearest *HazardPayUnits* in c-bills.
-
-> Example: A mechwarrior has a salary of 11,500 and MechWarriors.HazardPayRatio is set to 0.15. Their hazard pay would be 11,500 x 0.15 = 1,725. Because HazardPayUnits is set to 500, this is rounded up to the nearest 500s value, or 2,000 c-bills.
 
 # Attitude
 
@@ -353,17 +352,7 @@ Some tags are not displayed to the player, and are used....
 		
 ## Dev Notes
 
-### Lifepaths
 
-Start: Commoner (by faction), noble (by faction)
-
-Level1: convict, criminal enforcer, petty criminal, corp merchant, merchant crew, merc. trader, enlisted infantry, enlisted navy, merc recruit, officer training, noble heir, noble supernumerary, pirate recruit, comstar tech, tech school, tinkerer
-
-level2: crim. hitman, crim. smuggler, merc. corp, merc. officer, enlisted inf, enlisted navy, miliary mechwarrior, military merc corporal, mil. officier. infan, mil. officer navy, noble diplo, noble fallen, noble landed, pirate crew, solaris gladiator, comstar tech, mechTech
-
-level 3: crim. assassin, merc. captain, merch. corp, mil. captain. inf, mil. enlisted inf, mil enlisted navy, mil. mechwarrior, mil merc LCorp, mil. officer navy, mil. spec ops, noble admin, noble ruling, pirate captain, pirate MW, solaris trainer, tech jumpship, tech researchers
-
-themes: criminal, merchant, military, noble, pirate, technician
 
 
 ## TODO
