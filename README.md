@@ -274,15 +274,14 @@ themes: criminal, merchant, military, noble, pirate, technician
 
 ## TODO
 
-* Descriptions for MedTechs/MercTechs
-  * Background
-  * Attributes
+* Abilities for combat crews need to be auto-generated
+	- Be aware of https://github.com/bloodydoves/BattleTech-Advanced/tree/development/Abilifier which adds multiple abilities
 * Add dropship maintenance crew; reduces Argo maintenance cost?
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
 * skill distribution mu and sigma modified by planet tags
+	- partial; done for MW/VC
 * size distribution mu and sigma modified by planet tags
-* MechWarrior skill distribution to reflect our distribution
 * Mercenary loyalty
   * After AAR report, will complain if you work against their faction
 * Allow mod-makers to set faction hatred/favors on pre-generated pilots
@@ -323,6 +322,8 @@ themes: criminal, merchant, military, noble, pirate, technician
 * BUG: Colors not updating when you first look at screen
 * BUG: Colors not updating for Mechs in list
 * BUG: Compound faction names aren't whitespace separated (in events?)
+* BUG: Hiring scrollbars don't update
+* BUG: MRB hiring limits should be based on unit skill, NOT points
 
 * IDEA: Age based interactions... for combat, younger pilots have less value but heal quicker? Older pilots take longer to heal?
 
