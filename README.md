@@ -1,47 +1,74 @@
 # Human Resources
 This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life into the crews onboard the Argo. Aerospace pilots, MechTech crews, MedTech crews, and Vehicle crews can be acquired from the Hiring Hall. These crew require a hiring bonus in addition to their monthly salary, offer contracts of varying lengths, and will have their own loyalties to manage. These crews are mercenaries and will leave at the end of their contract, or when someone makes them a better offer. You'll always have Wang, Sumire and the rest - but otherwise you'll need to keep an eye on the people that form the backbone of your mercenary company.
 
-# **Features**
+:information_source: This mod uses icons from [https://game-icons.net/](https://game-icons.net/), which are distributed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). 
 
- * Hirable Aerospace, MechTech, MedTech, and Vehicle crews in the Hiring Hall
- * Fully customizable salary and hiring bonus calculations based upon an exponential formula
- * Scarcity of all hirable crews based upon planetary tags
- * Scarcity of all hirable crews driven by a gaussian distribution
- * Crews have a contract length and must be re-hired periodically
+**Features**
+
+ * Hirable Aerospace, MechTech, MedTech, and Vehicle crews
+ * Expanded management options for all MechWarriors and crews
+    * Fully customizable lifepath system for generated crews
+    * Customizable salary based upon an exponential formula
+    * Crews have a contract length and must be re-hired periodically
+    * Crews require a hiring bonus each time they are hired 
+    * (Optional) Crews may demand hazard-pay for combat drops
+    * (Optional) Crews may demand kill-bonuses for units they destroy in a mission
+ * Scarcity of hirable crews driven by a gaussian distribution
+    * Scarcity of hirable crews based upon planetary tags
  * Crews have an attitude towards the company and may leave if they become unhappy
- * Crews may have a loyalty or hatred for specific factions, which impacts their attitude
+    * Crews may have a loyalty or hatred for specific factions. 
  * (Optional) Crews can be head-hunted by other mercenaries companies and start a bidding war
- * (Optional) Crews may demand hazard-pay for combat drops
- * (Optional) Crews may demand kill-bonuses for units they destroy in a mission
+
+**Warnings**
 
 :warning: This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
 
-:information_source: This mod uses icons from [https://game-icons.net/](https://game-icons.net/), which are distributed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). 
+:warning: This mod introduces new pilot tags (see below). If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
 
-## **Combat Crews and Support Crews**
+## **General Concepts**
 
-This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews). Some configuration elements will be common across these two types.
+This mod creates different types of Pilots, separated between *Combat Crews* (MechWarriors, Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews).
 
-*Combat Crews* are handled normally, though their distribution and prices are handled by the mod. They gain skills normally and can die during combat. Vehicle Crews are assigned the `pilot_vehicle_crew` and `pilot_nomech_crew` tags for CustomUnits compatibility.
+*Combat Crews* are handled as per the base game, with customizable skills that the player can select. They can be injured or die during combat. The mod controls the distribution of their skills and the salary they require. Vehicle Crews are compatible with [CustomUnits](https://github.com/BattletechModders/CustomBundle/), and will have the `pilot_vehicle_crew` and `pilot_nomech_crew` tags.
 
-*Support Crews* are non-combat units with a skill rating indicating their competency and a size rating indicating how many people comprise the crew. Both ratings are between 1-5 with customizable labels in `mod_localization.json` (indexed by rating value):
+*Support Crews* are non-combat units that do not have selectable skills. They instead have a *skill* and *size* rating, which combines to determine a flat value that improve the company's MechTech, MedTech, or Aerospace squad size rating. Both ratings range from 1-5 with customizable labels in `mod_localization.json` (indexed by rating value). Default values are given below:
 
 | Name | 1 | 2 | 3 | 4 | 5 |
 | -- | -- | -- | -- | -- | -- |
 | Skill | Rookie | Regular | Veteran | Elite | Legendary |
 | Size | Tiny | Small | Medium | Large | Huge |
 
-## Warnings
+:information_source: This mod does NOT change Ronin pilots, which are the pilots with defined backstories that were backers of the HBS BattleTech Kickstarter. 
 
-* :warning: This mod introduces new pilot tags (see below). If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
+### Scarcity
+
+This mod defines **Scarcity** for all crew types, and makes a limited number of crews available on planets. The number of each type of crew per planet can be configured, and can be further modified by the tags defined on the planet. Anywhere the mod refers to scarcity we mean that only a limited number of crews will be available in the hiring fall.
+
+### Distributions
+
+This mod relies upon [Gaussian distributions](https://en.wikipedia.org/wiki/Normal_distribution) (aka normal distributions) for almost all of the random elements. The most common values in a Gaussian distribution are clustered around a central value, with less common values along either side of the curve. 
+
+This central value is defined as *mu* , which is the most common expected value a random sample should return. If you define the mu value as 2.3, then random results will be likely to be in the 1.5 - 3.0 range (depending on sigma). This is the *height* of the curve. 
+
+The second value that influences the distribution is the *sigma* value. This determines how far from the central value a randomly selected value will be. It defines the *width* of the curve. Small sigma values will have most selected values cluster around the expected value, while larger sigma values will have selected values range across the full value. 
+
+Most features in the mod that depend upon a distribution will allow you to modify the selected values by changing the mu value. For instance, the *SkillDistribution* value can be influenced by planet tags. A planet tag will apply a plus or minus value to the mu value used to generate the random value. 
+
+:warning: While both sigma and mu are fully customizable, the default configuration expects values of mu = 1.0 and sigma = 0.0. If you modify sigma and mu, you will need to change most other configuration values to reflect your adjusted distribution.
 
 # Hiring 
 
-All crews are available to be hired from the HiringHall. Mechwarriors are untouched, but all other crews are represented with different icons:
+The vast majority of the mod's functionality relates to the hiring and generating of random crew members. There are several features within the hiring umbrella:
 
-* TODO: Add icon images
+* Scarcity - limits many crew are available on a planet by planet basis
+* LifePath - configures the lifepaths used to generate crews
+* Skill and Size Distribution - configures the skill and size frequencies for crews
+* Salary and Bonuses - defines the money the crew requires as salary, hiring bonuses, hazard pay, and others
+* Crew Configuration - 
 
-## Salary
+
+
+### Salary
 
 A crew's base salary is driven by an exponential function `ab^x` where a = `SalaryMulti`, b = `SalaryExponent` and x = the value of the pilot, rounded down to the nearest integer value. A pilot's value is defined as the number of points they contribute (Aerospace, MedTech, MechTech) or the sum of all their skills (MechWarriors or Vehicle Crews). 
 
@@ -55,7 +82,7 @@ A crew's base salary is driven by an exponential function `ab^x` where a = `Sala
 
 Once the base salary is calculated, a variance is applied to randomize the amount. This is controlled by the `SalaryVariance` multiplier.  A random value between the base salary and the salary x `SalaryVariance` will be used as the final salary the mercenary asks for.
 
-## Hiring Bonus
+#### Hiring Bonus
 Each mercenary asks for a hiring bonus when their contract is renewed. This bonus is calculated using the same formula as the salary, but used `BonusVariance` multiplier instead. 
 
 > Example: A mercenary with base salary 95,000 has `SalaryVariance` = 1.1 and `BonusVariance` = 1.5. 
@@ -64,7 +91,7 @@ Each mercenary asks for a hiring bonus when their contract is renewed. This bonu
 >
 > Their bonus will be randomly chosen between 95,000 and 142,500 (i.e. 95,000 x 1.5)
 
-## Contract Length
+#### Contract Length
 
 When you sign a contract with a mercenary, it's only good for a certain number of days. When a crew is created, a random contract length is determined for them and they will always use this contract length no matter how many times they are hired. The length is determined by calculating a random integer between `MinContractDaysMulti` and `MaxContractDaysMulti`, and multiplying that random integer by `BaseDaysInContract`. 
 
