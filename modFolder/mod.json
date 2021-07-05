@@ -133,11 +133,19 @@
 			},
 
             "SkillDistribution" : {
-                "Breakpoints" : [ -0.5, 1, 1.75, 2.5 ]
-            },
+                "Sigma" : 1.0,
+                "Mu" : 0.0,
+                "Breakpoints" : [ -0.5, 1, 1.75, 2.5 ],
+                "PlanetTagModifiers" : {
+                }
+            },                                             
 
             "SizeDistribution" : {
-                "Breakpoints" : [ -0.25, 0.25, 1.25, 2  ]
+                "Sigma" : 1.0,
+                "Mu" : 0.0,
+                "Breakpoints" : [ -0.25, 0.25, 1.25, 2  ],
+                "PlanetTagModifiers" : {
+                }
             },
 
             "PointsBySkillAndSize" : {

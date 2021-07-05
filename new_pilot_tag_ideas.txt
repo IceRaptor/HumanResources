@@ -5,12 +5,15 @@ scarred - covered in physical scars and damage
 abstinent - refrains from chemicals and alcohol
 aesthetic - refers from possessions
 bling_lord - likes obnoxious displays of wealth
+X hardened - physically tough, hard-bitten con or military
+X scarred - covered in physical scars and damage
+X abstinent - refrains from chemicals and alcohol
 intimidating - physically threatening
 fraudster - reputation for running scams, etc
 racer - loves to drive quickly
 bribery_master - knows how to deliver bribes
 well_networked - knows how to know people
-snitch - reputation for selling out people
+x snitch - reputation for selling out people
 
 bureaucrat - knows how the bureauacy works
 lawyer - trained in legal proceedings
@@ -22,8 +25,8 @@ monotone - speaks in a boring fashion, hard to pay attention
 spoiled - expects a high standard of living
 patient - has a deep well of patience, can defer gratification for a long time
 
-hunted - wanted for something they have done
-debtor - wanted for debts that haven't been paid
+X hunted - wanted for something they have done
+X debtor - wanted for debts that haven't been paid
 
 depraved - known for enjoying taboos
 psychopath - does not care about others

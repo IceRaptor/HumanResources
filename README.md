@@ -1,43 +1,193 @@
 # Human Resources
 This mod for the [HBS BattleTech](http://battletechgame.com/) game breathes life into the crews onboard the Argo. Aerospace pilots, MechTech crews, MedTech crews, and Vehicle crews can be acquired from the Hiring Hall. These crew require a hiring bonus in addition to their monthly salary, offer contracts of varying lengths, and will have their own loyalties to manage. These crews are mercenaries and will leave at the end of their contract, or when someone makes them a better offer. You'll always have Wang, Sumire and the rest - but otherwise you'll need to keep an eye on the people that form the backbone of your mercenary company.
 
+:information_source: This mod uses icons from [https://game-icons.net/](https://game-icons.net/), which are distributed under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). 
+
 **Features**
 
- * Hirable Aerospace, MechTech, MedTech, and Vehicle crews in the Hiring Hall
- * Fully customizable salary and hiring bonus calculations based upon an exponential formula
- * Scarcity of all hireable crews based upon planetary tags
- * Scarcity of all hireable crews driven by a gaussian distribution
- * Crews have a contract length and must be re-hired periodically
+ * Hirable Aerospace, MechTech, MedTech, and Vehicle crews
+ * Expanded management options for all MechWarriors and crews
+    * Fully customizable lifepath system for generated crews
+    * Customizable salary based upon an exponential formula
+    * Crews have a contract length and must be re-hired periodically
+    * Crews require a hiring bonus each time they are hired 
+    * (Optional) Crews may demand hazard-pay for combat drops
+    * (Optional) Crews may demand kill-bonuses for units they destroy in a mission
+ * Scarcity of hirable crews driven by a gaussian distribution
+    * Scarcity of hirable crews based upon planetary tags
  * Crews have an attitude towards the company and may leave if they become unhappy
- * Crews may have a loyalty or hatred for specific factions, which impacts their attitude
+    * Crews may have a loyalty or hatred for specific factions. 
  * (Optional) Crews can be head-hunted by other mercenaries companies and start a bidding war
- * (Optional) Crews may demand hazard-pay for combat drops
- * (Optional) Crews may demand kill-bonuses for units they destroy in a mission
 
-This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
+**Warnings**
 
-**Combat Crews and Support Crews**
+:warning: This mod requires the [IRBTModUtils](https://github.com/battletechmodders/irbtmodutils/) mod. Download the most recent version and make sure it's enabled before loading this mod.
 
-This mod distinguishes between *Combat Crews* (MechWarriors and Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews). Some configuration elements will be common across these two types.
+:warning: This mod introduces new pilot tags (see below). If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
 
-*Combat Crews* are handled normally, though their distribution and prices are handled by the mod. They gain skills normally and can die during combat. Vehicle Crews are assigned the `pilot_vehicle_crew` and `pilot_nomech_crew` tags for CustomUnits compatibility.
+## **General Concepts**
 
-*Support Crews* are non-combat units with a skill rating indicating their competency and a size rating indicating how many people comprise the crew. Both ratings are between 1-5 with customizable labels in `mod_localization.json` (indexed by rating value):
+This mod creates different types of Pilots, separated between *Combat Crews* (MechWarriors, Vehicle Crews) and *Support Crews* (Aerospace Wings, MechTech Crews, and MedTech Crews).
+
+*Combat Crews* are handled as per the base game, with customizable skills that the player can select. They can be injured or die during combat. The mod controls the distribution of their skills and the salary they require. Vehicle Crews are compatible with [CustomUnits](https://github.com/BattletechModders/CustomBundle/), and will have the `pilot_vehicle_crew` and `pilot_nomech_crew` tags.
+
+*Support Crews* are non-combat units that do not have selectable skills. They instead have a *skill* and *size* rating, which combines to determine a flat value that improve the company's MechTech, MedTech, or Aerospace squad size rating. Both ratings range from 1-5 with customizable labels in `mod_localization.json` (indexed by rating value). Default values are given below:
 
 | Name | 1 | 2 | 3 | 4 | 5 |
 | -- | -- | -- | -- | -- | -- |
 | Skill | Rookie | Regular | Veteran | Elite | Legendary |
 | Size | Tiny | Small | Medium | Large | Huge |
 
-:warning: This mod introduces new pilot tags. If removed from an active career, the pilots will retain those tags but no definitions will be present for these custom tags. The pilots will have long strings in their 'attributes' section but there should be no other impact. There is unfortunately no convenient way to clean these up during an uninstall. 
+:information_source: This mod does NOT change Ronin pilots, which are the pilots with defined backstories that were backers of the HBS BattleTech Kickstarter. 
+
+### Scarcity
+
+This mod defines **Scarcity** for all crew types, and makes a limited number of crews available on planets. The number of each type of crew per planet can be configured, and can be further modified by the tags defined on the planet. Anywhere the mod refers to scarcity we mean that only a limited number of crews will be available in the hiring fall.
+
+### Distributions
+
+This mod relies upon [Gaussian distributions](https://en.wikipedia.org/wiki/Normal_distribution) (aka normal distributions) for almost all of the random elements. The most common values in a Gaussian distribution are clustered around a central value, with less common values along either side of the curve. 
+
+This central value is defined as *mu* , which is the most common expected value a random sample should return. If you define the mu value as 2.3, then random results will be likely to be in the 1.5 - 3.0 range (depending on sigma). This is the *height* of the curve. 
+
+The second value that influences the distribution is the *sigma* value. This determines how far from the central value a randomly selected value will be. It defines the *width* of the curve. Small sigma values will have most selected values cluster around the expected value, while larger sigma values will have selected values range across the full value. 
+
+Most features in the mod that depend upon a distribution will allow you to modify the selected values by changing the mu value. For instance, the *SkillDistribution* value can be influenced by planet tags. A planet tag will apply a plus or minus value to the mu value used to generate the random value. 
+
+:warning: While both sigma and mu are fully customizable, the default configuration expects values of mu = 1.0 and sigma = 0.0. If you modify sigma and mu, you will need to change most other configuration values to reflect your adjusted distribution.
 
 # Hiring 
 
-All crews are available to be hired from the HiringHall. Mechwarriors are untouched, but all other crews are represented with different icons:
+The vast majority of the mod's functionality relates to the hiring and generating of random crew members. There are several features within the hiring umbrella:
 
-* TODO: Add icon images
+* *LifePath* - configures the lifepaths used to generate crews
+* *Scarcity* - limits many crew are available on a planet by planet basis
+* *Skill and Size Distribution* - configures the skill and size frequencies for crews
+* *Salary and Bonuses* - defines the money the crew requires as salary, hiring bonuses, hazard pay, and others
+* *Crew Configuration* - various values specific to the mod not reflected by the above
 
-## Salary
+
+
+## LifePath
+
+This mod completely replaces the default HBS lifepath system with a simplified solution. The HBS system allows for branching paths and is built to simulate character creation in an RPG, with extensive hooks to build in tags and other customizations for the resultant pilot. The lifepath system in this mod is significantly simpler, with each crew randomly selected one lifepath from a weighted list to determine their relevant background. 
+
+All lifepaths are defined in the `lifepaths.json` file. There are two levels of hierarchy in the file. The top level is a a *lifepath class*, which is just a container for similar lifepaths. Some *lifepath classes* are **criminal**, **military**, **civilian**, or **pirate**. A lifepath class is simply defined with a dictionary of lifepath elements, and a weight.
+
+```json
+"lifepath_class" : 
+{
+    "weight" : 5.0,
+    "lifepaths" : {
+    }
+}
+```
+
+The **weight** element is used to influence how frequently the lifepath_class should be picked. At mod initialization, the weight value for every `lifepath_class` is summed together. When a lifepath has to be chosen, a random number between 1 and the sum of the weights is selected. The lifepath classes are then iterated one by one, with their weights being added to each other. When the randomly selected number matches the summed weight, the lifepath class is chosen.
+
+> Example: There are 4 lifepath classess defined, with weights given as criminal=4, military=3, civilian=10, pirate=3. The sum of all weights is 20. If the random number is 1-4, criminal will be chosen. If 5-7, military. If 8-17 civilian and if 18-20 pirate will be chosen.
+
+Each class contains one or more **lifepaths**, which are weighted in a similar fashion to lifepath classes. Lifepath weights are summed across the class only, and selections occur only across the class. Thus the selection is two step - randomly determine a lifepath class, then randomly determine a lifepath.
+
+```json
+{
+    "descriptionKey" : "LIFEPATH_CIVILIAN_FACTORY_WORKER",
+    "requiredTags" : [  ],
+    "randomTags" : [ ],
+    "skillMod" : {
+        "mechwarrior" : 0,
+        "vehicle" : 0,
+        "aerospace" : 0,
+        "mechtech" : 0,
+        "medtech" : 0
+  	}
+}
+```
+
+Each lifepath has a `requiredtags` and `randomTags` element. Every tag listed in `requiredTags` will be added to the newly created crew. For each tag in the `randomTags` element a random roll will be made. If the value is less than `HiringHall.Lifepath.RandomTagChance` in the `mod.json` value, the tag will be added to the crew. 
+
+The `skillMod` element in a lifepath defines the modifiers that should be applied to specific crew types. For instance to increase the overall skill rating of an aerospace crew from a particular lifepath, set `skillMod.aerospace = 0.5`. Crew that select this lifepath will increase their overall rating by 0.5, if they are generated as aerospace crew.
+
+Lifepaths must include a `descriptionKey` element in them. This key links the lifepath to the `mod_localized_text.json` file, and must correspond to a value in the `LifePathDescriptions` dictionary. As an example, for a value of `"descriptionKey" : "LIFEPATH_CIVILIAN_FACTORY_WORKER"` in the lifepath, the `mod_localized_text.json` entry must be:
+
+```json
+	"LifePathDescriptions": {
+
+		"LIFEPATH_CIVILIAN_FACTORY_WORKER": {
+			"title": "Factory Worker",
+			"description": "Factories run by human labor aren't uncommon in the Inner Sphere, and are everywhere in the Periphery. These places always need strong hands that can do repetitive, dull work hour after hour every day of the week. This crew member eventually decided to embrace mercenary life to break the monotony and now seeks adventure among the stars. They are happy to join your mercenary company so long as there are new places to explore and people to kill. Just don't ask them to go on yet another patrol route, unless you want to get an earful."
+		},
+```
+
+:information_source: I've chosen to simplify the lifepath system because I don't find there to be significant depth in the pilots concept. Generally the most important aspects of the pilots (skills and abilities) are configured by the player directly, while the background elements have no mechanical effect. Because of this the branching lifepath system doesn't make much sense to me, since ultimately players will care about the defined abilities, the skills, and maybe the tags if using a mod that provides benefits based upon tag names.
+
+## Scarcity
+
+The availability of crews are determined on a planet by planet basis, through planet tags. Each crew type (Aerospace, MechWarrior, etc) is given a default scarcity defined in `Scarcity.Defaults`. The `Scarcity.PlanetTagModifiers` dictionary allows you to associate a specific planet tag with modifiers to those scarcity defaults. The format for a modifier is: ` "planet_tag" : { "MechWarriors" : 0.0, "VehicleCrews" : 1.0, "MechTechs" : 2.0, "MedTechs" : 3.0, "Aerospace" : 4.0 }`. 
+
+All the modifiers from all the tags on the planet are added together, the rounded up to the nearest integer to determine the maximum number of each crew that will be randomly generated. The lower bound of each crew type is half the upper bound, rounded to zero. 
+
+> Example: The tag modifiers includes `planet_other_capital` with `MedTechs=1.3`, `planet_pop_small` with `Medtechs=0.8` and `planet_industry_recreation` with `MedTechs=0.5`. The sum of these is 2.6, which is rounded up to 3 for the upper bound. The lower bound is half the upper bound rounded down, or 3 / 2 = 1.5 for 1. This planet will generate between 1 and 3 MedTechs.
+
+
+
+## Skill and Size Distribution
+
+Support Crew skill and size are randomly determined, using a [Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution. These distributions are customizable through the `SkillDistribution` and `SizeDistribution` values in mod.json. Each distribution is configured with a *Sigma* and *Mu* value, representing the standard deviation of the distribution and the center-point of the distribution. *Mu* represents the most common value in the distribution around which all other values will cluster.
+
+Each distribution also defines four breakpoints representing the progression from rating 1 to 5 for the values. Values below the first breakpoint will be treated as rating 1, values below the second breakpoint will be treated as rating 2, etc. These are defined in the `SkillDistribution.Breakpoints` and `SizeDistribution.Breakpoints` arrays.
+
+> Example: The skill distribution is setup with a sigma of 1, a mu of 0, and breakpoints of [ -1, 1, 2, 3 ]. Most random values will center around point 0. If a value of -3.8 is pulled from the distribution, it will be treated as rating of 1. If value of 1.3 is pulled from the distribution, it will be treated as a rating of 3. 
+
+### Crew Value
+
+#### Combat Crew Value
+
+The value of a combat crew is determined as the sum of all their skills. This value gets mapped to the 5 common categories (Rookie, Regular, Veteran, Elite, Legendary) of all crew types through the `Mechwarriors.SkillToExpertiseThresholds` and `VehicleCrews.SkillToExpertiseThresholds` settings. These are integer arrays with exactly five values, representing the progression given above. Each position determines the maximum value (i.e. sum of all skills) that applies to that index position. If the pilot has a greater value than the index position, the next index is evaluated.
+
+> Example: A pilot has Gunnery 5, Guts 4, Piloting 6 and Tactics 5. Their value is 5 + 4 + 6 + 5 = 20. If SkillToExpertiseThresholds : [ 10, 18, 27, 35, 99 ], the pilot is considered a Veteran. Their value of 20 is greater than 10 so they are not a rookie; it's greater than 18 so they are not a Regular. Their value is less than or equal to 27, so they are Veteran.
+
+#### AeroSpace Points
+
+Aerospace points are applied to the statistic `HR_AerospaceSkill`. It's not used directly by any mechanic in the HBS game, but may be used by other mods. The allocation of points are determined by the configuration in `PointsBySkillAndSize.Aerospace`.
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+#### MechTech Points
+
+MechTech points are applied to the CompanyStat `MechTechSkill`. This value determines how quickly the Mech workqueue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MechTech`.
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+#### MedTech Points
+
+MedTech points are applied to the CompanyStat `MedTechSkill`. This value determines how quickly the injuries work queue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MedTech`.
+
+| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
+| --------- | ------ | ------- | ------- | ----- | --------- |
+| Tiny      | 1      | 2       | 3       | 5     | 8         |
+| Small     | 2      | 4       | 6       | 10    | 16        |
+| Medium    | 3      | 6       | 9       | 15    | 24        |
+| Large     | 4      | 8       | 12      | 20    | 32        |
+| Huge      | 5      | 10      | 15      | 25    | 40        |
+
+
+
+## Salary and Bonuses 
+
+### Salary
 
 A crew's base salary is driven by an exponential function `ab^x` where a = `SalaryMulti`, b = `SalaryExponent` and x = the value of the pilot, rounded down to the nearest integer value. A pilot's value is defined as the number of points they contribute (Aerospace, MedTech, MechTech) or the sum of all their skills (MechWarriors or Vehicle Crews). 
 
@@ -51,7 +201,7 @@ A crew's base salary is driven by an exponential function `ab^x` where a = `Sala
 
 Once the base salary is calculated, a variance is applied to randomize the amount. This is controlled by the `SalaryVariance` multiplier.  A random value between the base salary and the salary x `SalaryVariance` will be used as the final salary the mercenary asks for.
 
-## Hiring Bonus
+### Hiring Bonus
 Each mercenary asks for a hiring bonus when their contract is renewed. This bonus is calculated using the same formula as the salary, but used `BonusVariance` multiplier instead. 
 
 > Example: A mercenary with base salary 95,000 has `SalaryVariance` = 1.1 and `BonusVariance` = 1.5. 
@@ -60,17 +210,28 @@ Each mercenary asks for a hiring bonus when their contract is renewed. This bonu
 >
 > Their bonus will be randomly chosen between 95,000 and 142,500 (i.e. 95,000 x 1.5)
 
-## Contract Length
+
+### Hazard Pay
+
+Combat crews (MechWarriors and Vehicle Pilots) often get paid a bonus simply for being exposed to enemy fire. At the end of a contract, the **Hazard Pay** for all combat crews is summed together and displayed as an objective result. The amount of hazard pay each merc requires is a function of their salary times *MechWarriors.HazardPayRatio* or *VehicleCrews.HazardPayRatio*. This ratio is a float percentage between 0 and 1, thus that 0.33 is 33%. The hazard pay will be rounded up to the nearest *HazardPayUnits* in c-bills.
+
+> Example: A mechwarrior has a salary of 11,500 and MechWarriors.HazardPayRatio is set to 0.15. Their hazard pay would be 11,500 x 0.15 = 1,725. Because HazardPayUnits is set to 500, this is rounded up to the nearest 500s value, or 2,000 c-bills.
+
+
+
+## Crew Configuration
+
+#### Contract Length
 
 When you sign a contract with a mercenary, it's only good for a certain number of days. When a crew is created, a random contract length is determined for them and they will always use this contract length no matter how many times they are hired. The length is determined by calculating a random integer between `MinContractDaysMulti` and `MaxContractDaysMulti`, and multiplying that random integer by `BaseDaysInContract`. 
 
 > Example: A crew has MinContractDaysMulti = 3, MaxContractDaysMulti = 12, and BaseDaysInContract 15. A random value between 3 and 12 will be chosen,  in this case 8. That's then multiplied by 15 for 8 x 15 = 120 days.
 
-## Hiring Limits
+### Hiring Limits
 
 There are several limitations in the mod that can restrict a player's ability to hire a crew. They are detailed in the sections below.
 
-### MRB Restriction
+#### MRB Restriction
 
 More experienced MechWarriors will not work for you until your company is well known, represented by your MRBC rating. Each crew has a **Value**, which is calculated differently for combat and support crews. This value is then compared against the `ValueThresholdForMRBLevel` for that crew type. This value must be an array of integers from least to greatest. Each array position is the maximum *crew value* that applies to the MRBC level of the array position. If the player's MRBC level is greater than the specified value, the next position is checked and so on.
 
@@ -79,81 +240,13 @@ More experienced MechWarriors will not work for you until your company is well k
 See the [Value](#Crew_Value) section below details on how each crew's value is calculated.
 
 
-### Crew Type Limits
+#### Crew Type Limits
 
 You may not want players to be able to acquire too many crews of the same time. If `MaxOfType` is set to -1, any number of crews can be hired up to the current berth limits. If `MaxOfType` is set to a value greater 0, the player won't be able to hire more than `MaxOfType` crews.
 
 > Example: If MedTechCrews.MaxOfType = 2, then the player cannot hire more than 2 MedTech crews.
 
-## Crew Value
 
-### Combat Crew Value
-
-The value of a combat crew is determined as the sum of all their skills. This value gets mapped to the 5 common categories (Rookie, Regular, Veteran, Elite, Legendary) of all crew types through the `Mechwarriors.SkillToExpertiseThresholds` and `VehicleCrews.SkillToExpertiseThresholds` settings. These are integer arrays with exactly five values, representing the progression given above. Each position determines the maximum value (i.e. sum of all skills) that applies to that index position. If the pilot has a greater value than the index position, the next index is evaluated.
-
-> Example: A pilot has Gunnery 5, Guts 4, Piloting 6 and Tactics 5. Their value is 5 + 4 + 6 + 5 = 20. If SkillToExpertiseThresholds : [ 10, 18, 27, 35, 99 ], the pilot is considered a Veteran. Their value of 20 is greater than 10 so they are not a rookie; it's greater than 18 so they are not a Regular. Their value is less than or equal to 27, so they are Veteran.
-
-### AeroSpace Points
-
-Aerospace points are applied to the statistic `HR_AerospaceSkill`. It's not used directly by any mechanic in the HBS game, but may be used by other mods. The allocation of points are determined by the configuration in `PointsBySkillAndSize.Aerospace`.
-
-| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
-| --------- | ------ | ------- | ------- | ----- | --------- |
-| Tiny      | 1      | 2       | 3       | 5     | 8         |
-| Small     | 2      | 4       | 6       | 10    | 16        |
-| Medium    | 3      | 6       | 9       | 15    | 24        |
-| Large     | 4      | 8       | 12      | 20    | 32        |
-| Huge      | 5      | 10      | 15      | 25    | 40        |
-
-### MechTech Points
-
-MechTech points are applied to the CompanyStat `MechTechSkill`. This value determines how quickly the Mech workqueue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MechTech`.
-
-| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
-| --------- | ------ | ------- | ------- | ----- | --------- |
-| Tiny      | 1      | 2       | 3       | 5     | 8         |
-| Small     | 2      | 4       | 6       | 10    | 16        |
-| Medium    | 3      | 6       | 9       | 15    | 24        |
-| Large     | 4      | 8       | 12      | 20    | 32        |
-| Huge      | 5      | 10      | 15      | 25    | 40        |
-
-### MedTech Points
-
-MedTech points are applied to the CompanyStat `MedTechSkill`. This value determines how quickly the injuries work queue is resolved. The allocation of points are determined by the configuration in `PointsBySkillAndSize.MedTech`.
-
-| Crew Size | Rookie | Regular | Veteran | Elite | Legendary |
-| --------- | ------ | ------- | ------- | ----- | --------- |
-| Tiny      | 1      | 2       | 3       | 5     | 8         |
-| Small     | 2      | 4       | 6       | 10    | 16        |
-| Medium    | 3      | 6       | 9       | 15    | 24        |
-| Large     | 4      | 8       | 12      | 20    | 32        |
-| Huge      | 5      | 10      | 15      | 25    | 40        |
-
-
-## Skill and Size Distribution
-
-Support Crew skill and size are randomly determined, using a [Gaussian](https://en.wikipedia.org/wiki/Normal_distribution) distribution. These distributions are customizable through the `SkillDistribution` and `SizeDistribution` values in mod.json. Each distribution is configured with a *Sigma* and *Mu* value, representing the standard deviation of the distribution and the center-point of the distribution. *Mu* represents the most common value in the distribution around which all other values will cluster.
-
-Each distribution also defines four breakpoints representing the progression from rating 1 to 5 for the values. Values below the first breakpoint will be treated as rating 1, values below the second breakpoint will be treated as rating 2, etc. These are defined in the `SkillDistribution.Breakpoints` and `SizeDistribution.Breakpoints` arrays.
-
-> Example: The skill distribution is setup with a sigma of 1, a mu of 0, and breakpoints of [ -1, 1, 2, 3 ]. Most random values will center around point 0. If a value of -3.8 is pulled from the distribution, it will be treated as rating of 1. If value of 1.3 is pulled from the distribution, it will be treated as a rating of 3. 
-
-
-
-## Scarcity
-
-The availability of crews are determined on a planet by planet basis, through planet tags. Each crew type (Aerospace, MechWarrior, etc) is given a default scarcity defined in `Scarcity.Defaults`. The `Scarcity.PlanetTagModifiers` dictionary allows you to associate a specific planet tag with modifiers to those scarcity defaults. The format for a modifier is: ` "planet_tag" : { "MechWarriors" : 0.0, "VehicleCrews" : 1.0, "MechTechs" : 2.0, "MedTechs" : 3.0, "Aerospace" : 4.0 }`. 
-
-All the modifiers from all the tags on the planet are added together, the rounded up to the nearest integer to determine the maximum number of each crew that will be randomly generated. The lower bound of each crew type is half the upper bound, rounded to zero. 
-
-> Example: The tag modifiers includes `planet_other_capital` with `MedTechs=1.3`, `planet_pop_small` with `Medtechs=0.8` and `planet_industry_recreation` with `MedTechs=0.5`. The sum of these is 2.6, which is rounded up to 3 for the upper bound. The lower bound is half the upper bound rounded down, or 3 / 2 = 1.5 for 1. This planet will generate between 1 and 3 MedTechs.
-
-
-## Hazard Pay
-
-Combat crews (MechWarriors and Vehicle Pilots) often get paid a bonus simply for being exposed to enemy fire. At the end of a contract, the **Hazard Pay** for all combat crews is summed together and displayed as an objective result. The amount of hazard pay each merc requires is a function of their salary times *MechWarriors.HazardPayRatio* or *VehicleCrews.HazardPayRatio*. This ratio is a float percentage between 0 and 1, thus that 0.33 is 33%. The hazard pay will be rounded up to the nearest *HazardPayUnits* in c-bills.
-
-> Example: A mechwarrior has a salary of 11,500 and MechWarriors.HazardPayRatio is set to 0.15. Their hazard pay would be 11,500 x 0.15 = 1,725. Because HazardPayUnits is set to 500, this is rounded up to the nearest 500s value, or 2,000 c-bills.
 
 # Attitude
 
@@ -169,7 +262,7 @@ If a mercenary is rehired, they experience a small attitude boost thanks to avoi
 
 Each quarter all crews experience an attitude change equal to the current _Expenses Level_ of the company (i.e. Spartan, Restricted, Normal, etc). The change is controlled through the following variables in `mod.json`:
 
-| Setting | Default Value | 
+| Setting | Default Value |
 | -- | -- |
 | Attitude.Monthly.EconSpartanMod | -6 |
 | Attitude.Monthly.EconRestrictiveMod | -3 |
@@ -208,7 +301,7 @@ The chance for a crew to have a loyalty or hatred is controlled through the `Att
 The amount of attitude gain or loss is controlled through several settings in `mod.json`:
 
 | Setting | Default Value |
-| -- | -- | 
+| -- | -- |
 | Attitude.Monthly.FavoredEmployerAlliedMod | 6 |
 | Attitude.Monthly.HatedEmployerAlliedMod | -30 |
 | Attitude.PerMission.FavoredFactionIsEmployerMod | 1 |
@@ -246,10 +339,10 @@ Many vanilla events target MechWarriors, and this mod's 'crews' are all consider
 ## New Pilot Tags
 
 This mod adds several pilot tags to the MDDB. They function like normal pilot tags in all respects, and can be used with other mods that tie pilot tags to mechanical advantages.   
-  
+
 (!) Pilot tags are not removed when the mod is disabled or uninstalled. They will persist throughout the save. It's not safe to remove them without cleaning up every pilot that has them, so they remain in the system for all current and future saves to use. To completely remove them, you must wipe out your Mods/.modtek directory and start a new save.
 
-| Vanilla Behavior Tags | Vanilla Origin Tags | HR Behavior Tags | HR Origin Tags | 
+| Vanilla Behavior Tags | Vanilla Origin Tags | HR Behavior Tags | HR Origin Tags |
 | -- | -- | -- | -- |
 | pilot\_athletic<br>pilot\_assassin<br>pilot\_brave<br>pilot\_bookish<br>pilot\_cautious<br>pilot\_criminal<br>pilot\_command<br>pilot\_comstar<br>pilot\_dependable<br>pilot\_disgraced<br>pilot\_dishonest<br>pilot\_drunk<br>pilot\_gladiator<br>pilot\_honest<br>pilot\_jinxed<br>pilot\_klutz<br>pilot\_lostech<br>pilot\_lucky<br>pilot\_mechwarrior<br>pilot\_military<br>pilot\_naive<br>pilot\_officer<br>pilot\_rebellious<br>pilot\_reckless<br>pilot\_spacer<br>pilot\_tech<br>pilot\_unstable<br>pilot\_wealthy | pilot\_aurigan<br>pilot\_davion<br>pilot\_kurita<br>pilot\_liao<br>pilot\_innersphere<br>pilot\_magistracy<br>pilot\_marik<br>pilot\_noble<br>pilot\_periphery<br>pilot\_steiner<br>pilot\_taurian<br>pilot\_tortuga |
 
@@ -259,17 +352,7 @@ Some tags are not displayed to the player, and are used....
 		
 ## Dev Notes
 
-### Lifepaths
-  
-Start: Commoner (by faction), noble (by faction)
 
-Level1: convict, criminal enforcer, petty criminal, corp merchant, merchant crew, merc. trader, enlisted infantry, enlisted navy, merc recruit, officer training, noble heir, noble supernumerary, pirate recruit, comstar tech, tech school, tinkerer
-
-level2: crim. hitman, crim. smuggler, merc. corp, merc. officer, enlisted inf, enlisted navy, miliary mechwarrior, military merc corporal, mil. officier. infan, mil. officer navy, noble diplo, noble fallen, noble landed, pirate crew, solaris gladiator, comstar tech, mechTech
-
-level 3: crim. assassin, merc. captain, merch. corp, mil. captain. inf, mil. enlisted inf, mil enlisted navy, mil. mechwarrior, mil merc LCorp, mil. officer navy, mil. spec ops, noble admin, noble ruling, pirate captain, pirate MW, solaris trainer, tech jumpship, tech researchers
-
-themes: criminal, merchant, military, noble, pirate, technician
 
 
 ## TODO
@@ -315,7 +398,7 @@ themes: criminal, merchant, military, noble, pirate, technician
 * EVENT: Add slackers event for support; reduces their value for N days has a change in attitude
 * EVENT: Add motivated event for support; increases their value for N days if you fund it 
 * EVENT: Add feud event; two crews are fighting with each other.
- 
+
 * BUG: Max injuries should be hidden on hiring screen
 * BUG: Contract desc / pilot isn't getting reset between events
 * BUG: Can click hire even if at max berths
