@@ -60,11 +60,80 @@ Most features in the mod that depend upon a distribution will allow you to modif
 
 The vast majority of the mod's functionality relates to the hiring and generating of random crew members. There are several features within the hiring umbrella:
 
-* Scarcity - limits many crew are available on a planet by planet basis
-* LifePath - configures the lifepaths used to generate crews
-* Skill and Size Distribution - configures the skill and size frequencies for crews
-* Salary and Bonuses - defines the money the crew requires as salary, hiring bonuses, hazard pay, and others
-* Crew Configuration - 
+* *LifePath* - configures the lifepaths used to generate crews
+* *Scarcity* - limits many crew are available on a planet by planet basis
+* *Skill and Size Distribution* - configures the skill and size frequencies for crews
+* *Salary and Bonuses* - defines the money the crew requires as salary, hiring bonuses, hazard pay, and others
+* *Crew Configuration* - various values specific to the mod not reflected by the above
+
+
+
+## LifePath
+
+This mod completely replaces the default HBS lifepath system with a simplified solution. The HBS system allows for branching paths and is built to simulate character creation in an RPG, with extensive hooks to build in tags and other customizations for the resultant pilot. The lifepath system in this mod is significantly simpler, with each crew randomly selected one lifepath from a weighted list to determine their relevant background. 
+
+All lifepaths are defined in the `lifepaths.json` file. There are two levels of hierarchy in the file. The top level is a a *lifepath class*, which is just a container for similar lifepaths. Some *lifepath classes* are **criminal**, **military**, **civilian**, or **pirate**. A lifepath class is simply defined with a dictionary of lifepath elements, and a weight.
+
+```json
+"lifepath_class" : 
+{
+    "weight" : 5.0,
+    "lifepaths" : {
+    }
+}
+```
+
+The **weight** element is used to influence how frequently the lifepath_class should be picked. At mod initialization, the weight value for every `lifepath_class` is summed together. When a lifepath has to be chosen, a random number between 1 and the sum of the weights is selected. The lifepath classes are then iterated one by one, with their weights being added to each other. When the randomly selected number matches the summed weight, the lifepath class is chosen.
+
+> Example: There are 4 lifepath classess defined, with weights given as criminal=4, military=3, civilian=10, pirate=3. The sum of all weights is 20. If the random number is 1-4, criminal will be chosen. If 5-7, military. If 8-17 civilian and if 18-20 pirate will be chosen.
+
+Each class contains one or more **lifepaths**, which are weighted in a similar fashion to lifepath classes. Lifepath weights are summed across the class only, and selections occur only across the class. Thus the selection is two step - randomly determine a lifepath class, then randomly determine a lifepath.
+
+```json
+{
+    "descriptionKey" : "LIFEPATH_CIVILIAN_FACTORY_WORKER",
+    "requiredTags" : [  ],
+    "randomTags" : [ ],
+    "skillMod" : {
+        "mechwarrior" : 0,
+        "vehicle" : 0,
+        "aerospace" : 0,
+        "mechtech" : 0,
+        "medtech" : 0
+  	}
+}
+```
+
+Each lifepath has a `requiredtags` and `randomTags` element. Every tag listed in `requiredTags` will be added to the newly created crew. For each tag in the `randomTags` element a random roll will be made. If the value is less than `HiringHall.Lifepath.RandomTagChance` in the `mod.json` value, the tag will be added to the crew. 
+
+The `skillMod` element in a lifepath defines the modifiers that should be applied to specific crew types. For instance to increase the overall skill rating of an aerospace crew from a particular lifepath, set `skillMod.aerospace = 0.5`. Crew that select this lifepath will increase their overall rating by 0.5, if they are generated as aerospace crew.
+
+Lifepaths must include a `descriptionKey` element in them. This key links the lifepath to the `mod_localized_text.json` file, and must correspond to a value in the `LifePathDescriptions` dictionary. As an example, for a value of `"descriptionKey" : "LIFEPATH_CIVILIAN_FACTORY_WORKER"` in the lifepath, the `mod_localized_text.json` entry must be:
+
+```json
+	"LifePathDescriptions": {
+
+		"LIFEPATH_CIVILIAN_FACTORY_WORKER": {
+			"title": "Factory Worker",
+			"description": "Factories run by human labor aren't uncommon in the Inner Sphere, and are everywhere in the Periphery. These places always need strong hands that can do repetitive, dull work hour after hour every day of the week. This crew member eventually decided to embrace mercenary life to break the monotony and now seeks adventure among the stars. They are happy to join your mercenary company so long as there are new places to explore and people to kill. Just don't ask them to go on yet another patrol route, unless you want to get an earful."
+		},
+```
+
+:information_source: I've chosen to simplify the lifepath system because I don't find there to be significant depth in the pilots concept. Generally the most important aspects of the pilots (skills and abilities) are configured by the player directly, while the background elements have no mechanical effect. Because of this the branching lifepath system doesn't make much sense to me, since ultimately players will care about the defined abilities, the skills, and maybe the tags if using a mod that provides benefits based upon tag names.
+
+## Scarcity
+
+The availability of crews are determined on a planet by planet basis, through planet tags. Each crew type (Aerospace, MechWarrior, etc) is given a default scarcity defined in `Scarcity.Defaults`. The `Scarcity.PlanetTagModifiers` dictionary allows you to associate a specific planet tag with modifiers to those scarcity defaults. The format for a modifier is: ` "planet_tag" : { "MechWarriors" : 0.0, "VehicleCrews" : 1.0, "MechTechs" : 2.0, "MedTechs" : 3.0, "Aerospace" : 4.0 }`. 
+
+All the modifiers from all the tags on the planet are added together, the rounded up to the nearest integer to determine the maximum number of each crew that will be randomly generated. The lower bound of each crew type is half the upper bound, rounded to zero. 
+
+> Example: The tag modifiers includes `planet_other_capital` with `MedTechs=1.3`, `planet_pop_small` with `Medtechs=0.8` and `planet_industry_recreation` with `MedTechs=0.5`. The sum of these is 2.6, which is rounded up to 3 for the upper bound. The lower bound is half the upper bound rounded down, or 3 / 2 = 1.5 for 1. This planet will generate between 1 and 3 MedTechs.
+
+
+
+## Size and Skill Distribution
+
+Loreum
 
 
 
@@ -171,13 +240,7 @@ Each distribution also defines four breakpoints representing the progression fro
 
 
 
-## Scarcity
-
-The availability of crews are determined on a planet by planet basis, through planet tags. Each crew type (Aerospace, MechWarrior, etc) is given a default scarcity defined in `Scarcity.Defaults`. The `Scarcity.PlanetTagModifiers` dictionary allows you to associate a specific planet tag with modifiers to those scarcity defaults. The format for a modifier is: ` "planet_tag" : { "MechWarriors" : 0.0, "VehicleCrews" : 1.0, "MechTechs" : 2.0, "MedTechs" : 3.0, "Aerospace" : 4.0 }`. 
-
-All the modifiers from all the tags on the planet are added together, the rounded up to the nearest integer to determine the maximum number of each crew that will be randomly generated. The lower bound of each crew type is half the upper bound, rounded to zero. 
-
-> Example: The tag modifiers includes `planet_other_capital` with `MedTechs=1.3`, `planet_pop_small` with `Medtechs=0.8` and `planet_industry_recreation` with `MedTechs=0.5`. The sum of these is 2.6, which is rounded up to 3 for the upper bound. The lower bound is half the upper bound rounded down, or 3 / 2 = 1.5 for 1. This planet will generate between 1 and 3 MedTechs.
+> 
 
 
 ## Hazard Pay
