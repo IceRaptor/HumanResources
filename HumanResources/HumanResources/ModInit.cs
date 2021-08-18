@@ -18,8 +18,11 @@ namespace HumanResources
 
         public const string HarmonyPackage = "us.frostraptor.HumanResources";
         public const string LogName = "human_resources";
+        public const string LogSuffixDossier = "dossier";
 
         public static DeferringLogger Log;
+        public static DeferringLogger DossierLog;
+
         public static string ModDir;
         public static ModConfig Config;
         public static ModCrewNames CrewNames;
@@ -47,6 +50,7 @@ namespace HumanResources
             Mod.Config.Init(); // Initialize color conversion & defaults
 
             Log = new DeferringLogger(modDirectory, LogName, "HR", Mod.Config.Debug, Mod.Config.Trace);
+            DossierLog = new DeferringLogger(modDirectory, $"{LogName}.{LogSuffixDossier}", "HR", Mod.Config.Debug, Mod.Config.Trace);
 
             Assembly asm = Assembly.GetExecutingAssembly();
             FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(asm.Location);

@@ -23,7 +23,7 @@ namespace HumanResources.Patches
         {
             if (p == null) return;
 
-            Mod.Log.Debug?.Write($"Updating Dossier for pilot: {p.Name}");
+            Mod.DossierLog.Debug?.Write($"Updating Dossier for pilot: {p.Name}");
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
@@ -40,7 +40,7 @@ namespace HumanResources.Patches
             ___firstName.SetText(nameS);
 
             // Set the firstname label to 'Name' instead of 'First Name'
-            Mod.Log.Debug?.Write("Updating firstName to Name");
+            Mod.DossierLog.Debug?.Write("Updating firstName to Name");
             GameObject firstNameGO = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Dossier_LastName);
             GameObject firstNameLabelGO = firstNameGO.transform.parent.GetChild(0).GetChild(0).gameObject;
             LocalizableText firstNameLabel = firstNameLabelGO.GetComponentInChildren<LocalizableText>();
@@ -48,7 +48,7 @@ namespace HumanResources.Patches
             firstNameLabel.SetText(firstNameS);
 
             // Set the lastname label to 'Contract End' and the name value to the remaining days
-            Mod.Log.Debug?.Write("Updating lastName to ContractTerm");
+            Mod.DossierLog.Debug?.Write("Updating lastName to ContractTerm");
             GameObject lastNameGO = __instance.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Barracks_Dossier_LastName);
             GameObject lastNameLabelGO = lastNameGO.transform.parent.GetChild(0).GetChild(0).gameObject; // should be text_lastName -> parent -> layout-label -> label
             LocalizableText lastNameLabel = lastNameLabelGO.GetComponentInChildren<LocalizableText>();
@@ -62,11 +62,11 @@ namespace HumanResources.Patches
                 if (daysRemaining < 0) daysRemaining = 0;
                 contractTermRemaining = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Days_Remaining],
                     new object[] { daysRemaining }).ToString();
-                Mod.Log.Debug?.Write($" {daysRemaining} daysRemaining = {ModState.SimGameState.DaysPassed} daysPassed - {details.ExpirationDay} endDay");
+                Mod.DossierLog.Debug?.Write($" {daysRemaining} daysRemaining = {ModState.SimGameState.DaysPassed} daysPassed - {details.ExpirationDay} endDay");
             }
 
             ___lastName.SetText(contractTermRemaining);
-            Mod.Log.Debug?.Write($"  -- done updating dossier for pilot: {p.Name}");
+            Mod.DossierLog.Debug?.Write($"  -- done updating dossier for pilot: {p.Name}");
 
         }
     }

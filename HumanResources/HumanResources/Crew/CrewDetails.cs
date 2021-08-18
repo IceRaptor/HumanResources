@@ -278,6 +278,8 @@ namespace HumanResources.Crew
 
         public bool CanBeHiredAtMRBLevel(int MRBLevel)
         {
+            return true;
+
             float threshold = 0f;
             if (IsAerospaceCrew)
                 threshold = Mod.Config.HiringHall.AerospaceWings.ValueThresholdForMRBLevel[MRBLevel];

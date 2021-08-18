@@ -13,7 +13,6 @@ namespace HumanResources
     {
         public PilotNameGenerator NameGenerator = null;
 
-        // TODO: Old, HBS style - remove!
         public List<LifepathNodeDef> LifePaths = null;
         public List<LifepathNodeDef> StartingPaths = null;
         public List<LifepathNodeDef> AdvancePaths = null;
@@ -22,11 +21,12 @@ namespace HumanResources
         public Dictionary<string, (int, int)> LifePathFamilyBounds = new Dictionary<string, (int, int)>();
         public Dictionary<string, Dictionary<string, (int, int)>> LifePathBounds = new Dictionary<string, Dictionary<string, (int, int)>>();
 
-
         public GenderedOptionsListDef Voices = null;
 
         public List<int> GenderWeights = null;
         public readonly Gender[] Genders = { Gender.Female, Gender.Male, Gender.NonBinary };
+
+        public PilotGenerator HBSPilotGenerator;
     }
 
     public static class ModState

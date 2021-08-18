@@ -76,7 +76,8 @@ namespace HumanResources.Patches
                 // Applied killed pilots modifier
                 details.Attitude += killedPilotsMod;
 
-                // Check favored / hated factions
+                // Check favored /
+                // factions
                 if (details.FavoredFaction > 0) 
                 {
                     if (details.FavoredFaction == ___theContract.Override.employerTeam.FactionValue.ID)

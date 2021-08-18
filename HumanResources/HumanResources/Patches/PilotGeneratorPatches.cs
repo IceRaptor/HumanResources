@@ -9,7 +9,8 @@ namespace HumanResources.Patches
     [HarmonyPatch(new Type[] { typeof(SimGameState), typeof(List<LifepathNodeDef>), typeof(List<SimGameStringList>) })]
     static class PilotGenerator_Ctor
     {
-        static void Postfix(SimGameState sim, List<LifepathNodeDef> ___lifepaths, List<LifepathNodeDef> ___startingPaths,
+        static void Postfix(SimGameState sim, PilotGenerator __instance, 
+            List<LifepathNodeDef> ___lifepaths, List<LifepathNodeDef> ___startingPaths,
             List<LifepathNodeDef> ___advanceStartingPaths, GenderedOptionsListDef ___voiceList)
         {
             ModState.CrewCreateState.NameGenerator = new PilotNameGenerator();
@@ -25,6 +26,8 @@ namespace HumanResources.Patches
                 sim.Constants.Pilot.MaleGenerationWeight,
                 sim.Constants.Pilot.NonBinaryGenerationWeight
             };
+
+            ModState.CrewCreateState.HBSPilotGenerator = __instance;
 
             Mod.Log.Info?.Write("Initialized Pilot Creation shared state.");
         }

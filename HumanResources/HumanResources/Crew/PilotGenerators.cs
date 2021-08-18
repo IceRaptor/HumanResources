@@ -1,6 +1,7 @@
 ﻿using BattleTech;
 using BattleTech.Data;
 using BattleTech.Portraits;
+using Harmony;
 using HBS.Collections;
 using HumanResources.Helper;
 using HumanResources.Lifepath;
@@ -103,12 +104,26 @@ namespace HumanResources.Crew
             // TODO: randomize health +/- 1?
             int health = 3;
 
-            // TODO: Randomize ability selections
-
+            
             PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), gunnery, piloting, guts, tactics, injuries: 0, health, 
                 lethalInjury: false, morale: 1, voice: "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
+            PilotDef generatedDef = GenerateCrew(starSystem, callsign, pilotDef);
 
-            return GenerateCrew(starSystem, callsign, pilotDef);
+            // Abilities must be set AFTER the pilotDef is created, to allow Abilifier a chance to hook into them
+            // TODO: Randomize ability selections
+            GenerateAbilityDefs(pilotDef, new Dictionary<string, int>() 
+                {
+                    { ModConsts.Skill_Gunnery, gunnery },
+                    { ModConsts.Skill_Guts, guts},
+                    { ModConsts.Skill_Piloting, piloting },
+                    { ModConsts.Skill_Tactics, tactics },
+                },
+                isMechWarrior ? Mod.Config.HiringHall.MechWarriors : Mod.Config.HiringHall.VehicleCrews
+                );
+
+            generatedDef.ForceRefreshAbilityDefs();
+
+            return generatedDef;
         }
 
         public static PilotDef GenerateCrew(StarSystem starSystem, string callsign, PilotDef pilotDef)
@@ -195,197 +210,81 @@ namespace HumanResources.Crew
             {
                 DataManager = ModState.SimGameState.DataManager,
                 PortraitSettings = GetPortraitForGenderAndAge(voiceGender, currentAge, alreadyAssignedPortraits)
-            };
-            pilotDef2.ForceRefreshAbilityDefs();
+            };            
             ModState.SimGameState.pilotGenCallsignDiscardPile.Add(pilotDef2.Description.Callsign);
 
             return pilotDef2;
         }
 
+        private static Traverse SetPilotAbilitiesT;
 
-        // Piloting = crew size
-        // Gunnery = crew skill
-        // Morale =  crew loyalty    
-        // Adapted from BattleTech.PilotGenerator.GenerateRandomPilot
-        //public static PilotDef GenerateVehicleCrew(int systemDifficulty)
-        //{
-        //    int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
-
-        //    Gender newGender = RandomGender();
-        //    string newFirstName = ModState.CrewCreateState.NameGenerator.GetFirstName(newGender);
-        //    string newLastName = ModState.CrewCreateState.NameGenerator.GetLastName();
-        //    string newCallsign = RandomUnusedCallsign();
-        //    Mod.Log.Debug?.Write($"Generating vehicleCrew with callsign: {newCallsign}");
-
-        //    int currentAge;
-        //    PilotDef pilotDef;
-        //    TagSet tagSet;
-        //    StringBuilder lifepathDescParagraphs;
-        //    GenAndWalkLifePath(systemDifficulty, initialAge, out currentAge, out pilotDef, out tagSet, out lifepathDescParagraphs);
-
-        //    string id = GenerateID();
-        //    Gender voiceGender = newGender;
-        //    if (voiceGender == Gender.NonBinary)
-        //    {
-        //        voiceGender = ((!(ModState.SimGameState.NetworkRandom.Float() < 0.5f)) ? Gender.Female : Gender.Male);
-        //    }
-        //    string voice = RandomUnusedVoice(voiceGender);
-        //    HumanDescriptionDef description = new HumanDescriptionDef(id, newCallsign, newFirstName, newLastName, newCallsign, newGender, FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
-
-        //    StatCollection statCollection = pilotDef.GetStats();
-        //    int spentXPPilot = GetSpentXPPilot(statCollection);
-
-        //    List<string> alreadyAssignedPortraits = new List<string>();
-        //    if (ModState.SimGameState.Commander != null && ModState.SimGameState.Commander.pilotDef.PortraitSettings != null)
-        //    {
-        //        alreadyAssignedPortraits.Add(ModState.SimGameState.Commander.pilotDef.PortraitSettings.Description.Id);
-        //    }
-        //    foreach (Pilot activePilot in ModState.SimGameState.PilotRoster)
-        //    {
-        //        if (activePilot.pilotDef.PortraitSettings != null)
-        //        {
-        //            alreadyAssignedPortraits.Add(activePilot.pilotDef.PortraitSettings.Description.Id);
-        //        }
-        //    }
-
-        //    PilotDef pilotDef2 = new PilotDef(description, pilotDef.BaseGunnery, pilotDef.BasePiloting, pilotDef.BaseGuts, pilotDef.BaseTactics, 0,
-        //        ModState.SimGameState.CombatConstants.PilotingConstants.DefaultMaxInjuries, lethalInjury: false, 0, voice, pilotDef.abilityDefNames,
-        //        AIPersonality.Undefined, 0, tagSet, spentXPPilot, 0)
-        //    {
-        //        DataManager = ModState.SimGameState.DataManager,
-        //        PortraitSettings = GetPortraitForGenderAndAge(voiceGender, currentAge, alreadyAssignedPortraits)
-        //    };
-        //    pilotDef2.ForceRefreshAbilityDefs();
-        //    ModState.SimGameState.pilotGenCallsignDiscardPile.Add(pilotDef2.Description.Callsign);
-        //    return pilotDef2;
-        //}
-
-        // A fairly complex method adapted from HBS code. In short it attempts to walk a node tree and find conditions
-        //   that would end the creation of the character.
-        private static void GenAndWalkLifePath(int systemDifficulty, int initialAge, out int currentAge, out PilotDef pilotDef, out TagSet tagSet, out StringBuilder lifepathDescParagraphs)
+        public static void GenerateAbilityDefs(PilotDef pilotDef, Dictionary<string, int> skillLevels, CrewOpts crewOpts)
         {
+            Mod.Log.Info?.Write($" Pilot skills => gunnery: {skillLevels[ModConsts.Skill_Gunnery]}  guts: {skillLevels[ModConsts.Skill_Guts]}  " +
+                $"piloting: {skillLevels[ModConsts.Skill_Piloting]}  tactics: {skillLevels[ModConsts.Skill_Tactics]}");
+            Mod.Log.Info?.Write($" Pilot base skills => gunnery: {pilotDef.BaseGunnery}  guts: {pilotDef.BaseGuts}  " +
+                $"piloting: {pilotDef.BasePiloting}  tactics: {pilotDef.BaseTactics}");
 
-            currentAge = initialAge;
-            pilotDef = new PilotDef(new HumanDescriptionDef(), 1, 1, 1, 1, 1, 1, lethalInjury: false, 1, "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
-            tagSet = new TagSet();
-
-            List<LifepathNodeDef> walkedNodes = new List<LifepathNodeDef>();
-            List<EndingPair> endings = new List<EndingPair>();
-            List<SimGameEventResultSet> nodeEventResults = new List<SimGameEventResultSet>();
-
-            LifepathNodeDef lifepathNodeDef = GetStartingNode(systemDifficulty);
-            while (lifepathNodeDef != null)
+            if (crewOpts.MandatoryAbilityDefs.Count > 0)
             {
-                walkedNodes.Add(lifepathNodeDef);
-                currentAge += lifepathNodeDef.Duration;
-                SimGameEventResultSet resultSet = ModState.SimGameState.GetResultSet(lifepathNodeDef.ResultSets);
-                SimGameEventResult[] results = resultSet.Results;
-                foreach (SimGameEventResult simGameEventResult in results)
-                {
-                    if (simGameEventResult.AddedTags != null)
-                    {
-                        tagSet.AddRange(simGameEventResult.AddedTags);
-                    }
-                    if (simGameEventResult.RemovedTags != null)
-                    {
-                        tagSet.RemoveRange(simGameEventResult.RemovedTags);
-                    }
-                    if (simGameEventResult.Stats == null)
-                    {
-                        continue;
-                    }
-                    for (int j = 0; j < simGameEventResult.Stats.Length; j++)
-                    {
-                        SimGameStat simGameStat = simGameEventResult.Stats[j];
-                        float f = simGameStat.ToSingle();
-                        SkillType skillType = SkillStringToType(simGameStat.name);
-                        if (skillType != 0)
-                        {
-                            int num3 = Mathf.RoundToInt(f);
-                            int baseSkill = pilotDef.GetBaseSkill(skillType);
-                            pilotDef.AddBaseSkill(skillType, num3);
-                            for (int k = baseSkill + 1; k <= baseSkill + num3; k++)
-                            {
-                                SetPilotAbilities(pilotDef, simGameStat.name, k);
-                            }
-                        }
-                    }
-                }
-
-                nodeEventResults.Add(resultSet);
-                List<LifepathNodeEnding> endingNodes = new List<LifepathNodeEnding>();
-                for (int l = 0; l < lifepathNodeDef.Endings.Length; l++)
-                {
-                    RequirementDef requirements = lifepathNodeDef.Endings[l].Requirements;
-                    if (requirements == null || SimGameState.MeetsRequirements(requirements.RequirementTags, requirements.ExclusionTags, requirements.RequirementComparisons, tagSet, pilotDef.GetStats()))
-                    {
-                        endingNodes.Add(lifepathNodeDef.Endings[l]);
-                    }
-                }
-
-                LifepathNodeDef nextLifePathNode = null;
-                if (endingNodes.Count > 0)
-                {
-                    List<int> list6 = new List<int>();
-                    for (int m = 0; m < endingNodes.Count; m++)
-                    {
-                        list6.Add(endingNodes[m].Weight);
-                    }
-                    int weightedResult = SimGameState.GetWeightedResult(list6, ModState.SimGameState.NetworkRandom.Float());
-                    LifepathNodeEnding lifepathNodeEnding = endingNodes[weightedResult];
-                    EndingPair item = default(EndingPair);
-                    item.ending = lifepathNodeEnding;
-                    TagSet nextNodeTags = lifepathNodeEnding.NextNodeTags;
-                    float num4 = (float)currentAge * ModState.SimGameState.Constants.Pilot.AgeEndingModifier;
-                    bool flag = false;
-                    if ((float)ModState.SimGameState.NetworkRandom.Int() < num4 && !lifepathNodeDef.ForceNode)
-                    {
-                        flag = true;
-                    }
-                    if (!lifepathNodeEnding.EndNode && !flag)
-                    {
-                        List<LifepathNodeDef> list7 = new List<LifepathNodeDef>();
-                        for (int n = 0; n < ModState.CrewCreateState.LifePaths.Count; n++)
-                        {
-                            if (nextNodeTags != null && !ModState.CrewCreateState.LifePaths[n].NodeTags.ContainsAll(nextNodeTags))
-                            {
-                                continue;
-                            }
-                            RequirementDef requirements2 = ModState.CrewCreateState.LifePaths[n].Requirements;
-                            if (requirements2 != null)
-                            {
-                                TagSet requirementTags = requirements2.RequirementTags;
-                                TagSet exclusionTags = requirements2.ExclusionTags;
-                                List<ComparisonDef> requirementComparisons = requirements2.RequirementComparisons;
-                                if (!SimGameState.MeetsRequirements(requirementTags, exclusionTags, requirementComparisons, tagSet, pilotDef.GetStats()))
-                                {
-                                    continue;
-                                }
-                            }
-                            list7.Add(ModState.CrewCreateState.LifePaths[n]);
-                        }
-                        if (list7.Count > 0)
-                        {
-                            nextLifePathNode = (item.nextNode = list7[ModState.SimGameState.NetworkRandom.Int(0, list7.Count)]);
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Unable to find new node from ending: " + lifepathNodeEnding.Description.Id + " | " + lifepathNodeDef.Description.Id);
-                        }
-                    }
-                    endings.Add(item);
-                }
-                lifepathNodeDef = nextLifePathNode;
+                Mod.Log.Info?.Write($"Adding mandatory abilityDefs: {string.Join(",", crewOpts.MandatoryAbilityDefs)}");
+                pilotDef.abilityDefNames.AddRange(crewOpts.MandatoryAbilityDefs);
             }
 
-            lifepathDescParagraphs = new StringBuilder();
-            foreach (SimGameEventResultSet item2 in nodeEventResults)
+            // Sort by skill skill
+            string primarySkill = SelectHighestSkill(skillLevels);
+
+            Dictionary<string, int> secondarySkills = new Dictionary<string, int>(skillLevels);
+            secondarySkills.Remove(primarySkill);
+            string secondarySkill = SelectHighestSkill(secondarySkills);
+
+            try
             {
-                if (item2.Description.Name != "")
+                Mod.Log.Info?.Write($"Generating pilot with skills => primary: {primarySkill}@{skillLevels[primarySkill]} " +
+                    $"secondary: {secondarySkill}@{skillLevels[secondarySkill]}");
+
+                // Filter for primary defs - sort by weight
+                if (SetPilotAbilitiesT == null)
                 {
-                    lifepathDescParagraphs.Append(string.Format("<b>{1}:</b> {0}\n\n", item2.Description.Details, item2.Description.Name));
+                    SetPilotAbilitiesT = Traverse
+                        .Create(ModState.CrewCreateState.HBSPilotGenerator)
+                        .Method("SetPilotAbilities", new Type[] { typeof(PilotDef), typeof(string), typeof(int) });
                 }
+
+                // invokeType - PilotDef pilot, string type, int value
+                Mod.Log.Info?.Write($" -- setting primary skill: {primarySkill}");
+                SetPilotAbilitiesT.GetValue(new object[] { pilotDef, primarySkill, skillLevels[primarySkill] });
+
+                Mod.Log.Info?.Write($" -- setting secondary skill: {secondarySkill}");
+                SetPilotAbilitiesT.GetValue(new object[] { pilotDef, secondarySkill, skillLevels[secondarySkill] });
             }
+            catch (Exception e)
+            {
+                Mod.Log.Warn?.Write(e, " Failed to set skill defs!");
+            }
+
+            Mod.Log.Info?.Write($"Final ability def names are: {string.Join(",", pilotDef.abilityDefNames)}");
+            Mod.Log.Info?.Write($"Final abilityDefs are:");
+            foreach (AbilityDef abilityDef in pilotDef.AbilityDefs)
+            {
+                Mod.Log.Info?.Write($" -- {abilityDef.Description.Id}");
+            }
+        }
+
+        private static string SelectHighestSkill(Dictionary<string, int> skillLevels)
+        {
+            var sortedLevels = skillLevels.OrderByDescending(x => x.Value);
+
+            int level = sortedLevels.FirstOrDefault().Value;
+            List<KeyValuePair<string, int>> skills = sortedLevels.Where(x => x.Value == level).ToList();
+            if (skills.Count == 1)
+                return skills[0].Key;
+
+            if (skills.Count == 0)
+                return null;
+
+            int randIdx = Mod.Random.Next(skills.Count);
+            return skills[randIdx].Key;
         }
 
         private static string RandomUnusedCallsign()
@@ -424,24 +323,6 @@ namespace HumanResources.Crew
             int weightedResult = SimGameState.GetWeightedResult(ModState.CrewCreateState.GenderWeights, (float)Mod.Random.NextDouble());
             Gender gender = ModState.CrewCreateState.Genders[weightedResult];
             return gender;
-        }
-
-        // Adapted from BattleTech.PilotGenerator.GetStartingNode for clarity
-        private static LifepathNodeDef GetStartingNode(int systemDifficulty)
-        {
-
-            float advancedPilotChance = ModState.SimGameState.Constants.Pilot.AdvancedPilotBaseChance + (float)systemDifficulty * ModState.SimGameState.Constants.Pilot.AdvancedPilotDifficultyStep;
-            Mod.Log.Debug?.Write($"Chance for advanced pilot => base: {ModState.SimGameState.Constants.Pilot.AdvancedPilotBaseChance} + systemDifficulty: {systemDifficulty} x difficultyStep: {ModState.SimGameState.Constants.Pilot.AdvancedPilotDifficultyStep}");
-            float roll = (float)Mod.Random.NextDouble();
-
-            bool isAdvancedPilot = advancedPilotChance > roll;
-            List<LifepathNodeDef> list = isAdvancedPilot ? ModState.CrewCreateState.AdvancePaths : ModState.CrewCreateState.StartingPaths;
-
-            int randomIdx = Mod.Random.Next(0, list.Count);
-            LifepathNodeDef lifepathNode = list[randomIdx];
-            Mod.Log.Debug?.Write($"Randomly determined lifePathNode: {lifepathNode?.Description?.Name}");
-
-            return lifepathNode;
         }
 
         // Direct copy from BattleTech.PilotGenerator.GenerateVoiceForGender
@@ -511,30 +392,7 @@ namespace HumanResources.Crew
             return portraitSettings;
         }
 
-        // Direct copy of BattleTech.PilotGenerator.SetPilotAbilities
-        private static void SetPilotAbilities(PilotDef pilot, string type, int value)
-        {
-            value--;
-            if (value < 0 || 
-                !ModState.SimGameState.AbilityTree.ContainsKey(type) || 
-                ModState.SimGameState.AbilityTree[type].Count <= value)
-            {
-                return;
-            }
 
-            List<AbilityDef> list = ModState.SimGameState.AbilityTree[type][value];
-            pilot.DataManager = ModState.SimGameState.DataManager;
-            pilot.ForceRefreshAbilityDefs();
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (ModState.SimGameState.CanPilotTakeAbility(pilot, list[i]))
-                {
-                    pilot.abilityDefNames.Add(list[i].Description.Id);
-                }
-            }
-
-            pilot.ForceRefreshAbilityDefs();
-        }
 
         // Direct copy of BattleTech.PilotGenerator.GetSpentXPPilot
         private static int GetSpentXPPilot(StatCollection stats)
@@ -559,25 +417,6 @@ namespace HumanResources.Crew
         {
             return string.Format("{0}{1}", "PilotGen_", ModState.SimGameState.GenerateSimGameUID());
         }
-
-        // Direct copy of BattleTech.PilotGenerator
-        private static SkillType SkillStringToType(string s)
-        {
-            switch (s)
-            {
-                case "Gunnery":
-                    return SkillType.Gunnery;
-                case "Guts":
-                    return SkillType.Guts;
-                case "Tactics":
-                    return SkillType.Tactics;
-                case "Piloting":
-                    return SkillType.Piloting;
-                default:
-                    return SkillType.NotSet;
-            }
-        }
-
        
     }
 }

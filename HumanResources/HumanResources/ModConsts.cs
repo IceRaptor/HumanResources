@@ -34,6 +34,11 @@ namespace HumanResources
         public const string Event_Option_HeadHunting_Leaves = "outcome_2";
         public const string Event_Option_HeadHunting_Deserts = "outcome_3";
 
+        public const string Skill_Gunnery = "Gunnery";
+        public const string Skill_Guts = "Guts";
+        public const string Skill_Piloting = "Piloting";
+        public const string Skill_Tactics = "Tactics";
+
     }
 
     // All of these tags are pilot tags

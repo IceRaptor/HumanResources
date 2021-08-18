@@ -324,6 +324,9 @@ A head-hunting check is a random roll between 0 and 1, modified by `HeadHunting.
 
 > Example: There are three crews with with skill 1, 2, 3. The company's expenses are set to regular, which gives a 0 modifier for economy. A random roll of 0.73 is made, making the modified check 0.73. The list of crew is randomly sorted into 2,3,1. The first crew has a headhunting chance of 0.1, which is less than 0.73 and thus they are skipped. The next crew has a chance of 0.15, and thus is also skipped. The final crew has a chance of 0.05 and is skipped. This counts as a failed headhunting attempt, and a random value of 5 (between 3 and 7) is determined. The system will check for headhunting again in 5 days.
 
+
+
+
 WIP: If a crew is head-hunted but retained by the company, they cannot be head-hunted in the near future. A random value between `HeadHunting.CrewCooldownIntervalMin` and `HeadHunting.CrewCooldownIntervalMax` will be added to the current days elapsed. They will automatically fail any head-hunting checks until this date has passed.
 
 During a head-hunting event, the counter-offer value is controlled by the `HeadHunting.CounterOfferVariance` value. A random value between the crew's current HiringBonus and __HiringBonus x CounterOfferVariance__ will be set as the counter-offer value. This value is only used in the head-hunting event and does not change the crew's hiring bonus value.
@@ -356,6 +359,25 @@ Some tags are not displayed to the player, and are used....
 
 
 ## TODO
+
+
+I don't remember the back part of that, but the first part sounds like me.
+
+@FrostRaptor (ping for later discovery) List for pilotdef requests
+-Salary fields (salaryMulti, salaryExponent)
+-Forced Favored Faction and/or Hated Faction, ignoring anything randomly generated in favor of the forced ones
+-Flag to set to ignore head hunting on a pilot (some pilots are fanatically loyal or put their word over the paycheck)
+Thought: would it be possible for HR to allow me to add a few fields to ronin such as special price modifiers or forced faction preferences?
+We have a number of pilots who have faction allegiances in their backgrounds and having them get fixed faction prefs would make a great deal of sense.
+Can remove those.
+Thought: would it be possible for HR to allow me to add a few fields to ronin such as special price modifiers or forced faction preferences?
+We have a number of pilots who have faction allegiances in their backgrounds and having them get fixed faction prefs would make a great deal of sense.
+
+@FrostRaptor I did think of something else I'd like in HumanResources: the ability to make "ronin" vee crews/mechtech crews/medtech crews (and I guess aerospace?) with unique icons and everything, so you could get lucky and find a special crew out there
+
+- Skirmish bay is broken; according to BD it just doesn't load at all
+- Dialog during AAR that shows all attitude adjustments
+- Set favored/hated faction lists
 
 * Abilities for combat crews need to be auto-generated
 	- Be aware of https://github.com/bloodydoves/BattleTech-Advanced/tree/development/Abilifier which adds multiple abilities

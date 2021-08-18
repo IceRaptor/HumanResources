@@ -7,9 +7,9 @@ namespace HumanResources
     public class DistributionOpts
     {
         // Defines how broad the grouping is, which influences the height of the curve.
-        public int Sigma = 1;
+        public float Sigma = 1;
         // Where on the number line the curve is centered, i.e. the tallest point of the curve
-        public int Mu = 0;
+        public float Mu = 0;
 
         // Breakpoints on the PDF (Probability distribution function), from worst to best. Must be 4 values.
         public float[] Breakpoints = new float[] { };
@@ -51,8 +51,11 @@ namespace HumanResources
         // -1 indicates no limit
         public float MaxOfType = -1;
 
-        public string[] originTags = new string[] { };
+        // Any abilityDefs (typically traits) that must be added to a crew of this type
+        public List<string> MandatoryAbilityDefs = new List<string>();
 
+        // Origin tags that will be added to the crew types
+        public string[] originTags = new string[] { };
         public string[] traitTags = new string[] { };
     }
 
@@ -154,6 +157,7 @@ namespace HumanResources
         
         public PointsBySkillAndSizeOpts PointsBySkillAndSize = new PointsBySkillAndSizeOpts();
 
+
         public CrewOpts AerospaceWings = new CrewOpts
         {
             Enabled = true,
@@ -207,7 +211,8 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            HazardPayRatio = 0.05f
+            HazardPayRatio = 0.05f,
+            MandatoryAbilityDefs = new List<string>()
         };
 
         public CrewOpts VehicleCrews = new CrewOpts
@@ -221,7 +226,8 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            HazardPayRatio = 0.05f
+            HazardPayRatio = 0.05f,
+            MandatoryAbilityDefs = new List<string>()
         };
 
         public float RoninChance = 0.3f;
