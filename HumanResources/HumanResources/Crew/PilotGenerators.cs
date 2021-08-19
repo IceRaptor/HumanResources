@@ -105,6 +105,19 @@ namespace HumanResources.Crew
                 lethalInjury: false, morale: 1, voice: "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
             PilotDef generatedDef = GenerateCrew(starSystem, callsign, pilotDef);
 
+            // Add the necessary tags here *in addition* to in CrewDetails to support Abilifier (it needs the tag before
+            //   the call to SetPilotAbilities)
+            if (!isMechWarrior)
+            {
+                generatedDef.PilotTags.Add(ModTags.Tag_CU_NoMech_Crew);
+                generatedDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
+            }
+            else
+            {
+                // TODO: Are there any mechwarrior tags?
+            }
+
+
             // Abilities must be set AFTER the pilotDef is created, to allow Abilifier a chance to hook into them
             // TODO: Randomize ability selections
             GenerateAbilityDefs(generatedDef, new Dictionary<string, int>()

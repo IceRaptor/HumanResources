@@ -29,7 +29,7 @@ namespace HumanResources.Patches
             __instance.UpdateMoneySpot();
 
             // Performance tweak; skip immediate refresh
-            //__instance.ForceRefreshImmediate();
+            __instance.ForceRefreshImmediate();
 
             return false;
         }
@@ -178,16 +178,22 @@ namespace HumanResources.Patches
             if (details.FavoredFaction > 0)
             {
                 FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFaction);
-                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { faction.FriendlyName }).ToString();
+                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], 
+                    new object[] { faction.FactionDef.CapitalizedName }).ToString();
                 sb.Append(favoredFactionS);
                 sb.Append("\n\n");
                 Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
+                //Mod.Log.Debug?.Write($"  Favored Faction => name: '{faction.Name}'  friendlyName: '{faction.FriendlyName}'  " +
+                //    $"factionDef.Name: {faction.FactionDef?.Name}  factionDef.CapitalizedName: {faction.FactionDef.CapitalizedName}  " +
+                //    $"factionDef.ShortName: {faction.FactionDef?.ShortName}  factionDef.CapitalizedShortName: {faction.FactionDef.CapitalizedShortName}  " +                    
+                //    $"");
             }
 
             if (details.HatedFaction > 0)
             {
                 FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFaction);
-                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { faction.FriendlyName }).ToString();
+                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], 
+                    new object[] { faction.FactionDef.CapitalizedName }).ToString();
                 sb.Append(hatedFactionS);
                 sb.Append("\n\n");
                 Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");

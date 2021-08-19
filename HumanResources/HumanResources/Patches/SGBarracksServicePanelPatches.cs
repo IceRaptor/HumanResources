@@ -78,7 +78,8 @@ namespace HumanResources.Patches
                 if (details.FavoredFaction > 0)
                 {
                     FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFaction);
-                    string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], new object[] { faction.FriendlyName }).ToString();
+                    string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], 
+                        new object[] { faction.FactionDef.CapitalizedName }).ToString();
                     sb.Append(favoredFactionS);
                     sb.Append("\n");
                     Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
@@ -87,7 +88,8 @@ namespace HumanResources.Patches
                 if (details.HatedFaction > 0)
                 {
                     FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFaction);
-                    string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], new object[] { faction.FriendlyName }).ToString();
+                    string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], 
+                        new object[] { faction.FactionDef.CapitalizedName }).ToString();
                     sb.Append(hatedFactionS);
                     sb.Append("\n");
                     Mod.Log.Debug?.Write($"  Hated Faction is: {hatedFactionS}");
