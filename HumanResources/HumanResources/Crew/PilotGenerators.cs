@@ -104,14 +104,13 @@ namespace HumanResources.Crew
             // TODO: randomize health +/- 1?
             int health = 3;
 
-            
-            PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), gunnery, piloting, guts, tactics, injuries: 0, health, 
+            PilotDef pilotDef = new PilotDef(new HumanDescriptionDef(), gunnery, piloting, guts, tactics, injuries: 0, health,
                 lethalInjury: false, morale: 1, voice: "", new List<string>(), AIPersonality.Undefined, 0, 0, 0);
             PilotDef generatedDef = GenerateCrew(starSystem, callsign, pilotDef);
 
             // Abilities must be set AFTER the pilotDef is created, to allow Abilifier a chance to hook into them
             // TODO: Randomize ability selections
-            GenerateAbilityDefs(pilotDef, new Dictionary<string, int>() 
+            GenerateAbilityDefs(generatedDef, new Dictionary<string, int>()
                 {
                     { ModConsts.Skill_Gunnery, gunnery },
                     { ModConsts.Skill_Guts, guts},
@@ -133,7 +132,7 @@ namespace HumanResources.Crew
             // Generate the lifepath we'll use
             LifePath lifePath = LifePathHelper.GetRandomLifePath();
 
-            int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge + 
+            int initialAge = ModState.SimGameState.Constants.Pilot.MinimumPilotAge +
                 ModState.SimGameState.NetworkRandom.Int(1, ModState.SimGameState.Constants.Pilot.StartingAgeRange + 1);
             int currentAge = Mod.Random.Next(initialAge, 70);
             Mod.Log.Debug?.Write($" - currentAge: {currentAge}");
@@ -185,7 +184,7 @@ namespace HumanResources.Crew
             }
 
             string id = GenerateID();
-            HumanDescriptionDef descriptionDef = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender, 
+            HumanDescriptionDef descriptionDef = new HumanDescriptionDef(id, callsign, newFirstName, newLastName, callsign, newGender,
                 FactionEnumeration.GetNoFactionValue(), currentAge, lifepathDescParagraphs.ToString(), null);
 
             StatCollection statCollection = pilotDef.GetStats();
@@ -210,7 +209,7 @@ namespace HumanResources.Crew
             {
                 DataManager = ModState.SimGameState.DataManager,
                 PortraitSettings = GetPortraitForGenderAndAge(voiceGender, currentAge, alreadyAssignedPortraits)
-            };            
+            };
             ModState.SimGameState.pilotGenCallsignDiscardPile.Add(pilotDef2.Description.Callsign);
 
             return pilotDef2;
@@ -220,10 +219,21 @@ namespace HumanResources.Crew
 
         public static void GenerateAbilityDefs(PilotDef pilotDef, Dictionary<string, int> skillLevels, CrewOpts crewOpts)
         {
-            Mod.Log.Info?.Write($" Pilot skills => gunnery: {skillLevels[ModConsts.Skill_Gunnery]}  guts: {skillLevels[ModConsts.Skill_Guts]}  " +
-                $"piloting: {skillLevels[ModConsts.Skill_Piloting]}  tactics: {skillLevels[ModConsts.Skill_Tactics]}");
-            Mod.Log.Info?.Write($" Pilot base skills => gunnery: {pilotDef.BaseGunnery}  guts: {pilotDef.BaseGuts}  " +
-                $"piloting: {pilotDef.BasePiloting}  tactics: {pilotDef.BaseTactics}");
+            //Mod.Log.Info?.Write($" Pilot skills => gunnery: {skillLevels[ModConsts.Skill_Gunnery]}  guts: {skillLevels[ModConsts.Skill_Guts]}  " +
+            //    $"piloting: {skillLevels[ModConsts.Skill_Piloting]}  tactics: {skillLevels[ModConsts.Skill_Tactics]}");
+            //Mod.Log.Info?.Write($" Pilot base skills => gunnery: {pilotDef.BaseGunnery}  guts: {pilotDef.BaseGuts}  " +
+            //    $"piloting: {pilotDef.BasePiloting}  tactics: {pilotDef.BaseTactics}");
+            //Mod.Log.Info?.Write($"Initial abilityDef names are: {string.Join(",", pilotDef.abilityDefNames)}");
+
+            //Mod.Log.Info?.Write($"-- ITERATING ABILITY TREE");
+            //foreach (KeyValuePair<string, Dictionary<int, List<AbilityDef>>> kvp in ModState.SimGameState.AbilityTree)
+            //{
+            //    Mod.Log.Info?.Write($"-- {kvp.Key}");
+            //    foreach (KeyValuePair<int, List<AbilityDef>> kvp2 in kvp.Value)
+            //    {
+            //        Mod.Log.Info?.Write($" ---- {string.Join(",", kvp2.Value.Select(x => x.Id))}");
+            //    }
+            //}
 
             if (crewOpts.MandatoryAbilityDefs.Count > 0)
             {
@@ -253,10 +263,17 @@ namespace HumanResources.Crew
 
                 // invokeType - PilotDef pilot, string type, int value
                 Mod.Log.Info?.Write($" -- setting primary skill: {primarySkill}");
-                SetPilotAbilitiesT.GetValue(new object[] { pilotDef, primarySkill, skillLevels[primarySkill] });
+                for (int i = 1; i < skillLevels[primarySkill] + 1; i++)
+                {
+                    SetPilotAbilitiesT.GetValue(new object[] { pilotDef, primarySkill, i });
+                }
 
                 Mod.Log.Info?.Write($" -- setting secondary skill: {secondarySkill}");
-                SetPilotAbilitiesT.GetValue(new object[] { pilotDef, secondarySkill, skillLevels[secondarySkill] });
+                for (int i = 1; i < skillLevels[secondarySkill] + 1; i++)
+                {
+                    SetPilotAbilitiesT.GetValue(new object[] { pilotDef, secondarySkill, i });
+                }
+
             }
             catch (Exception e)
             {
@@ -290,7 +307,7 @@ namespace HumanResources.Crew
         private static string RandomUnusedCallsign()
         {
             List<string> availableCallsigns = ModState.CrewCreateState.NameGenerator.GetAllCallsigns();
-            
+
             List<string> previouslyUsedCallsigns = new List<string>();
             for (int idx = availableCallsigns.Count - 1; idx >= 0; idx--)
             {
@@ -329,7 +346,7 @@ namespace HumanResources.Crew
         private static string RandomUnusedVoice(Gender gender)
         {
             List<string> allOptionsForGender = ModState.CrewCreateState.Voices.GetAllOptionsForGender(gender);
-            
+
             List<string> alreadyUsedVoices = new List<string>();
             for (int num = allOptionsForGender.Count - 1; num >= 0; num--)
             {
@@ -346,7 +363,7 @@ namespace HumanResources.Crew
                 allOptionsForGender.AddRange(alreadyUsedVoices);
                 ModState.SimGameState.pilotGenVoiceDiscardPile.Clear();
             }
-            
+
             // TODO: why are we shuffling each and every time? This is pretty inefficient...
             allOptionsForGender.Shuffle();
             return allOptionsForGender[0];
@@ -397,7 +414,7 @@ namespace HumanResources.Crew
         // Direct copy of BattleTech.PilotGenerator.GetSpentXPPilot
         private static int GetSpentXPPilot(StatCollection stats)
         {
-            return GetSpentXPPilot(stats.GetValue<int>("Gunnery")) + GetSpentXPPilot(stats.GetValue<int>("Piloting")) + 
+            return GetSpentXPPilot(stats.GetValue<int>("Gunnery")) + GetSpentXPPilot(stats.GetValue<int>("Piloting")) +
                 GetSpentXPPilot(stats.GetValue<int>("Guts")) + GetSpentXPPilot(stats.GetValue<int>("Tactics"));
         }
 
@@ -417,6 +434,6 @@ namespace HumanResources.Crew
         {
             return string.Format("{0}{1}", "PilotGen_", ModState.SimGameState.GenerateSimGameUID());
         }
-       
+
     }
 }
