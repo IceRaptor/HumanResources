@@ -245,12 +245,6 @@ namespace HumanResources.Crew
             //    }
             //}
 
-            if (crewOpts.MandatoryAbilityDefs.Count > 0)
-            {
-                Mod.Log.Info?.Write($"Adding mandatory abilityDefs: {string.Join(",", crewOpts.MandatoryAbilityDefs)}");
-                pilotDef.abilityDefNames.AddRange(crewOpts.MandatoryAbilityDefs);
-            }
-
             // Sort by skill skill
             string primarySkill = SelectHighestSkill(skillLevels);
 

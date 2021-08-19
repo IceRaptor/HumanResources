@@ -72,12 +72,13 @@ namespace HumanResources
 
             string guid = null;
             // Check the pilotDef for an existing guid
-            //Mod.Log.Debug?.Write($"Checking pilot tags for GUID in Get");
+            Mod.Log.Trace?.Write($"===== GetCrewDetails: Checking pilot tags for GUID");
             foreach (string tag in pilotDef.PilotTags)
             {
                 if (tag.StartsWith(ModTags.Tag_GUID))
                 {
                     guid = tag.Substring(ModTags.Tag_GUID.Length);
+                    Mod.Log.Trace?.Write($" -- found GUID: {guid} from tag.");
                 }
             }
 
@@ -96,10 +97,10 @@ namespace HumanResources
 
                 return newDetails;
             }
-            //else
-            //{
-            //    Mod.Log.Debug?.Write($"Reading crew details using GUID from tag: {guid}");
-            //}
+            else
+            {
+                Mod.Log.Trace?.Write($"Reading crew details using GUID from tag: {guid}");
+            }
 
             CrewDetails details;
             bool hasKey = crewDetailsCache.TryGetValue(guid, out details);
@@ -107,7 +108,7 @@ namespace HumanResources
             {
                 // Doesn't exist in cache, read from the company stat
                 string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
-                //Mod.Log.Debug?.Write($"Trying to read companyStatName: {companyStatName}");
+                Mod.Log.Trace?.Write($"Trying to read companyStatName: {companyStatName}");
 
                 Statistic detailsCompanyStat = ModState.SimGameState.CompanyStats.GetStatistic(companyStatName);
                 if (detailsCompanyStat == null)
@@ -126,12 +127,12 @@ namespace HumanResources
                 }
 
                 string statVal = detailsCompanyStat.Value<string>();
-                //Mod.Log.Debug?.Write($"Read companyStat value as: {statVal}");
+                Mod.Log.Trace?.Write($"Read companyStat value as: {statVal}");
 
                 try
                 {
                     details = JsonConvert.DeserializeObject<CrewDetails>(statVal);
-                    //Mod.Log.Debug?.Write($"Fetched details from companyStats serialization: {details}.");
+                    Mod.Log.Trace?.Write($"Fetched details from companyStats serialization: {details}.");
                 }
                 catch (Exception e)
                 {
@@ -141,10 +142,10 @@ namespace HumanResources
                 // Add to cache
                 crewDetailsCache[guid] = details;
             }
-            //else
-            //{
-            //    Mod.Log.Debug?.Write($"Found cached details value: {details}");
-            //}
+            else
+            {
+                Mod.Log.Trace?.Write($"Found cached details value: {details}");
+            }
 
             return details;
         }
@@ -155,36 +156,44 @@ namespace HumanResources
 
             string guid = null;
             // Check the pilotDef for an existing guid
-            Mod.Log.Debug?.Write($"Checking pilot tags for GUID in UpdateOrCreate");
+            Mod.Log.Trace?.Write($"===== UpdateOrCreate: Checking pilot tags for GUID");
             foreach (string tag in pilotDef.PilotTags)
             {
                 if (tag.StartsWith(ModTags.Tag_GUID))
                 {
                     guid = tag.Substring(ModTags.Tag_GUID.Length);
+                    Mod.Log.Trace?.Write($" -- found GUID: {guid} from tag");
                     break;
                 }
             }
 
             // PilotDef has no existing GUID, so we need to create a new one.
-            if (guid == null || String.IsNullOrEmpty(newDetails.GUID))
+            if (guid != null && String.IsNullOrEmpty(newDetails.GUID))
             {
-                // Check for failure state where newDetails has no GUID assigned
-                if (newDetails.GUID == null)
-                    newDetails.GUID = Guid.NewGuid().ToString();
-                
-                guid = newDetails.GUID;
-                Mod.Log.Debug?.Write($" -- no GUID found for pilotDef, adding new details GUID: {newDetails.GUID}");
+                newDetails.GUID = guid;
+                Mod.Log.Debug?.Write($" -- no GUID found in updated details, setting guid from tag: {guid}");
             }
-            else if (!String.Equals(guid, newDetails.GUID, StringComparison.InvariantCultureIgnoreCase))
+            else if (guid != null && !String.Equals(guid, newDetails.GUID, StringComparison.InvariantCultureIgnoreCase))
             {
                 // Something is seriously fucked up; fail fast and make a mess
                 Mod.Log.Error?.Write($"Pilot has GUID: {guid} but asked to be updated with GUID: {newDetails.GUID}. " +
                     $"Can't process this inconsisteny, failing!");
                 return null;
             }
+            else if (guid == null && String.IsNullOrEmpty(newDetails.GUID))
+            {
+                newDetails.GUID = Guid.NewGuid().ToString();
+                guid = newDetails.GUID;
+                Mod.Log.Debug?.Write($" -- no GUID found for pilotDef in tag or detailos, adding new details GUID: {newDetails.GUID}");
+            }
+            if (guid == null && !String.IsNullOrEmpty(newDetails.GUID))
+            {               
+                guid = newDetails.GUID;
+                Mod.Log.Debug?.Write($" -- no GUID found for pilotDef in tags, using new details GUID: {newDetails.GUID}");
+            }
             else
             {
-                Mod.Log.Debug?.Write($" -- pilot has existing details GUID: {guid}");
+                Mod.Log.Trace?.Write($" -- pilot has existing details GUID: {guid}");
             }
 
             // Make sure the pilotDef gets the linking tag

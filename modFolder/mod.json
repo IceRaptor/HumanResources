@@ -83,8 +83,8 @@
                 "BenchedOnMissionMod" : -2,
                 "FavoredFactionIsEmployerMod" : 1,
                 "FavoredFactionIsTargetMod" : -3,
-                "HatedEmployerIsEmployerMod" : -3,
-                "HatedEmployerIsTargetMod" : 3
+                "HatedFactionIsEmployerMod" : -3,
+                "HatedFactionIsTargetMod" : 3
             }
         },
 		"HeadHunting" : {

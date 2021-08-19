@@ -14,14 +14,12 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "AddPilot")]
     static class SGBarracksRosterList_AddPilot
     {
-        // Only patch if we're in SimGame
-        static bool Prepare() => ModState.SimGameState != null;
-
-
         static bool Prefix(SGBarracksRosterList __instance, 
             Pilot pilot, UnityAction<SGBarracksRosterSlot> pilotSelectedOnClick, bool isInHireHall,
             Dictionary<string, SGBarracksRosterSlot> ___currentRoster)
         {
+            if (ModState.SimGameState == null) return true; // Only patch if we're in SimGame
+
             Mod.Log.Debug?.Write($"Adding pilot {pilot.Callsign} to roster list.");
 
             if (!___currentRoster.ContainsKey(pilot.GUID))
@@ -57,12 +55,9 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "ApplySort")]
     static class SGBarracksRosterList_ApplySort
     {
-        // Only patch if we're in SimGame
-        static bool Prepare() => ModState.SimGameState != null;
-
-
         static bool Prefix(SGBarracksRosterList __instance, List<SGBarracksRosterSlot> inventory)
         {
+            if (ModState.SimGameState == null) return true; // Only patch if we're in SimGame
 
             // TODO: Apply a logical sort here
             Mod.Log.Info?.Write($"Sorting {inventory?.Count} pilot slots");
@@ -88,13 +83,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "SetRosterBerthText")]
     static class SGBarracksRosterList_SetRosterBerthText
     {
-        // Only patch if we're in SimGame
-        static bool Prepare() => ModState.SimGameState != null;
-
-
         static bool Prefix(SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
         {
-            
+            if (ModState.SimGameState == null) return true; // Only patch if we're in SimGame
+
             int usedBerths = CrewHelper.UsedBerths(ModState.SimGameState.PilotRoster);
             Mod.Log.Debug?.Write($"Berths => used: {usedBerths}  available: {ModState.SimGameState.GetMaxMechWarriors()}");
 

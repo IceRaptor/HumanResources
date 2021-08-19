@@ -17,12 +17,12 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "RefreshCostColorAndAvailability")]
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability
     {
-        // Only patch if we're in SimGame
-        static bool Prepare() => ModState.SimGameState != null;
 
         static void Postfix(Pilot ___pilot, GameObject ___cantBuyMRBOverlay, HBSTooltip ___cantBuyToolTip,
             LocalizableText ___costText, UIColorRefTracker ___costTextColor)
         {
+            if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
+
             Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
             
             // TODO: This may need to be improved, as it's used inside a loop. Maybe write to company stats?
@@ -110,12 +110,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "Refresh")]
     static class SGBarracksRosterSlot_Refresh
     {
-        // Only patch if we're in SimGame
-        static bool Prepare() => ModState.SimGameState != null;
-
-
         static void Prefix(Pilot ___pilot)
         {
+            if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
+
             Mod.Log.Debug?.Write($"PRE Calling refresh for pilot: {___pilot.Name}");
         }
 
@@ -124,6 +122,8 @@ namespace HumanResources.Patches
             SVGImage ___roninIcon, SVGImage ___veteranIcon, 
             LocalizableText ___expertise, HBSTooltip ___ExpertiseTooltip)
         {
+            if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
+
             if (___pilot == null) return;
             Mod.Log.Debug?.Write($"POST Calling refresh for pilot: {___pilot.Name}");
 

@@ -149,6 +149,49 @@ namespace HumanResources
         // == Lifepaths ==
         public Dictionary<string, LifePathDescription> LifePathDescriptions = new Dictionary<string, LifePathDescription>();
 
+        public const string DIAT_AAR_Title = "AAR_TITLE";
+        public const string DIAT_AAR_Body = "AAR_BODY";
+
+        public const string DIAT_AAR_Mod_Pilot_Killed = "AAR_MOD_PILOT_KILLED";
+
+        public const string DIAT_AAR_Mod_Contract_Failed = "AAR_MOD_CONTRACT_FAILED";
+        public const string DIAT_AAR_Mod_Contract_Success = "AAR_MOD_CONTRACT_SUCCESS";
+        public const string DIAT_AAR_Mod_Contract_GoodFaith = "AAR_MOD_CONTRACT_GOODFAITH";
+
+        public const string DIAT_AAR_Mod_Deployed = "AAR_MOD_DEPLOYED";
+        public const string DIAT_AAR_Mod_Benched = "AAR_MOD_BENCHED";
+
+        public const string DIAT_AAR_Mod_Favored_Employer = "AAR_MOD_FAVORED_EMPLOYER";
+        public const string DIAT_AAR_Mod_Favored_Target = "AAR_MOD_FAVORED_TARGET";
+
+        public const string DIAT_AAR_Mod_Hated_Employer = "AAR_MOD_HATED_EMPLOYER";
+        public const string DIAT_AAR_Mod_Hated_Target = "AAR_MOD_HATED_TARGET";
+
+        public const string DIAT_AAR_Pilot_Line = "AAR_MOD_PILOT_LINE";
+
+        public Dictionary<string, string> Dialogs = new Dictionary<string, string>
+        {
+            { DIAT_AAR_Title, "Attitude Changes" },
+            { DIAT_AAR_Body, "After the mission debriefing completes, Darius hands you a simple report. Commander, here's my " +
+                "best guess as to how the company reacted to this last outing. Each Merc's current attitude is listed below.\n\n" },
+
+            { DIAT_AAR_Mod_Pilot_Killed, "Crew Killed\n" },
+
+            { DIAT_AAR_Mod_Contract_Failed, "<color=red>Failed Contract: {0:+0;-#}</color>\n" },
+            { DIAT_AAR_Mod_Contract_Success, "<color=green>Successful Contract: {0:+0;-#}</color>\n" },
+            { DIAT_AAR_Mod_Contract_GoodFaith, "<color=green>Good Faith Contract: {0:+0;-#}</color>\n" },
+
+            { DIAT_AAR_Mod_Deployed, "<color=green>Deployed: {0:+0;-#}</color>" },
+            { DIAT_AAR_Mod_Benched, "<color=red>Benched: {0:+0;-#}</color>" },
+
+            { DIAT_AAR_Mod_Favored_Employer, "<color=green>Favored Employer: {0:+0;-#}</color>" },
+            { DIAT_AAR_Mod_Favored_Target, "<color=red>Favored Target: {0:+0;-#}</color>" },
+
+            { DIAT_AAR_Mod_Hated_Employer, "<color=red>Hated Employer: {0:+0;-#}</color>" },
+            { DIAT_AAR_Mod_Hated_Target, "<color=green>Hated Target: {0:+0;-#}</color>" },
+
+            { DIAT_AAR_Pilot_Line, "{0}: {1:+0;-#}  [{2}]\n" }
+        };
     }
 }
 

@@ -185,6 +185,8 @@ namespace HumanResources.Crew
         public bool IsMedTechCrew { get { return Type == CrewType.MedTechCrew; } }
         public bool IsVehicleCrew { get { return Type == CrewType.VehicleCrew; } }
 
+        public bool IsCombatCrew { get { return IsVehicleCrew || IsMechWarrior; } }
+
         public int HazardPay
         {
             get

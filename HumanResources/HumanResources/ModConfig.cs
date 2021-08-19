@@ -54,9 +54,6 @@ namespace HumanResources
         // -1 indicates no limit
         public float MaxOfType = -1;
 
-        // Any abilityDefs (typically traits) that must be added to a crew of this type
-        public List<string> MandatoryAbilityDefs = new List<string>();
-
         // Origin tags that will be added to the crew types
         public string[] originTags = new string[] { };
         public string[] traitTags = new string[] { };
@@ -125,8 +122,8 @@ namespace HumanResources
 
         public int FavoredFactionIsEmployerMod = 1;
         public int FavoredFactionIsTargetMod = -3;
-        public int HatedEmployerIsEmployerMod = -3;
-        public int HatedEmployerIsTargetMod = 3;
+        public int HatedFactionIsEmployerMod = -3;
+        public int HatedFactionIsTargetMod = 3;
     }
 
     public class LifePathOps
@@ -221,8 +218,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            HazardPayRatio = 0.05f,
-            MandatoryAbilityDefs = new List<string>()
+            HazardPayRatio = 0.05f
         };
 
         public CrewOpts VehicleCrews = new CrewOpts
@@ -236,8 +232,7 @@ namespace HumanResources
             SalaryVariance = 1.1f,
             BonusVariance = 1.5f,
             MaxOfType = -1,
-            HazardPayRatio = 0.05f,
-            MandatoryAbilityDefs = new List<string>()
+            HazardPayRatio = 0.05f
         };
 
         public float RoninChance = 0.3f;
@@ -451,7 +446,7 @@ namespace HumanResources
             Mod.Log.Info?.Write($"  PilotKilledMod: {this.Attitude.PerMission.PilotKilledMod}");
             Mod.Log.Info?.Write($"  DeployedOnMissionMod: {this.Attitude.PerMission.DeployedOnMissionMod}  BenchedOnMissionMod: {this.Attitude.PerMission.BenchedOnMissionMod}");
             Mod.Log.Info?.Write($"  FavoredFactionIsEmployerMod: {this.Attitude.PerMission.FavoredFactionIsEmployerMod}  FavoredFactionIsTargetMod: {this.Attitude.PerMission.FavoredFactionIsTargetMod}");
-            Mod.Log.Info?.Write($"  HatedEmployerIsEmployerMod: {this.Attitude.PerMission.HatedEmployerIsEmployerMod}  HatedEmployerIsTargetMod: {this.Attitude.PerMission.HatedEmployerIsTargetMod}");
+            Mod.Log.Info?.Write($"  HatedEmployerIsEmployerMod: {this.Attitude.PerMission.HatedFactionIsEmployerMod}  HatedEmployerIsTargetMod: {this.Attitude.PerMission.HatedFactionIsTargetMod}");
 
             Mod.Log.Info?.Write($"");
 

@@ -368,7 +368,6 @@ Some tags are not displayed to the player, and are used....
 - Ability to specify pilot icons to use
 - Flag to set to ignore head hunting on a pilot (some pilots are fanatically loyal or put their word over the paycheck)
 
-- Skirmish bay is broken; according to BD it just doesn't load at all
 - Dialog during AAR that shows all attitude adjustments
 
 * Add dropship maintenance crew; reduces Argo maintenance cost?
