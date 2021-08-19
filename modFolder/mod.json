@@ -1,7 +1,7 @@
 {
     "Name": "HumanResources",
     "Enabled": true,
-    "Version": "0.4.0",
+    "Version": "0.5.0",
     "Description": "Allows you to hire MechTech, MedTech, and Vehicle crews.",
     "Author": "IceRaptor",
     "Website": "https://github.com/IceRaptor/HumanResources",
@@ -13,6 +13,7 @@
 	"CustomResourceTypes": [ ],
     "Manifest": [ 
         { "Type": "BaseDescriptionDef", "Path": "tooltip/" },
+		{ "Type": "PilotDef", "Path": "pilots/" },
         { "Type": "SimGameEventDef", "Path": "events/" },
         { "Type": "SimGameStatDescDef", "Path": "statDescriptions/" },
         { "Type": "SVGAsset", "Path": "icons/" },
@@ -45,6 +46,18 @@
 
             "FavoredFactionChance" : 0.3,
             "HatedFactionChance" : 0.3,
+			
+			"CandidateFactionsFavored" : [
+				"faction_AuriganRestoration", "faction_AuriganDirectorate", "faction_ComStar", 
+                "faction_Davion", "faction_Liao", "faction_Kurita", "faction_Marik", "faction_Steiner",
+                "faction_TaurianConcordat", "faction_MagistracyOfCanopus"
+			],
+
+			"CandidateFactionsHated" : [
+				"faction_AuriganRestoration", "faction_AuriganDirectorate", "faction_ComStar", 
+                "faction_Davion", "faction_Liao", "faction_Kurita", "faction_Marik", "faction_Steiner",
+                "faction_TaurianConcordat", "faction_MagistracyOfCanopus"
+			],
 
             "Monthly" : {
                 "FavoredEmployerAlliedMod" : 6,
@@ -93,6 +106,29 @@
 			"PlanetBlacklist" : [ "planet_civ_primitive", "planet_other_plague", "planet_pop_none" ]
         },
         "HiringHall" : {
+			
+            "SkillDistribution" : {
+                "Breakpoints" : [ -0.5, 1, 1.75, 2.5 ],
+                "PlanetTagModifiers" : {
+                    "planet_civ_innersphere" :          { "MechWarriors" : 1.0, "VehicleCrews" : 1.0, "MechTechs" : 0.5, "MedTechs" : 0.5, "Aerospace" : 1.0 },
+                    "planet_civ_periphery" :            { "MechWarriors" : 0.5, "VehicleCrews" : 1.0, "MechTechs" : 0.0, "MedTechs" : 0.0, "Aerospace" : 0.5 },
+                    "planet_civ_primitive" :            { "MechWarriors" : -0.75, "VehicleCrews" : -0.25, "MechTechs" : -1, "MedTechs" : -1, "Aerospace" : -0.25 }
+				}					
+            },
+
+            "SizeDistribution" : {
+                "Breakpoints" : [ -0.25, 0.25, 1.25, 2  ],
+                "PlanetTagModifiers" : {
+                    "planet_civ_innersphere" :          { "MechWarriors" : 1.0, "VehicleCrews" : 1.0, "MechTechs" : 0.5, "MedTechs" : 0.5, "Aerospace" : 1.0 },
+                    "planet_civ_periphery" :            { "MechWarriors" : 0.5, "VehicleCrews" : 1.0, "MechTechs" : 0.0, "MedTechs" : 0.0, "Aerospace" : 0.5 },
+                    "planet_civ_primitive" :            { "MechWarriors" : -0.75, "VehicleCrews" : -0.25, "MechTechs" : -1, "MedTechs" : -1, "Aerospace" : -0.25 }
+				}						
+            },
+
+			"LifePath" : {
+				"RandomTagChance" : 0.2
+			},
+
             "Scarcity" : {
                 "Enabled": true,
                 "Defaults" : { "MechWarriors" : 0.0, "VehicleCrews" : 0.0, "MechTechs" : 0.0, "MedTechs": 0.0 },
@@ -128,28 +164,6 @@
                 }
             },
 			
-			"LifePath" : {
-				"RandomTagChance" : 0.2
-			},
-
-            "SkillDistribution" : {
-                "Breakpoints" : [ -0.5, 1, 1.75, 2.5 ],
-                "PlanetTagModifiers" : {
-                    "planet_civ_innersphere" :          { "MechWarriors" : 1.0, "VehicleCrews" : 1.0, "MechTechs" : 0.5, "MedTechs" : 0.5, "Aerospace" : 1.0 },
-                    "planet_civ_periphery" :            { "MechWarriors" : 0.5, "VehicleCrews" : 1.0, "MechTechs" : 0.0, "MedTechs" : 0.0, "Aerospace" : 0.5 },
-                    "planet_civ_primitive" :            { "MechWarriors" : -0.75, "VehicleCrews" : -0.25, "MechTechs" : -1, "MedTechs" : -1, "Aerospace" : -0.25 }
-				}					
-            },
-
-            "SizeDistribution" : {
-                "Breakpoints" : [ -0.25, 0.25, 1.25, 2  ],
-                "PlanetTagModifiers" : {
-                    "planet_civ_innersphere" :          { "MechWarriors" : 1.0, "VehicleCrews" : 1.0, "MechTechs" : 0.5, "MedTechs" : 0.5, "Aerospace" : 1.0 },
-                    "planet_civ_periphery" :            { "MechWarriors" : 0.5, "VehicleCrews" : 1.0, "MechTechs" : 0.0, "MedTechs" : 0.0, "Aerospace" : 0.5 },
-                    "planet_civ_primitive" :            { "MechWarriors" : -0.75, "VehicleCrews" : -0.25, "MechTechs" : -1, "MedTechs" : -1, "Aerospace" : -0.25 }
-				}						
-            },
-
             "PointsBySkillAndSize" : {
                 "Aerospace" : [
                     [ 1, 2, 3, 5, 8 ],
@@ -250,29 +264,7 @@
 				"SkillToExpertiseThresholds" : [ 10, 18, 27, 35, 99 ],
 				
                 "MaxOfType" : -1,
-				
-				"AbilityDefMap" : {
-					"GUNNERY" : {
-						"5"  : [ "AbilityDefG5", "AbilityDefG5a" ],
-						"8"  : [ "AbilityDefG8", "AbilityDefG8a", "AbilityDefG8b", "AbilityDefG8c" ],
-						"10" : [ "AbilityDefG10a" ]
-					},
-					"GUTS" : {
-						"5"  : [ "AbilityDefGu5", "AbilityDefGu5a" ],
-						"8"  : [ "AbilityDefGu8", "AbilityDefGu8a" ],
-						"10" : [ "AbilityDefGu10a" ]					
-					},
-					"PILOTING" : {
-						"5"  : [ "AbilityDefP5", "AbilityDefP5a" ],
-						"8"  : [ "AbilityDefP8", "AbilityDefP8a" ],
-						"10" : [ "AbilityDefP10a" ]										
-					},
-					"TACTICS" : {
-						"5"  : [ "AbilityDefT5A", "AbilityDefT5Aa" ],
-						"8"  : [ "AbilityDefT8A", "AbilityDefT8Aa" ],
-						"10" : [ "AbilityDefT10Aa" ]					
-					}
-				},
+				"MandatoryAbilityDefs" : []				
             },
 			
             "VehicleCrews" : {
@@ -295,29 +287,10 @@
 				
                 "MaxOfType" : -1,
 				
-								"AbilityDefMap" : {
-					"GUNNERY" : {
-						"5"  : [ "AbilityDefG5", "AbilityDefG5a" ],
-						"8"  : [ "AbilityDefG8", "AbilityDefG8a", "AbilityDefG8b", "AbilityDefG8c" ],
-						"10" : [ "AbilityDefG10a" ]
-					},
-					"GUTS" : {
-						"5"  : [ "AbilityDefGu5", "AbilityDefGu5a" ],
-						"8"  : [ "AbilityDefGu8", "AbilityDefGu8a" ],
-						"10" : [ "AbilityDefGu10a" ]					
-					},
-					"PILOTING" : {
-						"5"  : [ "AbilityDefP5", "AbilityDefP5a" ],
-						"8"  : [ "AbilityDefP8", "AbilityDefP8a" ],
-						"10" : [ "AbilityDefP10a" ]										
-					},
-					"TACTICS" : {
-						"5"  : [ "AbilityDefT5A", "AbilityDefT5Aa" ],
-						"8"  : [ "AbilityDefT8A", "AbilityDefT8Aa" ],
-						"10" : [ "AbilityDefT10Aa" ]					
-					}
-				},
-            }
+				"MandatoryAbilityDefs" : []
+            },
+			
+			"RoninChance" : 0.3	
         }
     }
 }

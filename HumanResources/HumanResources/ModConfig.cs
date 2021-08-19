@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using BattleTech;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HumanResources
@@ -80,6 +83,14 @@ namespace HumanResources
         public float FavoredFactionChance = 0.3f;
         public float HatedFactionChance = 0.3f;
 
+        public List<string> CandidateFactionsFavored = new List<string>();
+        [JsonIgnore]
+        public List<FactionValue> FavoredFactionCandidates = new List<FactionValue>();
+
+        public List<string> CandidateFactionsHated = new List<string>();
+        [JsonIgnore]
+        public List<FactionValue> HatedFactionCandidates = new List<FactionValue>();
+
         // Bonus added when a contract is renewed with the merc
         public int RehireBonusMod = 2;
 
@@ -157,7 +168,6 @@ namespace HumanResources
         
         public PointsBySkillAndSizeOpts PointsBySkillAndSize = new PointsBySkillAndSizeOpts();
 
-
         public CrewOpts AerospaceWings = new CrewOpts
         {
             Enabled = true,
@@ -231,6 +241,8 @@ namespace HumanResources
         };
 
         public float RoninChance = 0.3f;
+
+
 
     }
 
@@ -421,7 +433,11 @@ namespace HumanResources
             Mod.Log.Info?.Write("--- Attitude Config ---");
             Mod.Log.Info?.Write($"  ThresholdMax: {this.Attitude.ThresholdMax}  ThresholdBest: {this.Attitude.ThresholdBest}  ThresholdGood: {this.Attitude.ThresholdGood}");
             Mod.Log.Info?.Write($"  ThresholdPoor: {this.Attitude.ThresholdPoor}  ThresholdWorst: {this.Attitude.ThresholdWorst}  ThresholdMin: {this.Attitude.ThresholdMin}");
+
             Mod.Log.Info?.Write($"  FavoredFactionChance: {this.Attitude.FavoredFactionChance}  HatedFactionChance: {this.Attitude.HatedFactionChance}");
+            Mod.Log.Info?.Write($"  CandidateFavoredFactions: {string.Join(",", this.Attitude.FavoredFactionCandidates.Select(x => x.FactionDefID).ToList())}");
+            Mod.Log.Info?.Write($"  CandidateHatedFactions: {string.Join(",", this.Attitude.HatedFactionCandidates.Select(x => x.FactionDefID).ToList())}");
+
             Mod.Log.Info?.Write($"  RehireBonusMod: {this.Attitude.RehireBonusMod}");
             Mod.Log.Info?.Write("   -- Monthly Mods --");
             Mod.Log.Info?.Write($"  FavoredEmployerAlliedMod: {this.Attitude.Monthly.FavoredEmployerAlliedMod}  HatedEmployerAlliedMod: {this.Attitude.Monthly.HatedEmployerAlliedMod}");
@@ -469,8 +485,47 @@ namespace HumanResources
             // TODO: Validate the hiring hall distributions
 
             // Add any missing default values
+            InitAttitudeDefaults();
             InitHiringHallDefaults();
             InitHeadHuntingDefaults();
+        }
+
+        private void InitAttitudeDefaults()
+        {
+
+            // Default and process favored factions
+            if (this.Attitude.CandidateFactionsFavored.Count == 0)
+                this.Attitude.CandidateFactionsFavored = new List<string>()
+                {
+                    "faction_AuriganRestoration", "faction_AuriganDirectorate", "faction_ComStar",
+                    "faction_Davion", "faction_Liao", "faction_Kurita", "faction_Marik", "faction_Steiner",
+                    "faction_TaurianConcordat", "faction_MagistracyOfCanopus"
+                };
+
+            // Default and process hated factions
+            if (this.Attitude.CandidateFactionsHated.Count == 0)
+                this.Attitude.CandidateFactionsHated = new List<string>()
+                {
+                    "faction_AuriganRestoration", "faction_AuriganDirectorate", "faction_ComStar",
+                    "faction_Davion", "faction_Liao", "faction_Kurita", "faction_Marik", "faction_Steiner",
+                    "faction_TaurianConcordat", "faction_MagistracyOfCanopus"
+                };
+
+            List<FactionValue> allFactions = FactionEnumeration.FactionList.Where(fv => fv.DoesGainReputation).ToList();
+            foreach (FactionValue faction in allFactions)
+            {
+                if (this.Attitude.CandidateFactionsFavored.Contains(faction.FactionDefID))
+                {
+                    this.Attitude.FavoredFactionCandidates.Add(faction);
+                    this.Attitude.CandidateFactionsFavored.Remove(faction.FactionDefID);
+                }
+
+                if (this.Attitude.CandidateFactionsHated.Contains(faction.FactionDefID))
+                {
+                    this.Attitude.HatedFactionCandidates.Add(faction);
+                    this.Attitude.CandidateFactionsHated.Remove(faction.FactionDefID);
+                }
+            }
         }
 
         private void InitHiringHallDefaults()

@@ -18,9 +18,6 @@ namespace HumanResources.Crew
 
     public static class CrewGenerator
     {
-
-
-
         public static PilotDef GenerateMechTechCrew(StarSystem starSystem)
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count - 1);

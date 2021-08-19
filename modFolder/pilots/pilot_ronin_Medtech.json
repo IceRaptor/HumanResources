@@ -1,0 +1,41 @@
+{
+    "Description": {
+        "Id": "pilot_ronin_Medtech",
+        "Name": "RMedTTest",
+        "FirstName": "MedTech",
+        "LastName": "Ronin Test",
+        "Callsign": "RMedTTest",
+        "Gender": "Female",
+        "Faction": "Liao",
+        "Age": "27",
+        "Details": "Test Ronin",
+        "Icon": "pilot_at_axle_p"
+    },
+    "BaseGunnery": "5",
+    "BonusGunnery": 0,
+    "BasePiloting": "2",
+    "BonusPiloting": 0,
+    "BaseGuts": "3",
+    "BonusGuts": 0,
+    "BaseTactics": "3",
+    "BonusTactics": 0,
+    "ExperienceUnspent": 0,
+    "ExperienceSpent": 4100,
+    "Injuries": 0,
+    "Health": 3,
+    "LethalInjury": false,
+    "Incapacitated": false,
+    "Morale": 0,
+    "Voice": "f_glum01_russian",
+    "abilityDefNames": [],
+    "AIPersonality": "Undefined",
+    "PilotTags": {
+        "items": [
+
+        ],
+        "tagSetSourceFile": ""
+    },
+    "PilotCost": 0,
+    "IsRonin": true,
+    "IsVanguard": true
+}

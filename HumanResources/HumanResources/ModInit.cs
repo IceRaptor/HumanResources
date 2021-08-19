@@ -61,13 +61,9 @@ namespace HumanResources
             Log.Debug?.Write($"mod.json settings are:({settingsJSON})");
             Mod.Config.LogConfig();
             if (settingsE != null)
-            {
                 Log.Info?.Write($"ERROR reading settings file! Error was: {settingsE}");
-            }
             else
-            {
                 Log.Info?.Write($"INFO: No errors reading settings file.");
-            }
 
             // Read crew name dictionary
             string namesPath = Path.Combine(ModDir, "./mod_names.json");

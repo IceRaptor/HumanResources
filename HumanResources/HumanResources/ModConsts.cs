@@ -66,6 +66,10 @@ namespace HumanResources
         public const string Tag_CU_NoMech_Crew = "pilot_nomech_crew";
         public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
 
+        // Initialization tags
+        public const string Tag_Prefix_Faction_Favored = "HR_FACTION_FAVORED_";
+        public const string Tag_Prefix_Faction_Hated = "HR_FACTION_HATED_";
+
         // Used during cleanup; should contain all tag names
         public static List<string> Tags_All = new List<string>
         {

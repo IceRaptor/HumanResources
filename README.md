@@ -360,43 +360,39 @@ Some tags are not displayed to the player, and are used....
 
 ## TODO
 
-
-I don't remember the back part of that, but the first part sounds like me.
-
-@FrostRaptor (ping for later discovery) List for pilotdef requests
--Salary fields (salaryMulti, salaryExponent)
--Forced Favored Faction and/or Hated Faction, ignoring anything randomly generated in favor of the forced ones
--Flag to set to ignore head hunting on a pilot (some pilots are fanatically loyal or put their word over the paycheck)
-Thought: would it be possible for HR to allow me to add a few fields to ronin such as special price modifiers or forced faction preferences?
-We have a number of pilots who have faction allegiances in their backgrounds and having them get fixed faction prefs would make a great deal of sense.
-Can remove those.
-Thought: would it be possible for HR to allow me to add a few fields to ronin such as special price modifiers or forced faction preferences?
-We have a number of pilots who have faction allegiances in their backgrounds and having them get fixed faction prefs would make a great deal of sense.
-
-@FrostRaptor I did think of something else I'd like in HumanResources: the ability to make "ronin" vee crews/mechtech crews/medtech crews (and I guess aerospace?) with unique icons and everything, so you could get lucky and find a special crew out there
+- Ronin improvements
+    - ability to tag a ronin as Vehicle / MechTech / MedTech / Aerospace
+    - ability to assign custom icons to ronin
+	- ability to force-set faction preferred / hated 
+	- ability to set forced price modifiers (salaryMulti, salaryExponent)
+- Ability to specify pilot icons to use
+- Flag to set to ignore head hunting on a pilot (some pilots are fanatically loyal or put their word over the paycheck)
 
 - Skirmish bay is broken; according to BD it just doesn't load at all
 - Dialog during AAR that shows all attitude adjustments
-- Set favored/hated faction lists
 
-* Abilities for combat crews need to be auto-generated
-	- Be aware of https://github.com/bloodydoves/BattleTech-Advanced/tree/development/Abilifier which adds multiple abilities
 * Add dropship maintenance crew; reduces Argo maintenance cost?
 * Hiring cost varies by planet tag *not* faction owner
   * Faction reputation influences the cost (if they are faction affiliated and you are hated, more expensive)
 * skill distribution mu and sigma modified by planet tags
-	- partial; done for MW/VC
+	* partial; done for MW/VC
 * size distribution mu and sigma modified by planet tags
 * Mercenary loyalty
   * After AAR report, will complain if you work against their faction
-* Allow mod-makers to set faction hatred/favors on pre-generated pilots
+
 * Add pilot favor/hatred to pre-generated pilots
-* I'm not updating pilots value, etc as their skills change; need to ensure that getzs addressed at least at contract renegotiation
+    * Allow mod-makers to set faction hatred/favors on pre-generated pilots
+    * Ability to define favored/hated faction lists
+
+* I'm not updating pilots value, etc as their skills change; need to ensure that gets addressed at least at contract renegotiation
+    * Update text to say 'new terms'
+
 * Context tooltip from events needs to account for crews
 * Optional kill bonus where each unit killed gives a bonus to the pilot
 * Doco note: salary only changes on renegotiation
 * Update salary for mechwarriors/vcrew prior to event fire
 * MedTechs, MechTechs, Aerospace should improve as you use them
+
 * Check if player character is paid a salary
 * What happens if you fire then re-hire the same mechwarrior? Does the old state persist?
 * Random list of merc company names as the hiring company

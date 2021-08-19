@@ -141,31 +141,40 @@ namespace HumanResources.Crew
             }
 
             // Check for favored / hated faction
-            List<FactionValue> factions = FactionEnumeration.FactionList.Where(fv => fv.DoesGainReputation).ToList();
-
-            double favoredRoll = Mod.Random.NextDouble();
-            if (favoredRoll < Mod.Config.Attitude.FavoredFactionChance)
+            FactionValue favoredFaction = null;
+            if (Mod.Config.Attitude.FavoredFactionCandidates.Count > 0)
             {
-                int idx = Mod.Random.Next(factions.Count - 1);
-                FactionValue faction = factions.ElementAt(idx);
-                factions.RemoveAt(idx);
-                Mod.Log.Info?.Write($"Roll {favoredRoll} < {Mod.Config.Attitude.FavoredFactionChance}, adding {faction} as favored faction");
-                this.FavoredFaction = faction.ID;
+                double favoredRoll = Mod.Random.NextDouble();
+                if (favoredRoll < Mod.Config.Attitude.FavoredFactionChance)
+                {
+                    int idx = Mod.Random.Next(Mod.Config.Attitude.FavoredFactionCandidates.Count - 1);
+                    favoredFaction = Mod.Config.Attitude.FavoredFactionCandidates[idx];
+                    Mod.Log.Info?.Write($"Roll {favoredRoll} < {Mod.Config.Attitude.FavoredFactionChance}, adding {favoredFaction} as favored faction");
+                    this.FavoredFaction = favoredFaction.ID;
+                }
+                else
+                {
+                    this.FavoredFaction = -1;
+                }
             }
-            else
-                this.FavoredFaction = -1;
 
             double hatedRoll = Mod.Random.NextDouble();
-            if (hatedRoll < Mod.Config.Attitude.HatedFactionChance)
+            if (Mod.Config.Attitude.HatedFactionCandidates.Count > 0)
             {
-                int idx = Mod.Random.Next(factions.Count - 1);
-                FactionValue faction = factions.ElementAt(idx);
-                factions.RemoveAt(idx);
-                Mod.Log.Info?.Write($"Roll {hatedRoll} < {Mod.Config.Attitude.HatedFactionChance}, adding {faction} as hated faction");
-                this.HatedFaction = faction.ID;
+                if (hatedRoll < Mod.Config.Attitude.HatedFactionChance)
+                {
+                    List<FactionValue> candidates = new List<FactionValue>(Mod.Config.Attitude.HatedFactionCandidates);
+                    if (favoredFaction != null)
+                        candidates.Remove(favoredFaction);
+
+                    int idx = Mod.Random.Next(candidates.Count - 1);
+                    FactionValue faction = candidates[idx];
+                    Mod.Log.Info?.Write($"Roll {hatedRoll} < {Mod.Config.Attitude.HatedFactionChance}, adding {faction} as hated faction");
+                    this.HatedFaction = faction.ID;
+                }
+                else
+                    this.HatedFaction = -1;
             }
-            else
-                this.HatedFaction = -1;
 
             this.NextHeadHuntingDay = ModState.SimGameState.DaysPassed;
         }
