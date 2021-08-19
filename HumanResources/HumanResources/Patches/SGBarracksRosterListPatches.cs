@@ -14,6 +14,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "AddPilot")]
     static class SGBarracksRosterList_AddPilot
     {
+        // Only patch if we're in SimGame
+        static bool Prepare() => ModState.SimGameState != null;
+
+
         static bool Prefix(SGBarracksRosterList __instance, 
             Pilot pilot, UnityAction<SGBarracksRosterSlot> pilotSelectedOnClick, bool isInHireHall,
             Dictionary<string, SGBarracksRosterSlot> ___currentRoster)
@@ -53,6 +57,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "ApplySort")]
     static class SGBarracksRosterList_ApplySort
     {
+        // Only patch if we're in SimGame
+        static bool Prepare() => ModState.SimGameState != null;
+
+
         static bool Prefix(SGBarracksRosterList __instance, List<SGBarracksRosterSlot> inventory)
         {
 
@@ -80,6 +88,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "SetRosterBerthText")]
     static class SGBarracksRosterList_SetRosterBerthText
     {
+        // Only patch if we're in SimGame
+        static bool Prepare() => ModState.SimGameState != null;
+
+
         static bool Prefix(SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
         {
             

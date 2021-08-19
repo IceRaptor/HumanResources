@@ -6,6 +6,7 @@ using Harmony;
 using HBS.Extensions;
 using HumanResources.Crew;
 using HumanResources.Helper;
+using IRBTModUtils;
 using SVGImporter;
 using TMPro;
 using UnityEngine;
@@ -16,6 +17,9 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "RefreshCostColorAndAvailability")]
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability
     {
+        // Only patch if we're in SimGame
+        static bool Prepare() => ModState.SimGameState != null;
+
         static void Postfix(Pilot ___pilot, GameObject ___cantBuyMRBOverlay, HBSTooltip ___cantBuyToolTip,
             LocalizableText ___costText, UIColorRefTracker ___costTextColor)
         {
@@ -106,6 +110,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "Refresh")]
     static class SGBarracksRosterSlot_Refresh
     {
+        // Only patch if we're in SimGame
+        static bool Prepare() => ModState.SimGameState != null;
+
+
         static void Prefix(Pilot ___pilot)
         {
             Mod.Log.Debug?.Write($"PRE Calling refresh for pilot: {___pilot.Name}");

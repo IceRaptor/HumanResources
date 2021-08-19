@@ -9,6 +9,9 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(LanceConfiguratorPanel), "SetData")]
     static class LanceConfiguratorPanel_SetData
     {
+        // Only patch if we're in SimGame
+        static bool Prepare() => ModState.SimGameState != null;
+
         static void Prefix(LanceConfiguratorPanel __instance, ref List<Pilot> pilots)
         {
             // Remove any pilots who are aerospace, mechtechs, or medtechs
