@@ -175,9 +175,9 @@ namespace HumanResources.Patches
             }
 
             // Convert favored and hated faction
-            if (!string.IsNullOrEmpty(details.FavoredFactionId))
+            if (details.FavoredFactionId > 0)
             {
-                FactionValue faction = FactionEnumeration.GetFactionByName(details.FavoredFactionId);
+                FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFactionId);
                 string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], 
                     new object[] { faction.FactionDef.CapitalizedName }).ToString();
                 sb.Append(favoredFactionS);
@@ -189,9 +189,9 @@ namespace HumanResources.Patches
                 //    $"");
             }
 
-            if (!string.IsNullOrEmpty(details.HatedFactionId))
+            if (details.HatedFactionId > 0)
             {
-                FactionValue faction = FactionEnumeration.GetFactionByName(details.HatedFactionId);
+                FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFactionId);
                 string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], 
                     new object[] { faction.FactionDef.CapitalizedName }).ToString();
                 sb.Append(hatedFactionS);

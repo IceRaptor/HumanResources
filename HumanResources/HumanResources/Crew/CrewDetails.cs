@@ -36,8 +36,8 @@ namespace HumanResources.Crew
 
         public int ContractTerm { get; set; }
 
-        public string FavoredFactionId { get; set; }
-        public string HatedFactionId { get; set; }
+        public int FavoredFactionId { get; set; }
+        public int HatedFactionId { get; set; }
 
         // Mutable properties
         public int Attitude { get; set; }
@@ -155,9 +155,9 @@ namespace HumanResources.Crew
             }
 
             if (favoredFaction != null)
-                this.FavoredFactionId = favoredFaction.FactionDefID;
+                this.FavoredFactionId = (int)favoredFaction.FactionID;
             if (hatedFaction != null)
-                this.HatedFactionId = hatedFaction.FactionDefID;
+                this.HatedFactionId = (int)hatedFaction.FactionID;
 
             this.NextHeadHuntingDay = ModState.SimGameState.DaysPassed;
         }

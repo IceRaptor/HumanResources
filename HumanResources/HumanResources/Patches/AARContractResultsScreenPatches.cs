@@ -115,9 +115,9 @@ namespace HumanResources.Patches
                 }
 
                 // Check favored / hated factions
-                if (!string.IsNullOrEmpty(details.FavoredFactionId))
+                if (details.FavoredFactionId > 0)
                 {
-                    if (details.FavoredFactionId == ___theContract.Override.employerTeam.FactionValue.FactionDefID)
+                    if (details.FavoredFactionId == ___theContract.Override.employerTeam.FactionValue.FactionID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot favors employer faction, applying modifier: {Mod.Config.Attitude.PerMission.FavoredFactionIsEmployerMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.FavoredFactionIsEmployerMod;
@@ -127,7 +127,7 @@ namespace HumanResources.Patches
                            );
                     }
 
-                    if (details.FavoredFactionId == ___theContract.Override.targetTeam.FactionValue.FactionDefID)
+                    if (details.FavoredFactionId == ___theContract.Override.targetTeam.FactionValue.FactionID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot favors target faction, applying modifier: {Mod.Config.Attitude.PerMission.FavoredFactionIsTargetMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.FavoredFactionIsTargetMod;
@@ -138,9 +138,9 @@ namespace HumanResources.Patches
                     }
                 }
 
-                if (!string.IsNullOrEmpty(details.HatedFactionId))
+                if (details.HatedFactionId > 0)
                 {
-                    if (details.HatedFactionId == ___theContract.Override.employerTeam.FactionValue.FactionDefID)
+                    if (details.HatedFactionId == ___theContract.Override.employerTeam.FactionValue.FactionID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot hates employer faction, applying modifier: {Mod.Config.Attitude.PerMission.HatedFactionIsEmployerMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.HatedFactionIsEmployerMod;
@@ -150,7 +150,7 @@ namespace HumanResources.Patches
                            );
                     }
 
-                    if (details.HatedFactionId == ___theContract.Override.targetTeam.FactionValue.FactionDefID)
+                    if (details.HatedFactionId == ___theContract.Override.targetTeam.FactionValue.FactionID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot hates target faction, applying modifier: {Mod.Config.Attitude.PerMission.HatedFactionIsTargetMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.HatedFactionIsTargetMod;

@@ -525,11 +525,11 @@ namespace HumanResources.Patches
                 details.Attitude += econMod;
 
                 // Check pilots to see if they favor or hate an allied faction
-                if (!string.IsNullOrEmpty(details.FavoredFactionId) && !details.IsPlayer)
+                if (details.FavoredFactionId > 0 && !details.IsPlayer)
                 {
                     foreach (FactionValue faction in alliedFactions)
                     {
-                        if (faction.FactionDefID == details.FavoredFactionId)
+                        if (faction.FactionID == details.FavoredFactionId)
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} favors allied faction: {faction.FriendlyName}, " +
                                 $"applying attitude mod: {Mod.Config.Attitude.Monthly.FavoredEmployerAlliedMod}");
@@ -539,11 +539,11 @@ namespace HumanResources.Patches
                     }
                 }
 
-                if (!string.IsNullOrEmpty(details.HatedFactionId) && !details.IsPlayer)
+                if (details.HatedFactionId > 0 && !details.IsPlayer)
                 {
                     foreach (FactionValue faction in alliedFactions)
                     {
-                        if (faction.FactionDefID == details.HatedFactionId)
+                        if (faction.FactionID == details.HatedFactionId)
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} hates allied faction: {faction.FriendlyName}, " +
                                 $"applying attitude mod: {Mod.Config.Attitude.Monthly.HatedEmployerAlliedMod}");
