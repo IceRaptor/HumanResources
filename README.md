@@ -360,11 +360,10 @@ Some tags are not displayed to the player, and are used....
 
 ## TODO
 
-- Ronin improvements
-    - ability to tag a ronin as Vehicle / MechTech / MedTech / Aerospace
-    - ability to assign custom icons to ronin
-	- ability to force-set faction preferred / hated 
-	- ability to set forced price modifiers (salaryMulti, salaryExponent)
+- bloodydoves:  
+    - is it possible to tie the hiring of med/mech crews to having specific argo upgrades? So you need Medbay 3 for really big crews, for instance, since you'd need the facilities to support them?
+So for that Huge Crew, you'd need Medbay 3 or the Hospital Bay to support their work, for instance.
+which gives a reason for smaller crews to be attractive: you need less for them to be able to work with you. That Small Crew is only adding +3 or whatever but they're not picky about the working environment.
 
 - Ability to specify pilot icons to use
 - Flag to set to ignore head hunting on a pilot (some pilots are fanatically loyal or put their word over the paycheck)

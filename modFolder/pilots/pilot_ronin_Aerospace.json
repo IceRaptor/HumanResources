@@ -31,7 +31,11 @@
     "AIPersonality": "Undefined",
     "PilotTags": {
         "items": [
-
+			"HR_CREWTYPE_AEROSPACE",
+			"HR_RONIN_FACTION_FAVORED_faction_AuriganRestoration",
+			"HR_RONIN_FACTION_HATED_faction_MagistracyOfCanopus",
+			"HR_RONIN_SUPPORT_SIZE_1",
+			"HR_RONIN_SUPPORT_SKILL_1"			
         ],
         "tagSetSourceFile": ""
     },

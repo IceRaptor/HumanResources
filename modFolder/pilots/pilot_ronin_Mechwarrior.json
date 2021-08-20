@@ -31,7 +31,10 @@
     "AIPersonality": "Undefined",
     "PilotTags": {
         "items": [
-
+			"HR_RONIN_SALARY_MULTI_10000",
+			"HR_RONIN_SALARY_EXP_2.0",
+			"HR_RONIN_SALARY_VARIANCE_1.5",
+			"HR_RONIN_BONUS_VARIANCE_3.3"
         ],
         "tagSetSourceFile": ""
     },
