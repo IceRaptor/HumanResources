@@ -152,7 +152,7 @@ namespace HumanResources
         public const string DIAT_AAR_Title = "AAR_TITLE";
         public const string DIAT_AAR_Body = "AAR_BODY";
 
-        public const string DIAT_AAR_Mod_Font = "AAR_Mod_Font";
+        public const string DIAT_AAR_Mod_Font = "AAR_MOD_FONT";
 
         public const string DIAT_AAR_Mod_Pilot_Killed = "AAR_MOD_PILOT_KILLED";
 

@@ -7,6 +7,27 @@
 		"CREW_TYPE_MED_TECH": "Med Techs crews represent any medically trained individuals. Their value is added to your MedTech points value, which determines the healing time for pilots that are hurt. This healing only applies to MechWarriors and Vehicle Crews, who are the only crew types that can take injuries.",
 		"CREW_TYPE_VEHICLE": "Vehicle crews pilot the myraid vehicles you posses in combat. Vehicles tend to be less automated than BattleMechs, requiring several pilots for each vehicle. These pilots lack the training necessary to pilot BattleMechs though many of them undoubtedly aspire to that goal."
 	},
+	"Dialogs" : {
+        "AAR_TITLE" : "Attitude Changes",
+        "AAR_BODY" : "After the mission debriefing completes, Darius hands you a simple report. Commander, here's my best guess as to how the company reacted to this last outing. Each Merc's current attitude is listed below.\n\n",
+        "AAR_MOD_FONT" : "<mspace=10>",
+        "AAR_MOD_PILOT_KILLED" : "Crew Killed\n",
+
+        "AAR_MOD_CONTRACT_FAILED" : "<color=red>Failed Contract:{0:+0;-#}</color>\n",
+        "AAR_MOD_CONTRACT_SUCCESS" : "<color=green>Successful Contract:{0:+0;-#}</color>\n",
+        "AAR_MOD_CONTRACT_GOODFAITH" : "<color=green>Good Faith Contract:{0:+0;-#}</color>\n",
+
+        "AAR_MOD_DEPLOYED" : "<color=green>Deployed:{0:+0;-#}</color>",
+        "AAR_MOD_BENCHED" : "<color=red>Benched:{0:+0;-#}</color>",
+
+        "AAR_MOD_FAVORED_EMPLOYER" : "<color=green>Favored Employer:{0:+0;-#}</color>",
+        "AAR_MOD_FAVORED_TARGET" : "<color=red>Favored Target:{0:+0;-#}</color>",
+
+        "AAR_MOD_HATED_EMPLOYER" : "<color=red>Hated Employer:{0:+0;-#}</color>",
+        "AAR_MOD_HATED_TARGET" :  "<color=green>Hated Target:{0:+0;-#}</color>",
+
+        "AAR_MOD_PILOT_LINE" :  "{0,4:+0;-#} {1,15} [{2}]\n"
+	},
 	"Labels": {
 		"SKILL_LEVEL_1": "Rookie",
 		"SKILL_LEVEL_2": "Regular",
