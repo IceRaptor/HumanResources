@@ -265,8 +265,7 @@
                 "ValueThresholdForMRBLevel" : [ 10, 17, 24, 31, 99 ],
 				"SkillToExpertiseThresholds" : [ 10, 18, 27, 35, 99 ],
 				
-                "MaxOfType" : -1,
-				"MandatoryAbilityDefs" : []				
+                "MaxOfType" : -1		
             },
 			
             "VehicleCrews" : {
@@ -287,9 +286,7 @@
                 "ValueThresholdForMRBLevel" : [ 10, 17, 24, 31, 99 ],
 				"SkillToExpertiseThresholds" : [ 10, 18, 27, 35, 99 ],
 				
-                "MaxOfType" : -1,
-				
-				"MandatoryAbilityDefs" : []
+                "MaxOfType" : -1
             },
 			
 			"RoninChance" : 0.3	
