@@ -365,10 +365,14 @@ Some tags are not displayed to the player, and are used....
     - ability to assign custom icons to ronin
 	- ability to force-set faction preferred / hated 
 	- ability to set forced price modifiers (salaryMulti, salaryExponent)
+
 - Ability to specify pilot icons to use
 - Flag to set to ignore head hunting on a pilot (some pilots are fanatically loyal or put their word over the paycheck)
 
-- Dialog during AAR that shows all attitude adjustments
+* Founder idea
+	- select N pilots at career start
+	- They draw no salary, no bonus, cannot be head-hunted, cannot leave
+	- They get X % of each contract as 'profit sharing'
 
 * Add dropship maintenance crew; reduces Argo maintenance cost?
 * Hiring cost varies by planet tag *not* faction owner
@@ -398,6 +402,7 @@ Some tags are not displayed to the player, and are used....
 * Account for inflated hiring bonuses when recalculating on rehire
 * Check events for crew callsigns; I think they only have names?
 * Renewal should update terms, not 'same terms'
+* Faction hated/loved based upon location
 * Fix/eliminate smear campaign event
 * <Partial> Implement planet blacklist for head hunting
 * Implement CrewCooldownInterval for head-hunting

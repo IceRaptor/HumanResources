@@ -86,15 +86,8 @@ namespace HumanResources
             if (guid == null)
             {
                 Mod.Log.Warn?.Write($"Failed to find crew details for pilotDef - creating a new one.");
-                CrewDetails newDetails = new CrewDetails(pilotDef, CrewType.MechWarrior);
-
-                //System.Diagnostics.StackTrace t = new System.Diagnostics.StackTrace();
-                //Mod.Log.Info?.Write($"Failure occured at stack: {t}");
-
-                UpdateOrCreateCrewDetails(pilotDef, newDetails);
-                Mod.Log.Info?.Write($" -- pilotDef associated with GUID: {newDetails.GUID}");
+                CrewDetails newDetails = CrewGenerator.GenerateDetailsForVanillaMechwarrior(pilotDef);
                 crewDetailsCache[newDetails.GUID] = newDetails;
-
                 return newDetails;
             }
             else
@@ -102,8 +95,7 @@ namespace HumanResources
                 Mod.Log.Trace?.Write($"Reading crew details using GUID from tag: {guid}");
             }
 
-            CrewDetails details;
-            bool hasKey = crewDetailsCache.TryGetValue(guid, out details);
+            bool hasKey = crewDetailsCache.TryGetValue(guid, out CrewDetails details);
             if (!hasKey)
             {
                 // Doesn't exist in cache, read from the company stat

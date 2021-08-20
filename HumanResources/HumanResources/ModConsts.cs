@@ -66,9 +66,24 @@ namespace HumanResources
         public const string Tag_CU_NoMech_Crew = "pilot_nomech_crew";
         public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
 
-        // Initialization tags
-        public const string Tag_Prefix_Faction_Favored = "HR_FACTION_FAVORED_";
-        public const string Tag_Prefix_Faction_Hated = "HR_FACTION_HATED_";
+        // Tags to force certain Ronin behaviors
+        public const string Tag_Prefix_Ronin_Faction_Favored = "HR_FACTION_FAVORED_";
+        public const string Tag_Prefix_Ronin_Faction_Hated = "HR_FACTION_HATED_";
+
+        public const string Tag_Prefix_Ronin_Support_Size = "HR_FACTION_SUPPORT_SIZE_";
+        public const string Tag_Prefix_Ronin_Support_Skill = "HR_FACTION_SUPPORT_SKILL_";
+
+        public const string Tag_Prefix_Ronin_Salary_Multi = "HR_RONIN_SALARY_MULTI_";
+        public const string Tag_Prefix_Ronin_Salary_Exp = "HR_RONIN_SALARY_EXP_";
+        public const string Tag_Prefix_Ronin_Salary_Variance = "HR_RONIN_SALARY_VARIANCE_";
+        public const string Tag_Prefix_Ronin_Bonus_Variance = "HR_RONIN_BONUS_VARIANCE_";
+
+        // Founder tag - 
+        public const string Tag_Founder = "HR_FOUNDER"; // has no salary, takes a profit share instead
+
+        // Headhunting tags
+        public const string Tag_HeadHunting_Devoted = "HR_HEADHUNT_DEVOTED"; // never headhunted
+        public const string Tag_HeadHunting_Fickle = "HR_HEADHUNT_FICKLE"; // always headhunted
 
         // Used during cleanup; should contain all tag names
         public static List<string> Tags_All = new List<string>

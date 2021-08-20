@@ -9,6 +9,7 @@ using IRBTModUtils;
 using Localize;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace HumanResources.Crew
 
     public static class CrewGenerator
     {
+        // === SUPPORT CREWS ===
         public static PilotDef GenerateMechTechCrew(StarSystem starSystem)
         {
             int callsignIdx = Mod.Random.Next(0, Mod.CrewNames.MechTech.Count - 1);
@@ -26,7 +28,8 @@ namespace HumanResources.Crew
             PilotDef def = GenerateSkillessCrew(starSystem, newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
-            CrewDetails details = new CrewDetails(def, CrewType.MechTechCrew, crewSize, crewSkill);
+            (FactionValue favored, FactionValue hated) = GenerateCrewFactions(starSystem);
+            CrewDetails details = new CrewDetails(def, CrewType.MechTechCrew, favored, hated, crewSize, crewSkill);
             ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
@@ -40,7 +43,8 @@ namespace HumanResources.Crew
             PilotDef def = GenerateSkillessCrew(starSystem, newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
-            CrewDetails details = new CrewDetails(def, CrewType.MedTechCrew, crewSize, crewSkill);
+            (FactionValue favored, FactionValue hated) = GenerateCrewFactions(starSystem);
+            CrewDetails details = new CrewDetails(def, CrewType.MedTechCrew, favored, hated, crewSize, crewSkill);
             ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
@@ -54,12 +58,227 @@ namespace HumanResources.Crew
             PilotDef def = GenerateSkillessCrew(starSystem, newCallsign, out int crewSize, out int crewSkill);
 
             // Before returning, initialize the cache value
-            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, crewSize, crewSkill);
+            (FactionValue favored, FactionValue hated) = GenerateCrewFactions(starSystem);
+            CrewDetails details = new CrewDetails(def, CrewType.AerospaceWing, favored, hated, crewSize, crewSkill);
             ModState.UpdateOrCreateCrewDetails(def, details);
 
             return def;
         }
-        public static PilotDef GenerateSkillessCrew(StarSystem starSystem, string callsign, out int crewSize, out int crewSkill)
+
+        // === COMBAT CREWS ===
+        public static PilotDef GenerateMechWarrior(StarSystem starSystem)
+        {
+            PilotDef crew = GenerateSkilledCrew(starSystem, true);
+            Mod.Log.Debug?.Write($"CREATED MECHWARRIOR CREW");
+
+            (FactionValue favored, FactionValue hated) = GenerateCrewFactions(starSystem);
+            CrewDetails details = new CrewDetails(crew, CrewType.MechWarrior, favored, hated);
+            ModState.UpdateOrCreateCrewDetails(crew, details);
+            return crew;
+        }
+
+        public static PilotDef UpgradeRonin(StarSystem starSystem, PilotDef baseRoninDef)
+        {
+            CrewDetails details = ReadRoninTags(baseRoninDef);
+            ModState.UpdateOrCreateCrewDetails(baseRoninDef, details);
+            return baseRoninDef;
+        }
+
+        public static CrewDetails GenerateDetailsForVanillaMechwarrior(PilotDef basePilotDef, bool isFounder=false)
+        {
+            (FactionValue favored, FactionValue hated) = GenerateCrewFactions(null);
+            CrewDetails details = new CrewDetails(basePilotDef, CrewType.MechWarrior, favored, hated);
+            ModState.UpdateOrCreateCrewDetails(basePilotDef, details);
+            Mod.Log.Info?.Write($" -- pilotDef associated with GUID: {details.GUID}");
+
+            return details;
+        }
+
+        public static PilotDef GenerateVehicleCrew(StarSystem starSystem)
+        {
+            PilotDef crew = GenerateSkilledCrew(starSystem, false);
+            Mod.Log.Debug?.Write($"CREATED VEHICLE CREW");
+
+            (FactionValue favored, FactionValue hated) = GenerateCrewFactions(starSystem);
+            CrewDetails details = new CrewDetails(crew, CrewType.VehicleCrew, favored, hated);
+            ModState.UpdateOrCreateCrewDetails(crew, details);
+
+            return crew;
+        }
+
+        private static (FactionValue, FactionValue) GenerateCrewFactions(StarSystem starSystem)
+        {
+            // Check for favored / hated faction
+            FactionValue favoredFaction = null;
+            if (Mod.Config.Attitude.FavoredFactionCandidates.Count > 0)
+            {
+                double favoredRoll = Mod.Random.NextDouble();
+                if (favoredRoll < Mod.Config.Attitude.FavoredFactionChance)
+                {
+                    int idx = Mod.Random.Next(Mod.Config.Attitude.FavoredFactionCandidates.Count - 1);
+                    favoredFaction = Mod.Config.Attitude.FavoredFactionCandidates[idx];
+                    Mod.Log.Info?.Write($"Roll {favoredRoll} < {Mod.Config.Attitude.FavoredFactionChance}, adding {favoredFaction} as favored faction");
+                }
+            }
+
+            FactionValue hatedFaction = null;
+            double hatedRoll = Mod.Random.NextDouble();
+            if (Mod.Config.Attitude.HatedFactionCandidates.Count > 0)
+            {
+                if (hatedRoll < Mod.Config.Attitude.HatedFactionChance)
+                {
+                    List<FactionValue> candidates = new List<FactionValue>(Mod.Config.Attitude.HatedFactionCandidates);
+                    if (favoredFaction != null)
+                        candidates.Remove(favoredFaction);
+
+                    int idx = Mod.Random.Next(candidates.Count - 1);
+                    hatedFaction = candidates[idx];
+                    Mod.Log.Info?.Write($"Roll {hatedRoll} < {Mod.Config.Attitude.HatedFactionChance}, adding {hatedFaction} as hated faction");
+                }
+            }
+
+            return (favoredFaction, hatedFaction);
+        }
+
+        private static CrewDetails ReadRoninTags(PilotDef roninDef)
+        {
+            //CrewDetails crewDetails = new CrewDetails(); BAD, SERIALIZATION ONLY!
+            Mod.Log.Debug?.Write($"Building CrewDetails for Ronin: {roninDef.Description.Name}_{roninDef.GUID}");
+
+            CrewType type = CrewType.MechWarrior;
+            FactionValue favored = null, hated = null;
+            int skillIdx = 0, sizeIdx = 0;
+            int salaryMulti ;
+            float salaryExp, salaryVariance, bonusVariance;
+            bool isFounder = false;
+            foreach (string tag in roninDef.PilotTags)
+            {
+                // Check types
+                if (tag.Equals(ModTags.Tag_CrewType_Aerospace, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Mod.Log.Debug?.Write($" -- found type == Aerospace");
+                    type = CrewType.AerospaceWing;
+                }
+                if (tag.Equals(ModTags.Tag_CrewType_MechTech, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Mod.Log.Debug?.Write($" -- found type == MechTech");
+                    type = CrewType.MechTechCrew;
+                }
+                if (tag.Equals(ModTags.Tag_CrewType_MedTech, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Mod.Log.Debug?.Write($" -- found type == MedTech");
+                    type = CrewType.MedTechCrew;
+                }
+                if (tag.Equals(ModTags.Tag_CU_Vehicle_Crew, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Mod.Log.Debug?.Write($" -- found type == Vehicle");
+                    type = CrewType.VehicleCrew;
+                }
+
+                // Check factions
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Faction_Favored, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string factionDefId = tag.Substring(ModTags.Tag_Prefix_Ronin_Faction_Favored.Length);
+                    Mod.Log.Debug?.Write($" -- found favored faction defId: {factionDefId}");
+
+                    foreach (FactionValue factionVal in Mod.Config.Attitude.FavoredFactionCandidates)
+                    {
+                        if (factionVal.FactionDefID.Equals(factionDefId, StringComparison.InvariantCultureIgnoreCase))
+                            favored = factionVal;
+                    }
+
+                    if (favored == null)
+                        Mod.Log.Warn?.Write($"Could not map favored factionDefId: {factionDefId} to a configured faction! Skipping!");
+                }
+
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Faction_Hated, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string factionDefId = tag.Substring(ModTags.Tag_Prefix_Ronin_Faction_Hated.Length);
+                    Mod.Log.Debug?.Write($" -- found hated faction defId: {factionDefId}");
+
+                    foreach (FactionValue factionVal in Mod.Config.Attitude.HatedFactionCandidates)
+                    {
+                        if (factionVal.FactionDefID.Equals(factionDefId, StringComparison.InvariantCultureIgnoreCase))
+                            hated = factionVal;
+                    }
+
+                    if (hated == null)
+                        Mod.Log.Warn?.Write($"Could not map hated factionDefId: {factionDefId} to a configured faction! Skipping!");
+                }
+
+                // Check salary & bonus values
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Salary_Multi, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Multi.Length);
+                    try
+                    {
+                        salaryMulti =  Int32.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found salaryMulti: {salaryMulti}");
+                    }
+                    catch (Exception e)
+                    {
+                        Mod.Log.Warn?.Write(e, $"Failed to read salaryMulti: {tagS} as an integer value, skipping!");
+                    }
+                }
+
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Salary_Exp, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Exp.Length);
+                    try
+                    {
+                        salaryExp = float.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found salaryExp: {salaryExp}");
+                    }
+                    catch (Exception e)
+                    {
+                        Mod.Log.Warn?.Write(e, $"Failed to read salaryExp: {tagS} as an integer value, skipping!");
+                    }
+                }
+
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Salary_Variance, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Variance.Length);
+                    try
+                    {
+                        salaryVariance = float.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found salaryVariance: {salaryVariance}");
+                    }
+                    catch (Exception e)
+                    {
+                        Mod.Log.Warn?.Write(e, $"Failed to read salaryVariance: {tagS} as an integer value, skipping!");
+                    }
+                }
+
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Bonus_Variance, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Bonus_Variance.Length);
+                    try
+                    {
+                        bonusVariance = float.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found bonusVariance: {bonusVariance}");
+                    }
+                    catch (Exception e)
+                    {
+                        Mod.Log.Warn?.Write(e, $"Failed to read bonusVariance: {tagS} as an integer value, skipping!");
+                    }
+                }
+
+
+                // Check founder
+                if (tag.Equals(ModTags.Tag_Founder, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Mod.Log.Debug?.Write($" -- found founder tag");
+                    isFounder = true;
+                }
+
+            }
+
+            CrewDetails details = new CrewDetails(roninDef, type, favored, hated, sizeIdx, skillIdx, isFounder);
+
+            return details;
+        }
+
+        private static PilotDef GenerateSkillessCrew(StarSystem starSystem, string callsign, out int crewSize, out int crewSkill)
         {
             // Determine crew size and skill
             crewSize = GaussianHelper.RandomCrewSize(0, 0);
@@ -71,7 +290,7 @@ namespace HumanResources.Crew
             return GenerateCrew(starSystem, callsign, pilotDef);
         }
 
-        public static PilotDef GenerateSkilledCrew(StarSystem starSystem, bool isMechWarrior)
+        private static PilotDef GenerateSkilledCrew(StarSystem starSystem, bool isMechWarrior)
         {
             string callsign = RandomUnusedCallsign();
 
@@ -135,7 +354,7 @@ namespace HumanResources.Crew
             return generatedDef;
         }
 
-        public static PilotDef GenerateCrew(StarSystem starSystem, string callsign, PilotDef pilotDef)
+        private static PilotDef GenerateCrew(StarSystem starSystem, string callsign, PilotDef pilotDef)
         {
             Mod.Log.Debug?.Write($"Generating support crew with callsign: {callsign}");
 
@@ -227,7 +446,7 @@ namespace HumanResources.Crew
 
         private static Traverse SetPilotAbilitiesT;
 
-        public static void GenerateAbilityDefs(PilotDef pilotDef, Dictionary<string, int> skillLevels, CrewOpts crewOpts)
+        private static void GenerateAbilityDefs(PilotDef pilotDef, Dictionary<string, int> skillLevels, CrewOpts crewOpts)
         {
             //Mod.Log.Info?.Write($" Pilot skills => gunnery: {skillLevels[ModConsts.Skill_Gunnery]}  guts: {skillLevels[ModConsts.Skill_Guts]}  " +
             //    $"piloting: {skillLevels[ModConsts.Skill_Piloting]}  tactics: {skillLevels[ModConsts.Skill_Tactics]}");
@@ -412,8 +631,6 @@ namespace HumanResources.Crew
             ModState.SimGameState.pilotGenPortraitDiscardPile.Add(portraitSettings.Description.Id);
             return portraitSettings;
         }
-
-
 
         // Direct copy of BattleTech.PilotGenerator.GetSpentXPPilot
         private static int GetSpentXPPilot(StatCollection stats)

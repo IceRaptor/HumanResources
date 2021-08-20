@@ -30,6 +30,9 @@ namespace HumanResources.Patches
                     );
             }
 
+            // Add the monospace tag
+            bodySB.Append(new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Mod_Font], new object[] { }).ToString());
+
             // Calculate the contract bonus 
             int contractBonus = Mod.Config.Attitude.PerMission.ContractFailedMod;
             if (___theContract.State == Contract.ContractState.Complete)
@@ -112,9 +115,9 @@ namespace HumanResources.Patches
                 }
 
                 // Check favored / hated factions
-                if (details.FavoredFaction > 0)
+                if (!string.IsNullOrEmpty(details.FavoredFactionId))
                 {
-                    if (details.FavoredFaction == ___theContract.Override.employerTeam.FactionValue.ID)
+                    if (details.FavoredFactionId == ___theContract.Override.employerTeam.FactionValue.FactionDefID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot favors employer faction, applying modifier: {Mod.Config.Attitude.PerMission.FavoredFactionIsEmployerMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.FavoredFactionIsEmployerMod;
@@ -124,7 +127,7 @@ namespace HumanResources.Patches
                            );
                     }
 
-                    if (details.FavoredFaction == ___theContract.Override.targetTeam.FactionValue.ID)
+                    if (details.FavoredFactionId == ___theContract.Override.targetTeam.FactionValue.FactionDefID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot favors target faction, applying modifier: {Mod.Config.Attitude.PerMission.FavoredFactionIsTargetMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.FavoredFactionIsTargetMod;
@@ -135,9 +138,9 @@ namespace HumanResources.Patches
                     }
                 }
 
-                if (details.HatedFaction > 0)
+                if (!string.IsNullOrEmpty(details.HatedFactionId))
                 {
-                    if (details.HatedFaction == ___theContract.Override.employerTeam.FactionValue.ID)
+                    if (details.HatedFactionId == ___theContract.Override.employerTeam.FactionValue.FactionDefID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot hates employer faction, applying modifier: {Mod.Config.Attitude.PerMission.HatedFactionIsEmployerMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.HatedFactionIsEmployerMod;
@@ -147,7 +150,7 @@ namespace HumanResources.Patches
                            );
                     }
 
-                    if (details.HatedFaction == ___theContract.Override.targetTeam.FactionValue.ID)
+                    if (details.HatedFactionId == ___theContract.Override.targetTeam.FactionValue.FactionDefID)
                     {
                         Mod.Log.Debug?.Write($" -- pilot hates target faction, applying modifier: {Mod.Config.Attitude.PerMission.HatedFactionIsTargetMod}");
                         details.Attitude += Mod.Config.Attitude.PerMission.HatedFactionIsTargetMod;
@@ -164,14 +167,16 @@ namespace HumanResources.Patches
                 string detailsS = string.Join(", ", detailDescs);
                 bodySB.Append(
                     new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Pilot_Line],
-                    new object[] { p.Callsign, details.Attitude, detailsS }).ToString()
+                    new object[] {details.Attitude, p.Callsign, detailsS }).ToString()
                     );
 
                 ModState.UpdateOrCreateCrewDetails(p.pilotDef, details);
             }
 
-            // Display a dialog with changes
+            // Close the mspace tag
+            bodySB.Append("</mspace>");
 
+            // Display a dialog with changes
             string localDialogTitle = new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Title]).ToString();
             string localDialogText = bodySB.ToString();
             GenericPopup gp = GenericPopupBuilder.Create(localDialogTitle, localDialogText)

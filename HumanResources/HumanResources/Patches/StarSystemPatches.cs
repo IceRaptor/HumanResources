@@ -73,7 +73,9 @@ namespace HumanResources.Patches
                     if (!ModState.SimGameState.UsedRoninIDs.Contains(unusedRonin.Description.Id))
                     {
                         Mod.Log.Debug?.Write($"Added ronin: {unusedRonin.Description.DisplayName} to available pilots.");
-                        __instance.AvailablePilots.Add(unusedRonin);
+                        
+                        PilotDef upgradedDef = CrewGenerator.UpgradeRonin(__instance, unusedRonin);                        
+                        __instance.AvailablePilots.Add(upgradedDef);
                     }
                     else
                     {
@@ -84,12 +86,7 @@ namespace HumanResources.Patches
 
                 for (int i = 0; i < mechWarriors; i++)
                 {
-                    PilotDef pDef = CrewGenerator.GenerateSkilledCrew(__instance, false);
-
-                    Mod.Log.Debug?.Write($"CREATED MECHWARRIOR CREW");
-                    CrewDetails details = new CrewDetails(pDef, CrewType.MechWarrior);
-                    ModState.UpdateOrCreateCrewDetails(pDef, details);
-
+                    PilotDef pDef = CrewGenerator.GenerateMechWarrior(__instance);
                     __instance.AvailablePilots.Add(pDef);
                 }
 
@@ -126,13 +123,7 @@ namespace HumanResources.Patches
             {
                 for (int i = 0; i < vehicleCrews; i++)
                 {
-                    PilotDef pDef = CrewGenerator.GenerateSkilledCrew(__instance, false);
-
-                    Mod.Log.Debug?.Write($"CREATED VEHICLE CREW");
-                    // Before returning, initialize the cache value
-                    CrewDetails details = new CrewDetails(pDef, CrewType.VehicleCrew);
-                    ModState.UpdateOrCreateCrewDetails(pDef, details);
-
+                    PilotDef pDef = CrewGenerator.GenerateVehicleCrew(__instance);
                     __instance.AvailablePilots.Add(pDef);
                 }
             }

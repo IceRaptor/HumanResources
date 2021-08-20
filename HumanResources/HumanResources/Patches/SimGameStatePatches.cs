@@ -273,8 +273,10 @@ namespace HumanResources.Patches
 
                 // Initialize new details for the pre-generated pilots
                 Mod.Log.Info?.Write($"Creating details for career-default pilot: {pilot.Name}");
-                CrewDetails details = new CrewDetails(pilot.pilotDef, CrewType.MechWarrior);
-                ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
+
+                // TODO: Randomize founders across all pilots
+
+                CrewDetails details = CrewGenerator.GenerateDetailsForVanillaMechwarrior(pilot.pilotDef, true);
                 Mod.Log.Info?.Write($"  -- pilot will have GUID: {details.GUID}");
             }
         }
@@ -523,11 +525,11 @@ namespace HumanResources.Patches
                 details.Attitude += econMod;
 
                 // Check pilots to see if they favor or hate an allied faction
-                if (details.FavoredFaction > 0 && !details.IsPlayer)
+                if (!string.IsNullOrEmpty(details.FavoredFactionId) && !details.IsPlayer)
                 {
                     foreach (FactionValue faction in alliedFactions)
                     {
-                        if (faction.ID == details.FavoredFaction)
+                        if (faction.FactionDefID == details.FavoredFactionId)
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} favors allied faction: {faction.FriendlyName}, " +
                                 $"applying attitude mod: {Mod.Config.Attitude.Monthly.FavoredEmployerAlliedMod}");
@@ -537,11 +539,11 @@ namespace HumanResources.Patches
                     }
                 }
 
-                if (details.HatedFaction > 0 && !details.IsPlayer)
+                if (!string.IsNullOrEmpty(details.HatedFactionId) && !details.IsPlayer)
                 {
                     foreach (FactionValue faction in alliedFactions)
                     {
-                        if (faction.ID == details.HatedFaction)
+                        if (faction.FactionDefID == details.HatedFactionId)
                         {
                             Mod.Log.Debug?.Write($"Pilot {pilot.Name} hates allied faction: {faction.FriendlyName}, " +
                                 $"applying attitude mod: {Mod.Config.Attitude.Monthly.HatedEmployerAlliedMod}");
@@ -555,7 +557,6 @@ namespace HumanResources.Patches
                 details.Attitude = Mathf.Clamp(details.Attitude, Mod.Config.Attitude.ThresholdMin, Mod.Config.Attitude.ThresholdMax);
 
                 ModState.UpdateOrCreateCrewDetails(pilot.pilotDef, details);
-
             }
         }
     }

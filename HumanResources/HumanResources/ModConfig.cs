@@ -236,9 +236,6 @@ namespace HumanResources
         };
 
         public float RoninChance = 0.3f;
-
-
-
     }
 
     public class PointsBySkillAndSizeOpts

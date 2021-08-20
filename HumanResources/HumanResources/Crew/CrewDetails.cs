@@ -24,15 +24,20 @@ namespace HumanResources.Crew
         public string GUID { get; set; }
         public CrewType Type { get; set; }
         public bool IsPlayer { get; set; }
+        public bool IsFounder { get; set; }
 
         public int Size { get; set; }
         public int Skill { get; set; }
         public int Value { get; set; }
+
         public int HiringBonus { get; set; }
         public int Salary { get; set; }
+        public float ProfitShare { get; set; }
+
         public int ContractTerm { get; set; }
-        public int FavoredFaction { get; set; }
-        public int HatedFaction { get; set; }
+
+        public string FavoredFactionId { get; set; }
+        public string HatedFactionId { get; set; }
 
         // Mutable properties
         public int Attitude { get; set; }
@@ -76,7 +81,9 @@ namespace HumanResources.Crew
 
         }
 
-        public CrewDetails(PilotDef pilotDef, CrewType type, int sizeIdx = 0, int skillIdx = 0)
+        public CrewDetails(PilotDef pilotDef, CrewType type, 
+            FactionValue favoredFaction, FactionValue hatedFaction, 
+            int sizeIdx = 0, int skillIdx = 0, bool isFounder = false)
         {
             this.Type = type;
             this.Size = sizeIdx + 1;
@@ -132,6 +139,13 @@ namespace HumanResources.Crew
                 this.ContractTerm = 0; // Free and Immortal = player character
                 this.ExpirationDay = 0;
             }
+            else if (isFounder)
+            {
+                IsFounder = true;
+                Mod.Log.Debug?.Write("Setting expiration and contract term to 0 for founding member.");
+                this.ContractTerm = 0; // Free overhead, not immortal
+                this.ExpirationDay = 0;
+            }
             else
             {
                 IsPlayer = false;
@@ -140,41 +154,10 @@ namespace HumanResources.Crew
                 this.ExpirationDay = ModState.SimGameState.DaysPassed + ContractTerm;
             }
 
-            // Check for favored / hated faction
-            FactionValue favoredFaction = null;
-            if (Mod.Config.Attitude.FavoredFactionCandidates.Count > 0)
-            {
-                double favoredRoll = Mod.Random.NextDouble();
-                if (favoredRoll < Mod.Config.Attitude.FavoredFactionChance)
-                {
-                    int idx = Mod.Random.Next(Mod.Config.Attitude.FavoredFactionCandidates.Count - 1);
-                    favoredFaction = Mod.Config.Attitude.FavoredFactionCandidates[idx];
-                    Mod.Log.Info?.Write($"Roll {favoredRoll} < {Mod.Config.Attitude.FavoredFactionChance}, adding {favoredFaction} as favored faction");
-                    this.FavoredFaction = favoredFaction.ID;
-                }
-                else
-                {
-                    this.FavoredFaction = -1;
-                }
-            }
-
-            double hatedRoll = Mod.Random.NextDouble();
-            if (Mod.Config.Attitude.HatedFactionCandidates.Count > 0)
-            {
-                if (hatedRoll < Mod.Config.Attitude.HatedFactionChance)
-                {
-                    List<FactionValue> candidates = new List<FactionValue>(Mod.Config.Attitude.HatedFactionCandidates);
-                    if (favoredFaction != null)
-                        candidates.Remove(favoredFaction);
-
-                    int idx = Mod.Random.Next(candidates.Count - 1);
-                    FactionValue faction = candidates[idx];
-                    Mod.Log.Info?.Write($"Roll {hatedRoll} < {Mod.Config.Attitude.HatedFactionChance}, adding {faction} as hated faction");
-                    this.HatedFaction = faction.ID;
-                }
-                else
-                    this.HatedFaction = -1;
-            }
+            if (favoredFaction != null)
+                this.FavoredFactionId = favoredFaction.FactionDefID;
+            if (hatedFaction != null)
+                this.HatedFactionId = hatedFaction.FactionDefID;
 
             this.NextHeadHuntingDay = ModState.SimGameState.DaysPassed;
         }
@@ -212,7 +195,7 @@ namespace HumanResources.Crew
         {
             get
             {
-                string label = "UNKNOWN";
+                string label;
                 switch (Size)
                 {
                     case 5:
