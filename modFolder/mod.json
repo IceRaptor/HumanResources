@@ -58,6 +58,8 @@
                 "faction_Davion", "faction_Liao", "faction_Kurita", "faction_Marik", "faction_Steiner",
                 "faction_TaurianConcordat", "faction_MagistracyOfCanopus"
 			],
+			
+			"RehireBonusMod" : 2,
 
             "Monthly" : {
                 "FavoredEmployerAlliedMod" : 6,
