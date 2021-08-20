@@ -67,11 +67,11 @@ namespace HumanResources
         public const string Tag_CU_Vehicle_Crew = "pilot_vehicle_crew";
 
         // Tags to force certain Ronin behaviors
-        public const string Tag_Prefix_Ronin_Faction_Favored = "HR_FACTION_FAVORED_";
-        public const string Tag_Prefix_Ronin_Faction_Hated = "HR_FACTION_HATED_";
+        public const string Tag_Prefix_Ronin_Faction_Favored = "HR_RONIN_FACTION_FAVORED_";
+        public const string Tag_Prefix_Ronin_Faction_Hated = "HR_RONIN_FACTION_HATED_";
 
-        public const string Tag_Prefix_Ronin_Support_Size = "HR_FACTION_SUPPORT_SIZE_";
-        public const string Tag_Prefix_Ronin_Support_Skill = "HR_FACTION_SUPPORT_SKILL_";
+        public const string Tag_Prefix_Ronin_Support_Size = "HR_RONIN_SUPPORT_SIZE_";
+        public const string Tag_Prefix_Ronin_Support_Skill = "HR_RONIN_SUPPORT_SKILL_";
 
         public const string Tag_Prefix_Ronin_Salary_Multi = "HR_RONIN_SALARY_MULTI_";
         public const string Tag_Prefix_Ronin_Salary_Exp = "HR_RONIN_SALARY_EXP_";

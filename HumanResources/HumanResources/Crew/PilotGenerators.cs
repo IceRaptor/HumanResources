@@ -147,9 +147,8 @@ namespace HumanResources.Crew
 
             CrewType type = CrewType.MechWarrior;
             FactionValue favored = null, hated = null;
-            int skillIdx = 0, sizeIdx = 0;
-            int salaryMulti ;
-            float salaryExp, salaryVariance, bonusVariance;
+            int skill = 0, size = 0;
+            SalaryConfig salaryCfg = new SalaryConfig();
             bool isFounder = false;
             foreach (string tag in roninDef.PilotTags)
             {
@@ -206,14 +205,42 @@ namespace HumanResources.Crew
                         Mod.Log.Warn?.Write($"Could not map hated factionDefId: {factionDefId} to a configured faction! Skipping!");
                 }
 
+                // Check size and skill tags
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Support_Size, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Support_Size.Length);
+                    try
+                    {
+                        size = Int32.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found size: {size}");
+                    }
+                    catch (Exception e)
+                    {
+                        Mod.Log.Warn?.Write(e, $"Failed to read size: {tagS} as an integer value, skipping!");
+                    }
+                }
+                if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Support_Skill, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Support_Skill.Length);
+                    try
+                    {
+                        skill = Int32.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found skill: {skill}");
+                    }
+                    catch (Exception e)
+                    {
+                        Mod.Log.Warn?.Write(e, $"Failed to read skill: {tagS} as an integer value, skipping!");
+                    }
+                }
+
                 // Check salary & bonus values
                 if (tag.StartsWith(ModTags.Tag_Prefix_Ronin_Salary_Multi, StringComparison.InvariantCultureIgnoreCase))
                 {
                     string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Multi.Length);
                     try
                     {
-                        salaryMulti =  Int32.Parse(tagS, CultureInfo.InvariantCulture);
-                        Mod.Log.Debug?.Write($" -- found salaryMulti: {salaryMulti}");
+                        salaryCfg.Multi =  Int32.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found salaryMulti: {salaryCfg.Multi}");
                     }
                     catch (Exception e)
                     {
@@ -226,8 +253,8 @@ namespace HumanResources.Crew
                     string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Exp.Length);
                     try
                     {
-                        salaryExp = float.Parse(tagS, CultureInfo.InvariantCulture);
-                        Mod.Log.Debug?.Write($" -- found salaryExp: {salaryExp}");
+                        salaryCfg.Exponent = float.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found salaryExp: {salaryCfg.Exponent}");
                     }
                     catch (Exception e)
                     {
@@ -240,8 +267,8 @@ namespace HumanResources.Crew
                     string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Variance.Length);
                     try
                     {
-                        salaryVariance = float.Parse(tagS, CultureInfo.InvariantCulture);
-                        Mod.Log.Debug?.Write($" -- found salaryVariance: {salaryVariance}");
+                        salaryCfg.Variance = float.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found salaryVariance: {salaryCfg.Variance}");
                     }
                     catch (Exception e)
                     {
@@ -254,15 +281,14 @@ namespace HumanResources.Crew
                     string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Bonus_Variance.Length);
                     try
                     {
-                        bonusVariance = float.Parse(tagS, CultureInfo.InvariantCulture);
-                        Mod.Log.Debug?.Write($" -- found bonusVariance: {bonusVariance}");
+                        salaryCfg.BonusVariance = float.Parse(tagS, CultureInfo.InvariantCulture);
+                        Mod.Log.Debug?.Write($" -- found bonusVariance: {salaryCfg.BonusVariance}");
                     }
                     catch (Exception e)
                     {
                         Mod.Log.Warn?.Write(e, $"Failed to read bonusVariance: {tagS} as an integer value, skipping!");
                     }
                 }
-
 
                 // Check founder
                 if (tag.Equals(ModTags.Tag_Founder, StringComparison.InvariantCultureIgnoreCase))
@@ -273,7 +299,9 @@ namespace HumanResources.Crew
 
             }
 
-            CrewDetails details = new CrewDetails(roninDef, type, favored, hated, sizeIdx, skillIdx, isFounder);
+            // Normalize size and skill to index values
+            CrewDetails details = new CrewDetails(roninDef, type, favored, hated, size - 1, skill - 1, isFounder, 
+                salaryCfg.IsDefault() ? null : salaryCfg);
 
             return details;
         }

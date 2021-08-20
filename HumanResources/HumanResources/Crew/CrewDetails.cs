@@ -2,7 +2,6 @@
 using HumanResources.Helper;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -39,6 +38,8 @@ namespace HumanResources.Crew
         public int FavoredFactionId { get; set; }
         public int HatedFactionId { get; set; }
 
+        public SalaryConfig SalaryConfig { get; set; }
+
         // Mutable properties
         public int Attitude { get; set; }
         public int ExpirationDay { get; set; }
@@ -70,9 +71,11 @@ namespace HumanResources.Crew
 
         public override string ToString()
         {
-            return $"GUID:{GUID}  Type: {Type}  IsPlayer: {IsPlayer}  Size: {Size}  Skill: {Skill}  Value: {Value}  HiringBonus: {HiringBonus}" +
-                $"  Salary: {Salary}  ContractTerm: {ContractTerm}  Attitude: {Attitude}  ExpirationDay: {ExpirationDay}" +
-                $"  AdjustedBonus: {AdjustedBonus}  AdjustedSalary: {AdjustedSalary}";
+            return $"GUID:{GUID}  Type: {Type}  IsPlayer: {IsPlayer}  Size: {Size}  Skill: {Skill}  Value: {Value}  " +
+                $"  ContractTerm: {ContractTerm}  Attitude: {Attitude}  ExpirationDay: {ExpirationDay}" +
+                $"  Salary: {Salary}  HiringBonus: {HiringBonus}  AdjustedBonus: {AdjustedBonus}  AdjustedSalary: {AdjustedSalary}" +
+                $"  SalaryMulti: {SalaryConfig?.Multi}  SalaryExponent: {SalaryConfig?.Exponent}  SalaryVariance: {SalaryConfig?.Variance}  BonusVariance: {SalaryConfig?.BonusVariance}"
+                ;
         }
 
         // Empty constructor for serialization
@@ -83,7 +86,8 @@ namespace HumanResources.Crew
 
         public CrewDetails(PilotDef pilotDef, CrewType type, 
             FactionValue favoredFaction, FactionValue hatedFaction, 
-            int sizeIdx = 0, int skillIdx = 0, bool isFounder = false)
+            int sizeIdx = 0, int skillIdx = 0, bool isFounder = false,
+            SalaryConfig salaryCfg = null)
         {
             this.Type = type;
             this.Size = sizeIdx + 1;
@@ -126,8 +130,14 @@ namespace HumanResources.Crew
                 pilotDef.PilotTags.Add(ModTags.Tag_CU_Vehicle_Crew);
             }
 
+            if (salaryCfg == null)
+                this.SalaryConfig = SalaryConfig.FromModConfig(config);
+            else
+                this.SalaryConfig = salaryCfg;
+
+
             // Calculate salary and bonus
-            SalaryHelper.CalcSalary(Value, config, out int salary, out int bonus);
+            SalaryHelper.CalcSalary(Value, this.SalaryConfig, out int salary, out int bonus);
             this.Salary = salary;
             this.HiringBonus = bonus;
 
@@ -332,7 +342,7 @@ namespace HumanResources.Crew
             }
 
             // Calculate salary and bonus
-            SalaryHelper.CalcSalary(Value, config, out int salary, out int bonus);
+            SalaryHelper.CalcSalary(Value, this.SalaryConfig, out int salary, out int bonus);
             this.Salary = salary;
             this.HiringBonus = bonus;
 

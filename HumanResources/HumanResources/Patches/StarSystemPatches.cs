@@ -57,11 +57,29 @@ namespace HumanResources.Patches
                 $"mechTechs: {mechTechs}  medTechs: {medTechs}  aerospace: {aerospace}");
 
             // Generate pilots and crews
-
-            // Direct copy of StarSystem.GeneratePilots()
             if (mechWarriors > 0)
             {
                 __instance.AvailablePilots.Clear();
+
+                if (Mod.Config.DebugCommands)
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        PilotDef unusedRonin = ModState.SimGameState.GetUnusedRonin();
+
+                        if (!ModState.SimGameState.UsedRoninIDs.Contains(unusedRonin.Description.Id))
+                        {
+                            Mod.Log.Debug?.Write($"Added ronin: {unusedRonin.Description.DisplayName} to available pilots.");
+
+                            PilotDef upgradedDef = CrewGenerator.UpgradeRonin(__instance, unusedRonin);
+                            __instance.AvailablePilots.Add(upgradedDef);
+                        }
+                        else
+                        {
+                            Mod.Log.Debug?.Write($"Ronin: {unusedRonin.Description.DisplayName} already in use, skipping.");
+                        }
+                    }
+                }
 
                 // Ronin DO NOT count against the system limits. Just add them, if the roll passes.
                 double roninRoll = Mod.Random.NextDouble();

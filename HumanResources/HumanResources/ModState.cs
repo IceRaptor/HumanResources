@@ -1,6 +1,7 @@
 ﻿
 using BattleTech;
 using HumanResources.Crew;
+using HumanResources.Helper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -139,6 +140,10 @@ namespace HumanResources
                 Mod.Log.Trace?.Write($"Found cached details value: {details}");
             }
 
+            // Check for an empty SalaryCfg; if empty, default to the mod settings
+            if (details.SalaryConfig == null || details.SalaryConfig.IsDefault())
+                details.SalaryConfig = SalaryConfig.FromModConfig(details.Type);
+
             return details;
         }
 
@@ -176,7 +181,7 @@ namespace HumanResources
             {
                 newDetails.GUID = Guid.NewGuid().ToString();
                 guid = newDetails.GUID;
-                Mod.Log.Debug?.Write($" -- no GUID found for pilotDef in tag or detailos, adding new details GUID: {newDetails.GUID}");
+                Mod.Log.Debug?.Write($" -- no GUID found for pilotDef in tag or details, adding new details GUID: {newDetails.GUID}");
             }
             if (guid == null && !String.IsNullOrEmpty(newDetails.GUID))
             {               
@@ -194,6 +199,10 @@ namespace HumanResources
 
             // Update attitude tags on pilot
             newDetails.UpdateAttitudeTags(pilotDef);
+
+            // Check for an empty SalaryCfg; if empty, default to the mod settings
+            if (newDetails.SalaryConfig == null || newDetails.SalaryConfig.IsDefault())
+                newDetails.SalaryConfig = SalaryConfig.FromModConfig(newDetails.Type);
 
             // Write the new data to the company stats for it
             string companyStatName = ModStats.Company_CrewDetail_Prefix + guid;
