@@ -379,12 +379,6 @@ which gives a reason for smaller crews to be attractive: you need less for them 
 * skill distribution mu and sigma modified by planet tags
 	* partial; done for MW/VC
 * size distribution mu and sigma modified by planet tags
-* Mercenary loyalty
-  * After AAR report, will complain if you work against their faction
-
-* Add pilot favor/hatred to pre-generated pilots
-    * Allow mod-makers to set faction hatred/favors on pre-generated pilots
-    * Ability to define favored/hated faction lists
 
 * I'm not updating pilots value, etc as their skills change; need to ensure that gets addressed at least at contract renegotiation
     * Update text to say 'new terms'
