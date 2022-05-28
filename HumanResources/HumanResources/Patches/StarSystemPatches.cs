@@ -61,31 +61,12 @@ namespace HumanResources.Patches
             {
                 __instance.AvailablePilots.Clear();
 
-                if (Mod.Config.DebugCommands)
-                {
-                    for (int i = 0; i < 8; i++)
-                    {
-                        PilotDef unusedRonin = ModState.SimGameState.GetUnusedRonin();
-
-                        if (!ModState.SimGameState.UsedRoninIDs.Contains(unusedRonin.Description.Id))
-                        {
-                            Mod.Log.Debug?.Write($"Added ronin: {unusedRonin.Description.DisplayName} to available pilots.");
-
-                            PilotDef upgradedDef = CrewGenerator.UpgradeRonin(__instance, unusedRonin);
-                            __instance.AvailablePilots.Add(upgradedDef);
-                        }
-                        else
-                        {
-                            Mod.Log.Debug?.Write($"Ronin: {unusedRonin.Description.DisplayName} already in use, skipping.");
-                        }
-                    }
-                }
-
                 // Ronin DO NOT count against the system limits. Just add them, if the roll passes.
                 double roninRoll = Mod.Random.NextDouble();
+                Mod.Log.Debug?.Write($"Ronin roll of {roninRoll} vs roninChance: {Mod.Config.HiringHall.RoninChance}");
                 if (roninRoll <= Mod.Config.HiringHall.RoninChance)
                 {
-                    Mod.Log.Debug?.Write($"Ronin roll of {roninRoll} <= roninChance: {Mod.Config.HiringHall.RoninChance}. Adding one Ronin to hiring hall.");
+                    Mod.Log.Debug?.Write($"Adding one Ronin to hiring hall.");
                     PilotDef unusedRonin = ModState.SimGameState.GetUnusedRonin();
 
                     if (!ModState.SimGameState.UsedRoninIDs.Contains(unusedRonin.Description.Id))

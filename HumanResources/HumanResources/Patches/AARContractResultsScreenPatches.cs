@@ -94,25 +94,43 @@ namespace HumanResources.Patches
                 details.Attitude += killedPilotsMod;
 
                 List<string> detailDescs = new List<string>();
+
+
                 // Check for bench - only applies to combat pilots
-                if (deployedPilots.Contains(p))
+                if (details.IsCombatCrew)
                 {
-                    Mod.Log.Debug?.Write($" -- combat pilot was deployed, adding {Mod.Config.Attitude.PerMission.DeployedOnMissionMod} attitude");
-                    details.Attitude += Mod.Config.Attitude.PerMission.DeployedOnMissionMod;
-                    detailDescs.Add(
-                        new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Mod_Deployed],
-                        new object[] { Mod.Config.Attitude.PerMission.DeployedOnMissionMod }).ToString()
-                       );
+
+                    string pilotHash = $"{p.FirstName}_{p.LastName}_{p.Callsign}";
+                    bool wasDeployed = false;
+                    foreach (Pilot dp in deployedPilots)
+                    {
+                        string deployedPilotHash = $"{dp.FirstName}_{dp.LastName}_{dp.Callsign}";
+                        if (deployedPilotHash.Equals(pilotHash, System.StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            wasDeployed = true;
+                        }
+                    }
+
+                    if (wasDeployed)
+                    {
+                        Mod.Log.Debug?.Write($" -- combat pilot was deployed, adding {Mod.Config.Attitude.PerMission.DeployedOnMissionMod} attitude");
+                        details.Attitude += Mod.Config.Attitude.PerMission.DeployedOnMissionMod;
+                        detailDescs.Add(
+                            new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Mod_Deployed],
+                            new object[] { Mod.Config.Attitude.PerMission.DeployedOnMissionMod }).ToString()
+                           );
+                    }
+                    else
+                    {
+                        Mod.Log.Debug?.Write($" -- combat pilot was benched, adding {Mod.Config.Attitude.PerMission.BenchedOnMissionMod} attitude");
+                        details.Attitude += Mod.Config.Attitude.PerMission.BenchedOnMissionMod;
+                        detailDescs.Add(
+                            new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Mod_Benched],
+                            new object[] { Mod.Config.Attitude.PerMission.BenchedOnMissionMod }).ToString()
+                           );
+                    }
                 }
-                else if (combatPilots.Contains(p))
-                {
-                    Mod.Log.Debug?.Write($" -- combat pilot was benched, adding {Mod.Config.Attitude.PerMission.BenchedOnMissionMod} attitude");
-                    details.Attitude += Mod.Config.Attitude.PerMission.BenchedOnMissionMod;
-                    detailDescs.Add(
-                        new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Mod_Benched],
-                        new object[] { Mod.Config.Attitude.PerMission.BenchedOnMissionMod }).ToString()
-                       );
-                }
+
 
                 // Check favored / hated factions
                 if (details.FavoredFactionId > 0)

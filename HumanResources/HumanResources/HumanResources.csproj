@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,8 +45,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(BattleTechGameDir)\BattleTech_Data\Managed\InControl.dll</HintPath>
     </Reference>
-    <Reference Include="IRBTModUtils">
-      <HintPath>$(BattleTechGameDir)\Mods\IRBTModUtils\IRBTModUtils.dll</HintPath>
+    <Reference Include="IRBTModUtils, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\Steam\steamapps\common\BATTLETECH\Mods\IRBTModUtils\IRBTModUtils.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -119,10 +121,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-      time /t
-      if exist "$(BattleTechGame)\Mods\IRTweaks" (
+    <PostBuildEvent>time /t
+if exist "$(BattleTechGame)\Mods\HumanResources" (
       xcopy "$(TargetDir)$(TargetFileName)" "$(BattleTechGame)\Mods\HumanResources" /y
-      )</PostBuildEvent>
+)</PostBuildEvent>
   </PropertyGroup>
 </Project>
