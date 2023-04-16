@@ -25,7 +25,7 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write($"Total hazard pay for contract is: {hazardPaySum}");
 
                 int newResult = Mathf.FloorToInt(__instance.MoneyResults - hazardPaySum);
-                Traverse.Create(__instance).Property("MoneyResults").SetValue(newResult);
+                __instance.MoneyResults = newResult;
             }
             catch (Exception e)
             {

@@ -38,7 +38,7 @@ namespace HumanResources.Helper
 
 
         // Walk the loaded list of lifepaths and families and assign weights based upon iteration order.
-        //   This *should* be stable as in C# dictionary key traverse order is fixed
+        //   This *should* be stable as in C# dictionary key sort order is fixed
         public static void InitAtModLoad()
         {
             Mod.Log.Info?.Write($"Calculating bounds for LifePath Weights");

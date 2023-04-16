@@ -198,8 +198,7 @@ namespace HumanResources.Patches
             GenericPopup gp = GenericPopupBuilder.Create(localDialogTitle, localDialogText)
                 .Render();
 
-            TextMeshProUGUI contentText = (TextMeshProUGUI)Traverse.Create(gp).Field("_contentText").GetValue();
-            contentText.alignment = TextAlignmentOptions.Left;
+            gp._contentText.alignment = TextAlignmentOptions.Left;
         }
     }
 }

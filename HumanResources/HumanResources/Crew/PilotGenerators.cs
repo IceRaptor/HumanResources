@@ -469,8 +469,6 @@ namespace HumanResources.Crew
             return pilotDef2;
         }
 
-        private static Traverse SetPilotAbilitiesT;
-
         private static void GenerateAbilityDefs(PilotDef pilotDef, Dictionary<string, int> skillLevels, CrewOpts crewOpts)
         {
             //Mod.Log.Info?.Write($" Pilot skills => gunnery: {skillLevels[ModConsts.Skill_Gunnery]}  guts: {skillLevels[ModConsts.Skill_Guts]}  " +
@@ -501,25 +499,17 @@ namespace HumanResources.Crew
                 Mod.Log.Info?.Write($"Generating pilot with skills => primary: {primarySkill}@{skillLevels[primarySkill]} " +
                     $"secondary: {secondarySkill}@{skillLevels[secondarySkill]}");
 
-                // Filter for primary defs - sort by weight
-                if (SetPilotAbilitiesT == null)
-                {
-                    SetPilotAbilitiesT = Traverse
-                        .Create(ModState.CrewCreateState.HBSPilotGenerator)
-                        .Method("SetPilotAbilities", new Type[] { typeof(PilotDef), typeof(string), typeof(int) });
-                }
-
                 // invokeType - PilotDef pilot, string type, int value
                 Mod.Log.Info?.Write($" -- setting primary skill: {primarySkill}");
                 for (int i = 1; i < skillLevels[primarySkill] + 1; i++)
                 {
-                    SetPilotAbilitiesT.GetValue(new object[] { pilotDef, primarySkill, i });
+                    ModState.CrewCreateState.HBSPilotGenerator.SetPilotAbilities(pilotDef, primarySkill, i);
                 }
 
                 Mod.Log.Info?.Write($" -- setting secondary skill: {secondarySkill}");
                 for (int i = 1; i < skillLevels[secondarySkill] + 1; i++)
                 {
-                    SetPilotAbilitiesT.GetValue(new object[] { pilotDef, secondarySkill, i });
+                    ModState.CrewCreateState.HBSPilotGenerator.SetPilotAbilities(pilotDef, secondarySkill, i);
                 }
 
             }

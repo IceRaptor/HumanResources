@@ -32,8 +32,7 @@ namespace HumanResources.Patches
 
                 MissionObjectiveResult hazardPayObjective = new MissionObjectiveResult(hazardPayTitleS, guid, false, true, ObjectiveStatus.Succeeded, false);
 
-                Traverse addObjective = Traverse.Create(__instance).Method("AddObjective", new Type[] { typeof(MissionObjectiveResult) });
-                addObjective.GetValue(new object[] { hazardPayObjective });
+                __instance.AddObjective(hazardPayObjective);
             }
             catch (Exception e)
             {

@@ -57,8 +57,8 @@ namespace HumanResources.Patches
                 )
                 return;
 
-            Traverse pushRecordT = Traverse.Create(__instance).Method("PushRecord", new Type[] { typeof(string) });
-            Traverse popRecordT = Traverse.Create(__instance).Method("PopRecord");
+//            Traverse pushRecordT = Traverse.Create(__instance).Method("PushRecord", new Type[] { typeof(string) });
+  //          Traverse popRecordT = Traverse.Create(__instance).Method("PopRecord");
 
             int num = 0;
             if (scope == EventScope.Company)
@@ -85,7 +85,7 @@ namespace HumanResources.Patches
                     {
                         reqList.Clear();
                         reqList.Add(pilot.pilotDef.PilotTags);
-                        pushRecordT.GetValue(new object[] { string.Format("Event For {0}", pilot.Callsign) });
+                        __instance.PushRecord(string.Format("Event For {0}", pilot.Callsign));
                         goto IL_C7;
                     }
                 }
@@ -122,13 +122,13 @@ namespace HumanResources.Patches
                             ___sim.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, pilot);
                         }
                         StatCollection statsByScope = ___sim.GetStatsByScope(scope);
-                        pushRecordT.GetValue(new object[] { evt.EventDefID });
+                       __instance.PushRecord(evt.EventDefID);
                         if (SimGameState.MeetsRequirements(simGameEventDef.Requirements, curTags, statsByScope, ___VerboseEntry))
                         {
                             __instance.RecordLog("Passed!", SimGameLogLevel.VERBOSE);
-                            popRecordT.GetValue();
+                            __instance.PopRecord();
                             __instance.RecordLog("Testing for additional requirements", SimGameLogLevel.VERBOSE);
-                            pushRecordT.GetValue(new object[] { simGameEventDef.Description.Id });
+                           __instance.PushRecord(simGameEventDef.Description.Id);
                             bool flag = true;
                             if (simGameEventDef.AdditionalRequirements != null)
                             {
@@ -151,11 +151,11 @@ namespace HumanResources.Patches
                             if (!flag)
                             {
                                 __instance.RecordLog("Failed additional req check.", SimGameLogLevel.VERBOSE);
-                                popRecordT.GetValue();
+                                __instance.PopRecord();
                             }
                             else
                             {
-                                popRecordT.GetValue();
+                                __instance.PopRecord();
                                 __instance.RecordLog(string.Format("Selected final event: {0}. Attempting to fetch additional objects.", simGameEventDef.Description.Id), SimGameLogLevel.CRITICAL);
                                 if (simGameEventDef.AdditionalObjects != null && simGameEventDef.AdditionalObjects.Length != 0)
                                 {
@@ -173,7 +173,7 @@ namespace HumanResources.Patches
                                         List<Pilot> list2 = new List<Pilot>();
                                         List<TagSet> list3 = new List<TagSet>();
                                         List<StatCollection> list4 = new List<StatCollection>();
-                                        pushRecordT.GetValue(new object[] { "Additional Object" });
+                                       __instance.PushRecord("Additional Object");
                                         __instance.RecordLog("Object Scope: " + simGameEventObject.Scope, SimGameLogLevel.VERBOSE);
                                         switch (simGameEventObject.Scope)
                                         {
@@ -208,7 +208,7 @@ namespace HumanResources.Patches
                                         if (num2 < 0)
                                         {
                                             __instance.RecordLog("Unable to find additional object that meets requirement. Skipping event.", SimGameLogLevel.CRITICAL);
-                                            popRecordT.GetValue();
+                                            __instance.PopRecord();
                                             __runOriginal = false;
                                             return;
                                         }
@@ -227,7 +227,7 @@ namespace HumanResources.Patches
                                             goodEvent.TertiaryPilot = list2[num2];
                                             __instance.RecordLog(string.Format("Pilot {0} has been set as additional object", list2[num2].Description.Id), SimGameLogLevel.CRITICAL);
                                         }
-                                        popRecordT.GetValue();
+                                        __instance.PopRecord();
                                         k++;
                                         continue;
                                     IL_3C7:
@@ -235,19 +235,19 @@ namespace HumanResources.Patches
                                         {
                                             if (pilot2.pilotDef.TimeoutRemaining > 0)
                                             {
-                                                popRecordT.GetValue();
+                                                __instance.PopRecord();
                                             }
                                             else if (pilot != null && pilot2.GUID == pilot.GUID)
                                             {
-                                                popRecordT.GetValue();
+                                                __instance.PopRecord();
                                             }
                                             else if (simGameEventObject.Scope == EventScope.SecondaryMechWarrior && goodEvent.TertiaryPilot != null && pilot2.GUID == goodEvent.TertiaryPilot.GUID)
                                             {
-                                                popRecordT.GetValue();
+                                                __instance.PopRecord();
                                             }
                                             else if (simGameEventObject.Scope == EventScope.TertiaryMechWarrior && goodEvent.SecondaryPilot != null && pilot2.GUID == goodEvent.SecondaryPilot.GUID)
                                             {
-                                                popRecordT.GetValue();
+                                                __instance.PopRecord();
                                             }
                                             else
                                             {
@@ -267,7 +267,7 @@ namespace HumanResources.Patches
                                 {
                                     if (scope == EventScope.MechWarrior)
                                     {
-                                        popRecordT.GetValue();
+                                        __instance.PopRecord();
                                     }
                                     __result = true;
                                     __runOriginal = false;
@@ -277,14 +277,14 @@ namespace HumanResources.Patches
                         else
                         {
                             __instance.RecordLog("Failed!", SimGameLogLevel.VERBOSE);
-                            popRecordT.GetValue();
-                            popRecordT.GetValue();
+                            __instance.PopRecord();
+                            __instance.PopRecord();
                         }
                     }
                 }
                 if (scope == EventScope.MechWarrior)
                 {
-                    popRecordT.GetValue();
+                    __instance.PopRecord();
                     goto IL_65E;
                 }
                 goto IL_65E;

@@ -45,8 +45,7 @@ namespace HumanResources.Patches
                     CrewDetails cd = ModState.GetCrewDetails(random.pilotDef);
                     SimGameEventDef newEvent = EventHelper.CreateHeadHuntingEvent(random, cd, cd.HiringBonus, cd.HiringBonus);
 
-                    Traverse mechWarriorEventTrackerT = Traverse.Create(ModState.SimGameState).Field("mechWarriorEventTracker");
-                    SimGameEventTracker mechWarriorEventTracker = mechWarriorEventTrackerT.GetValue<SimGameEventTracker>();
+                    SimGameEventTracker mechWarriorEventTracker = ModState.SimGameState.mechWarriorEventTracker;
 
                     ModState.HeadHuntedPilot = random;
                     Mod.Log.Info?.Write($"--  Firing debug event");
@@ -78,8 +77,7 @@ namespace HumanResources.Patches
                     ModState.ExpiredContracts.Enqueue((random, cd));
                     SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(random, cd);
 
-                    Traverse mechWarriorEventTrackerT = Traverse.Create(ModState.SimGameState).Field("mechWarriorEventTracker");
-                    SimGameEventTracker mechWarriorEventTracker = mechWarriorEventTrackerT.GetValue<SimGameEventTracker>();
+                    SimGameEventTracker mechWarriorEventTracker = ModState.SimGameState.mechWarriorEventTracker;
 
                     ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, mechWarriorEventTracker);
 

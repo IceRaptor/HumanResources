@@ -129,13 +129,11 @@ namespace HumanResources.Patches
                     SGKeyValueView component = transform.gameObject.GetComponent<SGKeyValueView>();
 
                     Mod.Log.Debug?.Write($"SGCQSS:RD - Reading key from component:{component.name}.");
-                    Traverse keyT = Traverse.Create(component).Field("Key");
-                    TextMeshProUGUI keyText = (TextMeshProUGUI)keyT.GetValue();
+                    TextMeshProUGUI keyText = component.Key;
                     string key = keyText.text;
                     Mod.Log.Debug?.Write($"SGCQSS:RD - key found as: {key}");
 
-                    Traverse valueT = Traverse.Create(component).Field("Value");
-                    TextMeshProUGUI valueText = (TextMeshProUGUI)valueT.GetValue();
+                    TextMeshProUGUI valueText = component.Value;
                     string valueS = valueText.text;
                     string digits = Regex.Replace(valueS, @"[^\d]", "");
                     Mod.Log.Debug?.Write($"SGCQSS:RD - rawValue:{valueS} digits:{digits}");
