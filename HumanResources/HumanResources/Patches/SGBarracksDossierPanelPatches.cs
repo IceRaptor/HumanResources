@@ -11,9 +11,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksDossierPanel), "SetPilot")]
     static class SGBarracksDossierPanel_SetPilot
     {
-        static void Postfix(SGBarracksDossierPanel __instance, Pilot p,
-            LocalizableText ___healthText, List<GameObject> ___healthList, LocalizableText ___salary,
-            LocalizableText ___firstName, LocalizableText ___lastName)
+        static void Postfix(SGBarracksDossierPanel __instance, Pilot p)
         {
             if (p == null) return;
 
@@ -22,16 +20,16 @@ namespace HumanResources.Patches
 
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
             {
-                ___healthText.SetText("N/A");
-                for (int i = 0; i < ___healthList.Count; i++)
+                __instance.healthText.SetText("N/A");
+                for (int i = 0; i < __instance.healthList.Count; i++)
                 {
-                    ___healthList[i].SetActive(false);
+                    __instance.healthList[i].SetActive(false);
                 }
             }
 
             string nameS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Name_Format],
                 new object[] { p.FirstName, p.LastName }).ToString();
-            ___firstName.SetText(nameS);
+            __instance.firstName.SetText(nameS);
 
             // Set the firstname label to 'Name' instead of 'First Name'
             Mod.DossierLog.Debug?.Write("Updating firstName to Name");
@@ -59,7 +57,7 @@ namespace HumanResources.Patches
                 Mod.DossierLog.Debug?.Write($" {daysRemaining} daysRemaining = {ModState.SimGameState.DaysPassed} daysPassed - {details.ExpirationDay} endDay");
             }
 
-            ___lastName.SetText(contractTermRemaining);
+            __instance.lastName.SetText(contractTermRemaining);
             Mod.DossierLog.Debug?.Write($"  -- done updating dossier for pilot: {p.Name}");
 
         }

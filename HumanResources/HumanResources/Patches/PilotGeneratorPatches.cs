@@ -7,16 +7,14 @@ namespace HumanResources.Patches
     [HarmonyPatch(new Type[] { typeof(SimGameState), typeof(List<LifepathNodeDef>), typeof(List<SimGameStringList>) })]
     static class PilotGenerator_Ctor
     {
-        static void Postfix(SimGameState sim, PilotGenerator __instance,
-            List<LifepathNodeDef> ___lifepaths, List<LifepathNodeDef> ___startingPaths,
-            List<LifepathNodeDef> ___advanceStartingPaths, GenderedOptionsListDef ___voiceList)
+        static void Postfix(SimGameState sim, PilotGenerator __instance)
         {
             ModState.CrewCreateState.NameGenerator = new PilotNameGenerator();
 
-            ModState.CrewCreateState.LifePaths = ___lifepaths;
-            ModState.CrewCreateState.StartingPaths = ___startingPaths;
-            ModState.CrewCreateState.AdvancePaths = ___advanceStartingPaths;
-            ModState.CrewCreateState.Voices = ___voiceList;
+            ModState.CrewCreateState.LifePaths = __instance.lifepaths;
+            ModState.CrewCreateState.StartingPaths = __instance.startingPaths;
+            ModState.CrewCreateState.AdvancePaths = __instance.advanceStartingPaths;
+            ModState.CrewCreateState.Voices = __instance.voiceList;
 
             ModState.CrewCreateState.GenderWeights = new List<int>()
             {

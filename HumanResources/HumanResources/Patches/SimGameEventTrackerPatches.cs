@@ -16,7 +16,6 @@ namespace HumanResources.Patches
         //   remaining elements. So we (unfortunately) iterate through the pilots until we find a mechwarrior.
         static Pilot NextSGSMechwarrior()
         {
-            //___sim.PilotRoster.GetNext(true);
             Pilot mechWarrior = null;
             while (mechWarrior == null)
             {
@@ -41,8 +40,7 @@ namespace HumanResources.Patches
         }
 
         static void Prefix(ref bool __runOriginal, SimGameEventTracker __instance, EventScope scope, EventDef_MDD evt, List<TagSet> reqList,
-            out SimGameEventTracker.PotentialEvent goodEvent, ref bool __result,
-            SimGameState ___sim, SimGameReport.ReportEntry ___VerboseEntry)
+            out SimGameEventTracker.PotentialEvent goodEvent, ref bool __result)
         {
             goodEvent = null;
 
@@ -57,9 +55,6 @@ namespace HumanResources.Patches
                 )
                 return;
 
-//            Traverse pushRecordT = Traverse.Create(__instance).Method("PushRecord", new Type[] { typeof(string) });
-  //          Traverse popRecordT = Traverse.Create(__instance).Method("PopRecord");
-
             int num = 0;
             if (scope == EventScope.Company)
             {
@@ -71,7 +66,7 @@ namespace HumanResources.Patches
             }
             else if (scope == EventScope.DeadMechWarrior)
             {
-                num = ___sim.Graveyard.Count;
+                num = __instance.sim.Graveyard.Count;
             }
 
             int i = 0;
@@ -93,7 +88,7 @@ namespace HumanResources.Patches
                 {
                     if (scope == EventScope.DeadMechWarrior)
                     {
-                        pilot = ___sim.Graveyard.GetNext(true);
+                        pilot = __instance.sim.Graveyard.GetNext(true);
                         reqList.Clear();
                         reqList.Add(pilot.pilotDef.PilotTags);
                         goto IL_C7;
@@ -110,20 +105,20 @@ namespace HumanResources.Patches
                     __instance.RecordLog("Attempting Event: " + evt.EventDefID, SimGameLogLevel.VERBOSE);
 
 
-                    if (!___sim.DataManager.SimGameEventDefs.Exists(evt.EventDefID))
+                    if (!__instance.sim.DataManager.SimGameEventDefs.Exists(evt.EventDefID))
                     {
                         Mod.Log.Warn?.Write($"Event {evt.EventDefID} cannot be found in manifest. Skipping.");
                     }
                     else
                     {
-                        SimGameEventDef simGameEventDef = ___sim.DataManager.SimGameEventDefs.Get(evt.EventDefID);
+                        SimGameEventDef simGameEventDef = __instance.sim.DataManager.SimGameEventDefs.Get(evt.EventDefID);
                         if (scope == EventScope.MechWarrior)
                         {
-                            ___sim.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, pilot);
+                            __instance.sim.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, pilot);
                         }
-                        StatCollection statsByScope = ___sim.GetStatsByScope(scope);
+                        StatCollection statsByScope = __instance.sim.GetStatsByScope(scope);
                        __instance.PushRecord(evt.EventDefID);
-                        if (SimGameState.MeetsRequirements(simGameEventDef.Requirements, curTags, statsByScope, ___VerboseEntry))
+                        if (SimGameState.MeetsRequirements(simGameEventDef.Requirements, curTags, statsByScope, __instance.VerboseEntry))
                         {
                             __instance.RecordLog("Passed!", SimGameLogLevel.VERBOSE);
                             __instance.PopRecord();
@@ -135,9 +130,9 @@ namespace HumanResources.Patches
                                 __instance.RecordLog("Has additional reqs.", SimGameLogLevel.VERBOSE);
                                 foreach (RequirementDef requirementDef in simGameEventDef.AdditionalRequirements)
                                 {
-                                    TagSet tagsByScope = ___sim.GetTagsByScope(requirementDef.Scope);
-                                    StatCollection statsByScope2 = ___sim.GetStatsByScope(requirementDef.Scope);
-                                    if (!SimGameState.MeetsRequirements(requirementDef, tagsByScope, statsByScope2, ___VerboseEntry))
+                                    TagSet tagsByScope = __instance.sim.GetTagsByScope(requirementDef.Scope);
+                                    StatCollection statsByScope2 = __instance.sim.GetStatsByScope(requirementDef.Scope);
+                                    if (!SimGameState.MeetsRequirements(requirementDef, tagsByScope, statsByScope2, __instance.VerboseEntry))
                                     {
                                         flag = false;
                                         break;
@@ -181,7 +176,7 @@ namespace HumanResources.Patches
                                             case EventScope.TertiaryMechWarrior:
                                                 goto IL_3C7;
                                             case EventScope.SecondaryMech:
-                                                list.AddRange(___sim.ActiveMechs.Values);
+                                                list.AddRange(__instance.sim.ActiveMechs.Values);
                                                 list.Shuffle<MechDef>();
                                                 using (List<MechDef>.Enumerator enumerator = list.GetEnumerator())
                                                 {
@@ -199,7 +194,7 @@ namespace HumanResources.Patches
                                         int num2 = -1;
                                         for (int l = 0; l < list3.Count; l++)
                                         {
-                                            if (SimGameState.MeetsRequirements(simGameEventObject.Requirements, list3[l], list4[l], ___VerboseEntry))
+                                            if (SimGameState.MeetsRequirements(simGameEventObject.Requirements, list3[l], list4[l], __instance.VerboseEntry))
                                             {
                                                 num2 = l;
                                                 break;

@@ -14,16 +14,14 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "OnPilotSelected")]
     static class SG_HiringHall_Screen_OnPilotSelected
     {
-        static void Prefix(ref bool __runOriginal, SG_HiringHall_Screen __instance, Pilot p,
-            ref Pilot ___selectedPilot, GameObject ___DescriptionAreaObject,
-            SG_HiringHall_DetailPanel ___DetailPanel, SG_HiringHall_MWSelectedPanel ___MWSelectedPanel)
+        static void Prefix(ref bool __runOriginal, SG_HiringHall_Screen __instance, Pilot p)
         {
             if (!__runOriginal) return;
 
-            ___selectedPilot = p;
-            ___DescriptionAreaObject.SetActive(value: true);
-            ___DetailPanel.SetPilot(___selectedPilot);
-            ___MWSelectedPanel.SetPilot(___selectedPilot);
+            __instance.selectedPilot = p;
+            __instance.DescriptionAreaObject.SetActive(value: true);
+            __instance.DetailPanel.SetPilot(__instance.selectedPilot);
+            __instance.MWSelectedPanel.SetPilot(__instance.selectedPilot);
             __instance.WarningsCheck();
             __instance.UpdateMoneySpot();
 
@@ -37,37 +35,35 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "UpdateMoneySpot")]
     static class SG_HiringHall_Screen_UpdateMoneySpot
     {
-        static void Postfix(SG_HiringHall_Screen __instance,
-            Pilot ___selectedPilot, LocalizableText ___MWInitialCostText, UIColorRefTracker ___MWCostColor,
-            HBSDOTweenButton ___HireButton)
+        static void Postfix(SG_HiringHall_Screen __instance)
         {
             Mod.Log.Debug?.Write("Updating UpdateMoneySpot");
 
-            if (___selectedPilot != null)
+            if (__instance.selectedPilot != null)
             {
                 Mod.Log.Debug?.Write(" -- pilot is selected");
 
                 // Account for the salary 
-                CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
+                CrewDetails details = ModState.GetCrewDetails(__instance.selectedPilot.pilotDef);
                 int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
                 string bonus = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Bonus_Label],
                     new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
                     .ToString();
                 Mod.Log.Debug?.Write($"  -- bonus will be: {bonus}");
 
-                ___MWInitialCostText.SetText(bonus);
+                __instance.MWInitialCostText.SetText(bonus);
 
                 if (modifiedBonus > ModState.SimGameState.Funds)
                 {
                     Mod.Log.Debug?.Write(" -- Disabling hire.");
-                    ___MWCostColor.SetUIColor(UIColor.Red);
-                    ___HireButton.SetState(ButtonState.Disabled);
+                    __instance.MWCostColor.SetUIColor(UIColor.Red);
+                    __instance.HireButton.SetState(ButtonState.Disabled);
                 }
                 else
                 {
                     Mod.Log.Debug?.Write(" -- Enabling hire.");
-                    ___MWCostColor.SetUIColor(UIColor.White);
-                    ___HireButton.SetState(ButtonState.Enabled);
+                    __instance.MWCostColor.SetUIColor(UIColor.White);
+                    __instance.HireButton.SetState(ButtonState.Enabled);
                 }
 
             }
@@ -77,19 +73,19 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "ReceiveButtonPress")]
     static class SG_HiringHall_Screen_ReceiveButtonPress
     {
-        static void Prefix(ref bool __runOriginal, SG_HiringHall_Screen __instance, Pilot ___selectedPilot, string button)
+        static void Prefix(ref bool __runOriginal, SG_HiringHall_Screen __instance, string button)
         {
             if (!__runOriginal) return;
 
             Mod.Log.Debug?.Write("Updating Dialog");
 
-            if (___selectedPilot != null &&
+            if (__instance.selectedPilot != null &&
                 "Hire".Equals(button, StringComparison.InvariantCultureIgnoreCase) &&
                 __instance.HireButtonValid())
             {
                 Mod.Log.Debug?.Write(" -- pilot is selected");
 
-                CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
+                CrewDetails details = ModState.GetCrewDetails(__instance.selectedPilot.pilotDef);
                 int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
                 string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hire_Button],
                     new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
@@ -111,9 +107,9 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_MWSelectedPanel), "DisplayPilot")]
     static class SG_HiringHall_MWSelectedPanel_DisplayPilot
     {
-        static void Postfix(SG_HiringHall_MWSelectedPanel __instance, Pilot p, LocalizableText ___BaseSalaryText)
+        static void Postfix(SG_HiringHall_MWSelectedPanel __instance, Pilot p)
         {
-            if (p != null && ___BaseSalaryText != null)
+            if (p != null && __instance.BaseSalaryText != null)
             {
                 Mod.Log.Debug?.Write($"Updating MWSelectedPanel for pilot: {p.Name}");
 
@@ -125,7 +121,7 @@ namespace HumanResources.Patches
 
                 string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Salary_Label], new string[] { modifiedSalaryS })
                     .ToString();
-                ___BaseSalaryText.SetText(salaryS);
+                __instance.BaseSalaryText.SetText(salaryS);
             }
         }
     }
@@ -133,23 +129,21 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "WarningsCheck")]
     static class SG_HiringHall_Screen_WarningsCheck
     {
-        static void Postfix(SG_HiringHall_Screen __instance, GameObject ___WarningAreaObject,
-            HBSDOTweenButton ___HireButton, LocalizableText ___WarningText,
-            HBSTooltip ___NoHireTooltip, Pilot ___selectedPilot)
+        static void Postfix(SG_HiringHall_Screen __instance)
         {
             Mod.Log.Debug?.Write("Updating MWSelectedPanel:WarningsCheck");
 
             // Use the warnings area to display the contract length terms
-            if (___selectedPilot != null && ___HireButton.State == ButtonState.Enabled)
+            if (__instance.selectedPilot != null && __instance.HireButton.State == ButtonState.Enabled)
             {
-                ___WarningAreaObject.SetActive(true);
+                __instance.WarningAreaObject.SetActive(true);
 
-                CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
+                CrewDetails details = ModState.GetCrewDetails(__instance.selectedPilot.pilotDef);
 
                 string contractTermS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Contract_Term],
                     new object[] { details.ContractTerm }
                     ).ToString();
-                ___WarningText.SetText(contractTermS);
+                __instance.WarningText.SetText(contractTermS);
             }
         }
     }
@@ -157,7 +151,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_DetailPanel), "DisplayPilot")]
     static class SG_HiringHall_DetailPanel_DisplayPilot
     {
-        static void Postfix(SG_HiringHall_DetailPanel __instance, Pilot p, LocalizableText ___DescriptionText)
+        static void Postfix(SG_HiringHall_DetailPanel __instance, Pilot p)
         {
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
 
@@ -182,10 +176,6 @@ namespace HumanResources.Patches
                 sb.Append(favoredFactionS);
                 sb.Append("\n\n");
                 Mod.Log.Debug?.Write($"  Favored Faction is: {favoredFactionS}");
-                //Mod.Log.Debug?.Write($"  Favored Faction => name: '{faction.Name}'  friendlyName: '{faction.FriendlyName}'  " +
-                //    $"factionDef.Name: {faction.FactionDef?.Name}  factionDef.CapitalizedName: {faction.FactionDef.CapitalizedName}  " +
-                //    $"factionDef.ShortName: {faction.FactionDef?.ShortName}  factionDef.CapitalizedShortName: {faction.FactionDef.CapitalizedShortName}  " +                    
-                //    $"");
             }
 
             if (details.HatedFactionId > 0)
@@ -200,15 +190,8 @@ namespace HumanResources.Patches
 
             sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), ModState.SimGameState.Context, true));
 
-            ___DescriptionText.SetText(sb.ToString());
+            __instance.DescriptionText.SetText(sb.ToString());
         }
 
-        // TODO: Reimplement this to prevent scrolling to end?
-        //private static IEnumerator EndOfFrameScrollBarMovement()
-        //{
-        //    yield return new WaitForEndOfFrame();
-        //    this.scrollbarArea.verticalNormalizedPosition = 1f;
-        //    yield break;
-        //}
     }
 }

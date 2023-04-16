@@ -11,7 +11,7 @@ namespace HumanResources.Patches.UI
     [HarmonyPatch(typeof(SGSystemViewPopulator), "UpdateRoutedSystem")]
     static class SGSystemViewPopulator_UpdateRoutedSystem
     {
-        static void Postfix(SGSystemViewPopulator __instance, List<LocalizableText> ___SystemDescriptionFields)
+        static void Postfix(SGSystemViewPopulator __instance)
         {
             Mod.Log.Debug?.Write("Updating system description with scarcity");
 
@@ -66,7 +66,7 @@ namespace HumanResources.Patches.UI
                 sb.Append(medTechBoundsText);
             }
 
-            __instance.SetField(___SystemDescriptionFields, sb.ToString());
+            __instance.SetField(__instance.SystemDescriptionFields, sb.ToString());
 
         }
     }

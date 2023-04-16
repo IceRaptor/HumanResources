@@ -13,11 +13,11 @@ namespace HumanResources.Patches
     public static class AAR_ContractObjectivesWidget_FillInObjectives
     {
 
-        static void Postfix(AAR_ContractObjectivesWidget __instance, Contract ___theContract)
+        static void Postfix(AAR_ContractObjectivesWidget __instance)
         {
             try
             {
-                List<Pilot> deployedPilots = ___theContract.PlayerUnitResults.Select(ur => ur.pilot).ToList();
+                List<Pilot> deployedPilots = __instance.theContract.PlayerUnitResults.Select(ur => ur.pilot).ToList();
                 int hazardPaySum = 0;
                 foreach (Pilot p in deployedPilots)
                 {

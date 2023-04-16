@@ -13,25 +13,22 @@ namespace HumanResources.Patches
     [HarmonyAfter(new string[] { "dZ.Zappo.MonthlyTechAdjustment", "us.frostraptor.IttyBittyLivingSpace" })]
     public static class SGCaptainsQuartersStatusScreen_RefreshData
     {
-        public static void Postfix(SGCaptainsQuartersStatusScreen __instance,
-            EconomyScale expenditureLevel, bool showMoraleChange,
-            Transform ___SectionTwoExpensesList, TextMeshProUGUI ___SectionTwoExpensesField,
-            SimGameState ___simState)
+        public static void Postfix(SGCaptainsQuartersStatusScreen __instance, EconomyScale expenditureLevel, bool showMoraleChange)
         {
 
             // Redo all the mechwarrior cost
-            float expenditureCostModifier = ___simState.GetExpenditureCostModifier(expenditureLevel);
-            ClearListLineItems(___SectionTwoExpensesList, ___simState);
+            float expenditureCostModifier = __instance.simState.GetExpenditureCostModifier(expenditureLevel);
+            ClearListLineItems(__instance.SectionTwoExpensesList, __instance.simState);
             int ongoingMechWariorCosts = 0;
 
             //int oldCosts = 0;
             List<KeyValuePair<string, int>> list = new List<KeyValuePair<string, int>>();
-            foreach (Pilot item in ___simState.PilotRoster)
+            foreach (Pilot item in __instance.simState.PilotRoster)
             {
                 string key = item.pilotDef.Description.DisplayName;
 
                 CrewDetails details = ModState.GetCrewDetails(item.pilotDef);
-                //oldCosts += Mathf.CeilToInt(expenditureCostModifier * (float)___simState.GetMechWarriorValue(item.pilotDef));
+                //oldCosts += Mathf.CeilToInt(expenditureCostModifier * (float)__instance.simState.GetMechWarriorValue(item.pilotDef));
 
                 Mod.Log.Debug?.Write($" Pilot: {item.Name} has salary: {details.AdjustedSalary}");
                 list.Add(new KeyValuePair<string, int>(key, details.AdjustedSalary));
@@ -44,75 +41,11 @@ namespace HumanResources.Patches
             list.ForEach(delegate (KeyValuePair<string, int> entry)
             {
                 ongoingMechWariorCosts += entry.Value;
-                AddListLineItem(___SectionTwoExpensesList, ___simState, entry.Key,
+                AddListLineItem(__instance.SectionTwoExpensesList, __instance.simState, entry.Key,
                     SimGameState.GetCBillString(entry.Value));
             });
 
-            ___SectionTwoExpensesField.SetText(SimGameState.GetCBillString(ongoingMechWariorCosts));
-
-            // Rectify the salary field
-
-            //SimGameState simGameState = UnityGameInstance.BattleTechGame.Simulation;
-            //if (__instance == null || ___SectionOneExpensesList == null || ___SectionOneExpensesField == null || simGameState == null)
-            //{
-            //    Mod.Log.Debug?.Write($"SGCQSS:RD - skipping");
-            //    return;
-            //}
-
-            //// TODO: Add this to mech parts maybe?
-            ////float expenditureCostModifier = simGameState.GetExpenditureCostModifier(expenditureLevel);
-
-            //// Determine the level of aerospace support
-            ////Statistic aerospaceAssets = simGameState.CompanyStats.GetStatistic("AerospaceAssets");
-            ////int aerospaceSupport = aerospaceAssets != null ? aerospaceAssets.Value<int>() : 0;
-
-            //Mod.Log.Info?.Write($"SGCQSS:RD - entered. Parsing current keys.");
-
-            //List<KeyValuePair<string, int>> currentKeys = GetCurrentKeys(___SectionOneExpensesList, ___simState);
-            //// Extract the active mechs from the list, then re-add the updated price
-            //List<KeyValuePair<string, int>> filteredKeys = FilterActiveMechs(currentKeys, ___simState);
-            //List<KeyValuePair<string, int>> activeMechs = GetUpkeepLabels(___simState);
-            //filteredKeys.AddRange(activeMechs);
-
-            //// Add the new costs
-            //int newActiveMechCosts = MonthlyCostCalcs.SumMonthlyMechCosts(___simState);
-
-            //filteredKeys.Sort(new ExpensesSorter());
-
-            //Mod.Log.Info?.Write($"SGCQSS:RD - Clearing items");
-            //ClearListLineItems(___SectionOneExpensesList, ___simState);
-
-            //Mod.Log.Info?.Write($"SGCQSS:RD - Adding listLineItems");
-            //int totalCost = 0;
-            //try
-            //{
-            //    foreach (KeyValuePair<string, int> kvp in filteredKeys)
-            //    {
-            //        Mod.Log.Info?.Write($"SGCQSS:RD - Adding key:{kvp.Key} value:{kvp.Value}");
-            //        totalCost += kvp.Value;
-            //        AddListLineItem(___SectionOneExpensesList, ___simState, kvp.Key, SimGameState.GetCBillString(kvp.Value));
-            //    }
-
-            //}
-            //catch (Exception e)
-            //{
-            //    Mod.Log.Info?.Write($"SGCQSS:RD - failed to add lineItemParts due to: {e.Message}");
-            //}
-
-            //// Update summary costs
-            //int newCosts = totalCost;
-            //string newCostsS = SimGameState.GetCBillString(newCosts);
-            //Mod.Log.Debug?.Write($"SGCQSS:RD - total:{newCosts} = activeMechs:{newActiveMechCosts}");
-
-            //try
-            //{
-            //    ___SectionOneExpensesField.SetText(SimGameState.GetCBillString(newCosts));
-            //    Mod.Log.Debug?.Write($"SGCQSS:RD - updated ");
-            //}
-            //catch (Exception e)
-            //{
-            //    Mod.Log.Info?.Write($"SGCQSS:RD - failed to update summary costs section due to: {e.Message}");
-            //}
+            __instance.SectionTwoExpensesField.SetText(SimGameState.GetCBillString(ongoingMechWariorCosts));
         }
 
         public static List<KeyValuePair<string, int>> GetCurrentKeys(Transform container, SimGameState sgs)

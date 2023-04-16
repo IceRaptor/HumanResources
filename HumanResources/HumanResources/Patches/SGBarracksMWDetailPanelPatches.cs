@@ -8,11 +8,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksMWDetailPanel), "DisplayPilot")]
     static class SGBarracksMWDetailPanel_DisplayPilot
     {
-        static void Postfix(SGBarracksMWDetailPanel __instance, Pilot p,
-            SGBarracksAdvancementPanel ___advancement, GameObject ___advancementSectionGO,
-            SGBarracksDossierPanel ___dossier,
-            SGBarracksServicePanel ___servicePanel, GameObject ___serviceSectionGO,
-            HBSDOTweenButton ___customizeButton)
+        static void Postfix(SGBarracksMWDetailPanel __instance, Pilot p)
         {
             if (p == null) return;
             CrewDetails details = ModState.GetCrewDetails(p.pilotDef);
@@ -36,20 +32,15 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksMWDetailPanel), "OnSkillsSectionClicked")]
     static class SGBarracksMWDetailPanel_OnSkillsSectionClicked
     {
-        static void Postfix(SGBarracksMWDetailPanel __instance,
-            Pilot ___curPilot,
-            SGBarracksAdvancementPanel ___advancement, GameObject ___advancementSectionGO,
-            SGBarracksDossierPanel ___dossier,
-            SGBarracksServicePanel ___servicePanel, GameObject ___serviceSectionGO,
-            HBSDOTweenButton ___customizeButton)
+        static void Postfix(SGBarracksMWDetailPanel __instance)
         {
-            if (___curPilot == null) return;
+            if (__instance.curPilot == null) return;
 
-            CrewDetails details = ModState.GetCrewDetails(___curPilot.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(__instance.curPilot.pilotDef);
 
             if (details.IsMechTechCrew || details.IsMedTechCrew || details.IsAerospaceCrew)
             {
-                ___advancementSectionGO.SetActive(false);
+                __instance.advancementSectionGO.SetActive(false);
             }
         }
     }

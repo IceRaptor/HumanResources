@@ -14,15 +14,14 @@ namespace HumanResources.Patches
     static class SGBarracksRosterSlot_RefreshCostColorAndAvailability
     {
 
-        static void Postfix(Pilot ___pilot, GameObject ___cantBuyMRBOverlay, HBSTooltip ___cantBuyToolTip,
-            LocalizableText ___costText, UIColorRefTracker ___costTextColor)
+        static void Postfix(SGBarracksRosterSlot __instance)
         {
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
-            Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
+            Mod.Log.Debug?.Write($"Refreshing availability for pilot: {__instance.pilot.Name}");
 
             // TODO: This may need to be improved, as it's used inside a loop. Maybe write to company stats?
-            CrewDetails details = ModState.GetCrewDetails(___pilot.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(__instance.pilot.pilotDef);
             Mod.Log.Debug?.Write($"  -- pilot requires: {details.Size} berths");
 
             int usedBerths = CrewHelper.UsedBerths(ModState.SimGameState.PilotRoster);
@@ -32,34 +31,34 @@ namespace HumanResources.Patches
             // Check berths limitations
             if (details.Size > availableBerths)
             {
-                Mod.Log.Info?.Write($"Pilot {___pilot.Name} cannot be hired, not enough berths (needs {details.Size})");
+                Mod.Log.Info?.Write($"Pilot {__instance.pilot.Name} cannot be hired, not enough berths (needs {details.Size})");
 
-                ___cantBuyMRBOverlay.SetActive(true);
+                __instance.cantBuyMRBOverlay.SetActive(true);
 
                 HBSTooltipStateData tooltipStateData = new HBSTooltipStateData();
                 tooltipStateData.SetContextString($"DM.BaseDescriptionDefs[{ModConsts.Tooltip_NotEnoughBerths}]");
-                ___cantBuyToolTip.SetDefaultStateData(tooltipStateData);
+                __instance.cantBuyToolTip.SetDefaultStateData(tooltipStateData);
             }
 
             // Check type limitations
             if (!CrewHelper.CanHireMoreCrewOfType(details))
             {
-                Mod.Log.Info?.Write($"Pilot {___pilot.Name} cannot be hired, too many of type already employed.");
+                Mod.Log.Info?.Write($"Pilot {__instance.pilot.Name} cannot be hired, too many of type already employed.");
 
-                ___cantBuyMRBOverlay.SetActive(true);
+                __instance.cantBuyMRBOverlay.SetActive(true);
 
                 HBSTooltipStateData tooltipStateData = new HBSTooltipStateData();
                 tooltipStateData.SetContextString($"DM.BaseDescriptionDefs[{ModConsts.Tooltip_TooManyOfType}]");
-                ___cantBuyToolTip.SetDefaultStateData(tooltipStateData);
+                __instance.cantBuyToolTip.SetDefaultStateData(tooltipStateData);
             }
             else
             {
-                Mod.Log.Debug?.Write($"Pilot {___pilot.Name} can be hired, no limiations on max.");
+                Mod.Log.Debug?.Write($"Pilot {__instance.pilot.Name} can be hired, no limiations on max.");
             }
 
             // Set the prices
             //int purchaseCostAfterReputationModifier = ModState.SimGameState.CurSystem.GetPurchaseCostAfterReputationModifier(
-            //    ModState.SimGameState.GetMechWarriorHiringCost(___pilot.pilotDef)
+            //    ModState.SimGameState.GetMechWarriorHiringCost(__instance.pilot.pilotDef)
             //    );
             // TODO: Apply system cost multiplier
             // Hiring cost is influenced by:
@@ -67,48 +66,45 @@ namespace HumanResources.Patches
             //  - any faction alignment for units
             //  - any reputation modifiers
 
-            ___costText.SetText(SimGameState.GetCBillString(details.HiringBonus));
+            __instance.costText.SetText(SimGameState.GetCBillString(details.HiringBonus));
 
             UIColor costColor = UIColor.Red;
             if (details.HiringBonus <= ModState.SimGameState.Funds) costColor = UIColor.White;
-            ___costTextColor.SetUIColor(costColor);
+            __instance.costTextColor.SetUIColor(costColor);
         }
     }
 
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "Refresh")]
     static class SGBarracksRosterSlot_Refresh
     {
-        static void Prefix(ref bool __runOriginal, Pilot ___pilot)
+        static void Prefix(ref bool __runOriginal, SGBarracksRosterSlot __instance)
         {
             if (!__runOriginal) return;
 
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
-            Mod.Log.Debug?.Write($"PRE Calling refresh for pilot: {___pilot.Name}");
+            Mod.Log.Debug?.Write($"PRE Calling refresh for pilot: {__instance.pilot.Name}");
         }
 
-        static void Postfix(SGBarracksRosterSlot __instance, Pilot ___pilot,
-            GameObject ___AbilitiesObject, LocalizableText ___callsign, Image ___portrait,
-            SVGImage ___roninIcon, SVGImage ___veteranIcon,
-            LocalizableText ___expertise, HBSTooltip ___ExpertiseTooltip)
+        static void Postfix(SGBarracksRosterSlot __instance )
         {
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
-            if (___pilot == null) return;
-            Mod.Log.Debug?.Write($"POST Calling refresh for pilot: {___pilot.Name}");
+            if (__instance.pilot == null) return;
+            Mod.Log.Debug?.Write($"POST Calling refresh for pilot: {__instance.pilot.Name}");
 
-            CrewDetails details = ModState.GetCrewDetails(___pilot.pilotDef);
+            CrewDetails details = ModState.GetCrewDetails(__instance.pilot.pilotDef);
 
             // Find the common GameObjects we need to manipulate
-            GameObject portraitOverride = GetOrCreateProfileOverride(___portrait);
+            GameObject portraitOverride = GetOrCreateProfileOverride(__instance.portrait);
             if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew || details.IsVehicleCrew) portraitOverride.SetActive(true);
             else portraitOverride.SetActive(false);
 
-            GameObject crewBlock = GetOrCreateCrewBlock(___portrait.gameObject);
+            GameObject crewBlock = GetOrCreateCrewBlock(__instance.portrait.gameObject);
             if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew) crewBlock.SetActive(true);
             else crewBlock.SetActive(false);
 
-            GameObject mwStats = ___portrait.transform.parent.parent.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Stats_Block);
+            GameObject mwStats = __instance.portrait.transform.parent.parent.gameObject.FindFirstChildNamed(ModConsts.GO_HBS_Profile_Stats_Block);
             if (details.IsAerospaceCrew || details.IsMechTechCrew || details.IsMedTechCrew) mwStats.SetActive(false);
             else mwStats.SetActive(true);
 
@@ -120,10 +116,10 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write($"  -- pilot is Aerospace crew");
                 layoutTitleImg.color = Mod.Config.Crew.AerospaceColor;
 
-                ___portrait.gameObject.SetActive(false);
-                ___AbilitiesObject.SetActive(false);
-                ___roninIcon.gameObject.SetActive(false);
-                ___veteranIcon.gameObject.SetActive(false);
+                __instance.portrait.gameObject.SetActive(false);
+                __instance.AbilitiesObject.SetActive(false);
+                __instance.roninIcon.gameObject.SetActive(false);
+                __instance.veteranIcon.gameObject.SetActive(false);
 
                 // Set the portrait icon
                 SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_Aerospace, BattleTechResourceType.SVGAsset);
@@ -155,8 +151,8 @@ namespace HumanResources.Patches
                 lt2.fontSizeMax = 16f;
 
                 // Set the expertise of the crew
-                ___expertise.color = Color.white;
-                ___expertise.SetText(details.ExpertiseLabel);
+                __instance.expertise.color = Color.white;
+                __instance.expertise.SetText(details.ExpertiseLabel);
 
             }
             else if (details.IsMechTechCrew)
@@ -164,10 +160,10 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write($"  -- pilot is Mechtech crew");
                 layoutTitleImg.color = Mod.Config.Crew.MechTechCrewColor;
 
-                ___portrait.gameObject.SetActive(false);
-                ___AbilitiesObject.SetActive(false);
-                ___roninIcon.gameObject.SetActive(false);
-                ___veteranIcon.gameObject.SetActive(false);
+                __instance.portrait.gameObject.SetActive(false);
+                __instance.AbilitiesObject.SetActive(false);
+                __instance.roninIcon.gameObject.SetActive(false);
+                __instance.veteranIcon.gameObject.SetActive(false);
 
                 // Set the portrait icon
                 SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_MechTech, BattleTechResourceType.SVGAsset);
@@ -199,8 +195,8 @@ namespace HumanResources.Patches
                 lt2.fontSizeMax = 16f;
 
                 // Set the expertise of the crew
-                ___expertise.color = Color.white;
-                ___expertise.SetText(details.ExpertiseLabel);
+                __instance.expertise.color = Color.white;
+                __instance.expertise.SetText(details.ExpertiseLabel);
 
             }
             else if (details.IsMedTechCrew)
@@ -208,10 +204,10 @@ namespace HumanResources.Patches
                 Mod.Log.Debug?.Write($"  -- pilot is Medtech crew");
                 layoutTitleImg.color = Mod.Config.Crew.MedTechCrewColor;
 
-                ___portrait.gameObject.SetActive(false);
-                ___AbilitiesObject.SetActive(false);
-                ___roninIcon.gameObject.SetActive(false);
-                ___veteranIcon.gameObject.SetActive(false);
+                __instance.portrait.gameObject.SetActive(false);
+                __instance.AbilitiesObject.SetActive(false);
+                __instance.roninIcon.gameObject.SetActive(false);
+                __instance.veteranIcon.gameObject.SetActive(false);
 
                 // Set the portrait icon
                 SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_MedTech, BattleTechResourceType.SVGAsset);
@@ -243,18 +239,18 @@ namespace HumanResources.Patches
                 lt2.fontSizeMax = 16f;
 
                 // Set the expertise of the crew
-                ___expertise.color = Color.white;
-                ___expertise.SetText(details.ExpertiseLabel);
+                __instance.expertise.color = Color.white;
+                __instance.expertise.SetText(details.ExpertiseLabel);
             }
             else if (details.IsVehicleCrew)
             {
                 Mod.Log.Debug?.Write($"  -- pilot is Vehicle crew");
                 layoutTitleImg.color = Mod.Config.Crew.VehicleCrewColor;
 
-                ___portrait.gameObject.SetActive(false);
-                ___roninIcon.gameObject.SetActive(false);
+                __instance.portrait.gameObject.SetActive(false);
+                __instance.roninIcon.gameObject.SetActive(false);
 
-                ___callsign.SetText("VCREW: " + ___pilot.Callsign);
+                __instance.callsign.SetText("VCREW: " + __instance.pilot.Callsign);
 
                 // Set the portrait icon
                 SVGAsset icon = ModState.SimGameState.DataManager.GetObjectOfType<SVGAsset>(Mod.Config.Icons.CrewPortrait_Vehicle, BattleTechResourceType.SVGAsset);
@@ -262,12 +258,12 @@ namespace HumanResources.Patches
                 SVGImage image = portraitOverride.GetComponentInChildren<SVGImage>();
                 image.vectorGraphics = icon;
 
-                ___expertise.color = Color.white;
+                __instance.expertise.color = Color.white;
             }
             else
             {
                 Mod.Log.Debug?.Write($"  -- pilot is Mechwarrior");
-                ___portrait.gameObject.SetActive(true);
+                __instance.portrait.gameObject.SetActive(true);
             }
 
             Mod.Log.Debug?.Write($"LayoutTitleImg color set to: {layoutTitleImg.color}");

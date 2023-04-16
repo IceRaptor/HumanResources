@@ -15,8 +15,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksServicePanel), "SetPilot")]
     static class SGBarracksServicePanel_SetPilot
     {
-        static void Postfix(SGBarracksServicePanel __instance, Pilot p,
-            BattleTech.UI.TMProWrapper.LocalizableText ___biographyLabel, SimGameState ___sim, HBSTagView ___tagViewer)
+        static void Postfix(SGBarracksServicePanel __instance, Pilot p) 
         {
             if (p == null) return;
 
@@ -34,7 +33,7 @@ namespace HumanResources.Patches
             List<string> filteredTags = p.pilotDef.PilotTags.Where(t => !t.StartsWith(ModTags.Tag_GUID)).ToList();
             TagSet baseTags = new TagSet(filteredTags);
             foreach (string tag in p.pilotDef.PilotTags)
-                ___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
+                __instance.tagViewer.Initialize(baseTags, __instance.sim.Context, __instance.sim.DebugMode, 4);
 
             Mod.Log.Debug?.Write("Updating attitude fields.");
 
@@ -94,11 +93,11 @@ namespace HumanResources.Patches
             }
 
             // Add the original description
-            sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), ___sim.Context, true));
+            sb.Append(Interpolator.Interpolate(p.pilotDef.Description.GetLocalizedDetails().ToString(true), __instance.sim.Context, true));
 
             string biographyS = sb.ToString();
             Mod.Log.Debug?.Write($"Biography will be: {biographyS}");
-            ___biographyLabel.SetText(biographyS, Array.Empty<object>());
+            __instance.biographyLabel.SetText(biographyS, Array.Empty<object>());
         }
     }
 }

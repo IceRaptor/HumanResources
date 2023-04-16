@@ -12,8 +12,7 @@ namespace HumanResources.Patches
     static class SGBarracksRosterList_AddPilot
     {
         static void Prefix(ref bool __runOriginal, SGBarracksRosterList __instance,
-            Pilot pilot, UnityAction<SGBarracksRosterSlot> pilotSelectedOnClick, bool isInHireHall,
-            Dictionary<string, SGBarracksRosterSlot> ___currentRoster)
+            Pilot pilot, UnityAction<SGBarracksRosterSlot> pilotSelectedOnClick, bool isInHireHall)            
         {
             if (!__runOriginal) return;
 
@@ -21,7 +20,7 @@ namespace HumanResources.Patches
 
             Mod.Log.Debug?.Write($"Adding pilot {pilot.Callsign} to roster list.");
 
-            if (!___currentRoster.ContainsKey(pilot.GUID))
+            if (!__instance.currentRoster.ContainsKey(pilot.GUID))
             {
                 SGBarracksRosterSlot slot = __instance.GetSlot();
                 if (isInHireHall)
@@ -39,7 +38,7 @@ namespace HumanResources.Patches
                 {
                     slot.Init(pilot, __instance, pilotSelectedOnClick);
                 }
-                ___currentRoster.Add(pilot.GUID, slot);
+                __instance.currentRoster.Add(pilot.GUID, slot);
                 slot.AddToRadioSet(__instance.listRadioSet);
 
                 // Performance tweak; skip
@@ -84,7 +83,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "SetRosterBerthText")]
     static class SGBarracksRosterList_SetRosterBerthText
     {
-        static void Prefix(ref bool __runOriginal, SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
+        static void Prefix(ref bool __runOriginal, SGBarracksRosterList __instance)
         {
             if (!__runOriginal) return;
 
@@ -95,7 +94,7 @@ namespace HumanResources.Patches
 
             string text = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Berths_Used],
                 new object[] { usedBerths, ModState.SimGameState.GetMaxMechWarriors() }).ToString();
-            ___mechWarriorCount.SetText(text);
+            __instance.mechWarriorCount.SetText(text);
 
             __runOriginal = false;
         }

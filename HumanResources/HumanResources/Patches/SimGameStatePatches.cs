@@ -286,14 +286,12 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SimGameState), "OnDayPassed")]
     static class SimGameState_OnDayPassed
     {
-        static void Postfix(SimGameState __instance, int timeLapse, SimGameInterruptManager ___interruptQueue,
-            SimGameEventTracker ___companyEventTracker, SimGameEventTracker ___mechWarriorEventTracker,
-            SimGameEventTracker ___deadEventTracker, SimGameEventTracker ___moraleEventTracker)
+        static void Postfix(SimGameState __instance, int timeLapse)
         {
             Mod.Log.Debug?.Write($"OnDayPassed called with timeLapse: {timeLapse}");
 
             // Only check for events if another event isn't firing, and we're in orbit around a system
-            if (!___interruptQueue.IsOpen && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
+            if (!__instance.interruptQueue.IsOpen && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
             {
                 foreach (Pilot pilot in __instance.PilotRoster)
                 {
@@ -311,7 +309,7 @@ namespace HumanResources.Patches
                     Mod.Log.Info?.Write($"Contract expiration event fired.");
                     (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
                     SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
-                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, __instance.mechWarriorEventTracker);
                 }
                 else if (Mod.Config.HeadHunting.Enabled && __instance.TravelState == SimGameTravelStatus.IN_SYSTEM)
                 {
@@ -325,7 +323,7 @@ namespace HumanResources.Patches
                             CrewDetails cd = ModState.GetCrewDetails(headHuntedCrew.pilotDef);
                             SimGameEventDef newEvent = EventHelper.CreateHeadHuntingEvent(headHuntedCrew, cd, cd.HiringBonus, cd.HiringBonus);
                             ModState.HeadHuntedPilot = headHuntedCrew;
-                            ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                            ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, __instance.mechWarriorEventTracker);
 
                             HeadHuntingHelper.UpdateNextDayOnSuccess();
                         }
@@ -366,12 +364,11 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGEventPanel), "OnOptionSelected")]
     static class SimGameState_OnOptionSelected
     {
-        static void Postfix(SGEventPanel __instance, SimGameEventOption option,
-            SimGameInterruptManager.EventPopupEntry ___thisEntry)
+        static void Postfix(SGEventPanel __instance, SimGameEventOption option)
         {
 
-            if (___thisEntry != null && ___thisEntry.parameters != null &&
-                ___thisEntry.parameters[0] is SimGameEventDef eventDef)
+            if (__instance.thisEntry != null && __instance.thisEntry.parameters != null &&
+                __instance.thisEntry.parameters[0] is SimGameEventDef eventDef)
             {
 
                 if (ModConsts.Event_ContractExpired.Equals(eventDef.Description.Id))
@@ -400,7 +397,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SimGameState), "OnEventDismissed")]
     static class SimGameState_OnEventDismissed
     {
-        static void Postfix(SimGameInterruptManager.EventPopupEntry entry, SimGameEventTracker ___mechWarriorEventTracker)
+        static void Postfix(SimGameState __instance, SimGameInterruptManager.EventPopupEntry entry)
         {
             SimGameEventDef evt = entry != null && entry.parameters[0] is SimGameEventDef ? (SimGameEventDef)entry.parameters[0] : null;
             if (String.Equals(ModConsts.Event_ContractExpired, evt?.Description?.Id))
@@ -415,7 +412,7 @@ namespace HumanResources.Patches
                     (Pilot Pilot, CrewDetails Details) expired = ModState.ExpiredContracts.Peek();
                     SimGameEventDef newEvent = EventHelper.ModifyContractExpirationEventForPilot(expired.Pilot, expired.Details);
                     Mod.Log.Info?.Write($"Contract expiration event fired.");
-                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, ___mechWarriorEventTracker);
+                    ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, __instance.mechWarriorEventTracker);
                 }
             }
 
