@@ -1,7 +1,4 @@
-﻿using BattleTech.Data;
-using Harmony;
-using HBS.Collections;
-using HumanResources.Helper;
+﻿using HumanResources.Helper;
 using HumanResources.Lifepath;
 using IRBTModUtils.Logging;
 using Newtonsoft.Json;
@@ -114,10 +111,7 @@ namespace HumanResources
                 Log.Error?.Write(e, $"Failed to read lifepaths from: {lifepathsPath} due to error!");
             }
 
-
-            // Initialize harmony
-            var harmony = HarmonyInstance.Create(HarmonyPackage);
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly(), HarmonyPackage);
         }
 
     }

@@ -1,7 +1,5 @@
-﻿using BattleTech;
-using HumanResources.Crew;
+﻿using HumanResources.Crew;
 using Localize;
-using System;
 using System.Text;
 
 namespace HumanResources.Helper
@@ -37,7 +35,7 @@ namespace HumanResources.Helper
             SimGameEventDef expiredEventDef = new SimGameEventDef(
                 rawEventDef.PublishState, rawEventDef.EventType, rawEventDef.Scope,
                 newBaseDescDef, rawEventDef.Requirements, rawEventDef.AdditionalRequirements,
-                rawEventDef.AdditionalObjects, newOptions, 
+                rawEventDef.AdditionalObjects, newOptions,
                 rawEventDef.Weight, rawEventDef.OneTimeEvent, rawEventDef.Tags);
             return expiredEventDef;
         }
@@ -49,14 +47,14 @@ namespace HumanResources.Helper
             int counterOffer = SalaryHelper.CalcCounterOffer(details) * -1;
             int buyout = details.AdjustedBonus;
             Mod.Log.Info?.Write($"For headhunting event, counterOffer: {counterOffer}  buyout: {buyout}");
-            
+
             // Change the description fields
             BaseDescriptionDef rawBaseDescDef = rawEventDef.Description;
             StringBuilder detailsSB = new StringBuilder(rawBaseDescDef.Details);
             detailsSB.Append("\n\n");
             detailsSB.Append("<margin=5em>\n");
             detailsSB.Append(
-                new Text(Mod.LocalizedText.Events[ModText.ET_HeadHunted_Retention], 
+                new Text(Mod.LocalizedText.Events[ModText.ET_HeadHunted_Retention],
                 new object[] { SimGameState.GetCBillString(counterOffer) }).ToString()
                 );
             detailsSB.Append(
@@ -78,7 +76,7 @@ namespace HumanResources.Helper
                 else if (ModConsts.Event_Option_HeadHunting_Retained.Equals(sgeOption.Description.Id))
                 {
                     // Mechwarrior statys, company pays them retention 
-                    UpdateFundsStat(pilot, counterOffer, sgeOption);                    
+                    UpdateFundsStat(pilot, counterOffer, sgeOption);
                 }
             }
 

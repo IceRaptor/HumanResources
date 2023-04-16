@@ -1,6 +1,4 @@
-﻿using BattleTech;
-using BattleTech.UI;
-using Harmony;
+﻿using BattleTech.UI;
 using HumanResources.Crew;
 using System;
 using System.Collections;
@@ -15,7 +13,7 @@ namespace HumanResources.Patches
     [HarmonyAfter(new string[] { "dZ.Zappo.MonthlyTechAdjustment", "us.frostraptor.IttyBittyLivingSpace" })]
     public static class SGCaptainsQuartersStatusScreen_RefreshData
     {
-        public static void Postfix(SGCaptainsQuartersStatusScreen __instance, 
+        public static void Postfix(SGCaptainsQuartersStatusScreen __instance,
             EconomyScale expenditureLevel, bool showMoraleChange,
             Transform ___SectionTwoExpensesList, TextMeshProUGUI ___SectionTwoExpensesField,
             SimGameState ___simState)
@@ -31,7 +29,7 @@ namespace HumanResources.Patches
             foreach (Pilot item in ___simState.PilotRoster)
             {
                 string key = item.pilotDef.Description.DisplayName;
-                
+
                 CrewDetails details = ModState.GetCrewDetails(item.pilotDef);
                 //oldCosts += Mathf.CeilToInt(expenditureCostModifier * (float)___simState.GetMechWarriorValue(item.pilotDef));
 
@@ -46,7 +44,7 @@ namespace HumanResources.Patches
             list.ForEach(delegate (KeyValuePair<string, int> entry)
             {
                 ongoingMechWariorCosts += entry.Value;
-                AddListLineItem(___SectionTwoExpensesList, ___simState, entry.Key, 
+                AddListLineItem(___SectionTwoExpensesList, ___simState, entry.Key,
                     SimGameState.GetCBillString(entry.Value));
             });
 

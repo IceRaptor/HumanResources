@@ -1,14 +1,11 @@
-﻿using BattleTech;
-using BattleTech.StringInterpolation;
+﻿using BattleTech.StringInterpolation;
 using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using BattleTech.UI.Tooltips;
-using Harmony;
 using HBS;
 using HumanResources.Crew;
 using Localize;
 using System;
-using System.Collections;
 using System.Text;
 using UnityEngine;
 
@@ -17,10 +14,12 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "OnPilotSelected")]
     static class SG_HiringHall_Screen_OnPilotSelected
     {
-        static bool Prefix(SG_HiringHall_Screen __instance, Pilot p,
-            ref Pilot ___selectedPilot, GameObject ___DescriptionAreaObject, 
+        static void Prefix(ref bool __runOriginal, SG_HiringHall_Screen __instance, Pilot p,
+            ref Pilot ___selectedPilot, GameObject ___DescriptionAreaObject,
             SG_HiringHall_DetailPanel ___DetailPanel, SG_HiringHall_MWSelectedPanel ___MWSelectedPanel)
         {
+            if (!__runOriginal) return;
+
             ___selectedPilot = p;
             ___DescriptionAreaObject.SetActive(value: true);
             ___DetailPanel.SetPilot(___selectedPilot);
@@ -31,7 +30,7 @@ namespace HumanResources.Patches
             // Performance tweak; skip immediate refresh
             __instance.ForceRefreshImmediate();
 
-            return false;
+            __runOriginal = false;
         }
     }
 
@@ -39,7 +38,7 @@ namespace HumanResources.Patches
     static class SG_HiringHall_Screen_UpdateMoneySpot
     {
         static void Postfix(SG_HiringHall_Screen __instance,
-            Pilot ___selectedPilot, LocalizableText ___MWInitialCostText, UIColorRefTracker ___MWCostColor, 
+            Pilot ___selectedPilot, LocalizableText ___MWInitialCostText, UIColorRefTracker ___MWCostColor,
             HBSDOTweenButton ___HireButton)
         {
             Mod.Log.Debug?.Write("Updating UpdateMoneySpot");
@@ -78,11 +77,13 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SG_HiringHall_Screen), "ReceiveButtonPress")]
     static class SG_HiringHall_Screen_ReceiveButtonPress
     {
-        static bool Prefix(SG_HiringHall_Screen __instance, Pilot ___selectedPilot, string button)
+        static void Prefix(ref bool __runOriginal, SG_HiringHall_Screen __instance, Pilot ___selectedPilot, string button)
         {
+            if (!__runOriginal) return;
+
             Mod.Log.Debug?.Write("Updating Dialog");
 
-            if (___selectedPilot != null && 
+            if (___selectedPilot != null &&
                 "Hire".Equals(button, StringComparison.InvariantCultureIgnoreCase) &&
                 __instance.HireButtonValid())
             {
@@ -90,7 +91,7 @@ namespace HumanResources.Patches
 
                 CrewDetails details = ModState.GetCrewDetails(___selectedPilot.pilotDef);
                 int modifiedBonus = (int)Mathf.RoundToInt(details.AdjustedBonus);
-                string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hire_Button], 
+                string salaryS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Hire_Button],
                     new string[] { SimGameState.GetCBillString(Mathf.RoundToInt(modifiedBonus)) })
                     .ToString();
                 Mod.Log.Debug?.Write($"  -- bonus will be: {salaryS}");
@@ -102,10 +103,8 @@ namespace HumanResources.Patches
                     .AddFader(LazySingletonBehavior<UIManager>.Instance.UILookAndColorConstants.PopupBackfill)
                     .Render();
 
-                return false;
+                __runOriginal = false;
             }
-
-            return true;
         }
     }
 
@@ -178,7 +177,7 @@ namespace HumanResources.Patches
             if (details.FavoredFactionId > 0)
             {
                 FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFactionId);
-                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], 
+                string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored],
                     new object[] { faction.FactionDef.CapitalizedName }).ToString();
                 sb.Append(favoredFactionS);
                 sb.Append("\n\n");
@@ -192,7 +191,7 @@ namespace HumanResources.Patches
             if (details.HatedFactionId > 0)
             {
                 FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFactionId);
-                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], 
+                string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated],
                     new object[] { faction.FactionDef.CapitalizedName }).ToString();
                 sb.Append(hatedFactionS);
                 sb.Append("\n\n");

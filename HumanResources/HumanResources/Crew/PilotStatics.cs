@@ -1,14 +1,12 @@
-﻿using BattleTech;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HumanResources.Crew
 {
-    
+
     public static class CrewHelper
     {
 
-        
+
 
         public static int UsedBerths(IEnumerable<Pilot> pilots)
         {

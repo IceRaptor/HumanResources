@@ -1,15 +1,6 @@
-﻿using BattleTech;
-using BattleTech.StringInterpolation;
-using BattleTech.UI;
-using BattleTech.UI.TMProWrapper;
-using Harmony;
-using HBS.Collections;
+﻿using BattleTech.UI;
 using HBS.Extensions;
 using HumanResources.Crew;
-using Localize;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -19,7 +10,7 @@ namespace HumanResources.Patches
     {
         static void Postfix(SGBarracksMWDetailPanel __instance, Pilot p,
             SGBarracksAdvancementPanel ___advancement, GameObject ___advancementSectionGO,
-            SGBarracksDossierPanel ___dossier, 
+            SGBarracksDossierPanel ___dossier,
             SGBarracksServicePanel ___servicePanel, GameObject ___serviceSectionGO,
             HBSDOTweenButton ___customizeButton)
         {

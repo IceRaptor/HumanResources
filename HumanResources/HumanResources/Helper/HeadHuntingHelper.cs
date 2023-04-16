@@ -1,10 +1,5 @@
-﻿using BattleTech;
-using HumanResources.Crew;
-using System;
+﻿using HumanResources.Crew;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HumanResources.Helper
 {

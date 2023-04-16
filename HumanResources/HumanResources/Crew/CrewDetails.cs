@@ -1,5 +1,4 @@
-﻿using BattleTech;
-using HumanResources.Helper;
+﻿using HumanResources.Helper;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -84,8 +83,8 @@ namespace HumanResources.Crew
 
         }
 
-        public CrewDetails(PilotDef pilotDef, CrewType type, 
-            FactionValue favoredFaction, FactionValue hatedFaction, 
+        public CrewDetails(PilotDef pilotDef, CrewType type,
+            FactionValue favoredFaction, FactionValue hatedFaction,
             int sizeIdx = 0, int skillIdx = 0, bool isFounder = false,
             SalaryConfig salaryCfg = null)
         {

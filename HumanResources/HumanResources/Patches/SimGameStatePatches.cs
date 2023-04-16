@@ -1,8 +1,5 @@
-﻿using BattleTech;
-using BattleTech.Data;
+﻿using BattleTech.Data;
 using BattleTech.UI;
-using Harmony;
-using HBS.Collections;
 using HumanResources.Crew;
 using HumanResources.Helper;
 using Localize;
@@ -165,8 +162,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(new Type[] { typeof(Pilot) })]
     static class SimGameState_DismissPilot
     {
-        static void Prefix(SimGameState __instance, Pilot p)
+        static void Prefix(ref bool __runOriginal, SimGameState __instance, Pilot p)
         {
+            if (!__runOriginal) return;
+
             if (p == null || !__instance.PilotRoster.Contains(p)) return;
 
             Mod.Log.Debug?.Write($"Removing pilot: {p.Name} from company.");
@@ -345,8 +344,10 @@ namespace HumanResources.Patches
     static class SGEventPanel_SetEvent
     {
         // Populate the target mechwarrior before the event
-        static void Prefix(SGEventPanel __instance, SimGameEventDef evt)
+        static void Prefix(ref bool __runOriginal, SGEventPanel __instance, SimGameEventDef evt)
         {
+            if (!__runOriginal) return;
+
             Mod.Log.Debug?.Write("SGEP:SetEvent:PRE");
             if (ModConsts.Event_ContractExpired.Equals(evt.Description.Id) && ModState.ExpiredContracts.Count > 0)
             {
@@ -391,7 +392,7 @@ namespace HumanResources.Patches
                     // TODO: Anything?
                 }
 
-            }                
+            }
         }
     }
 
@@ -430,8 +431,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SimGameState), "GetMechWarriorSalary")]
     static class SimGameState_GetMechWarriorSalary
     {
-        static bool Prefix(SimGameState __instance, PilotDef def, ref string __result)
+        static void Prefix(ref bool __runOriginal, SimGameState __instance, PilotDef def, ref string __result)
         {
+            if (!__runOriginal) return;
+
             string salaryLabel = "------";
             if (!def.IsFree)
             {
@@ -443,7 +446,7 @@ namespace HumanResources.Patches
             }
             __result = salaryLabel;
 
-            return false;
+            __runOriginal = false;
         }
     }
 
@@ -483,12 +486,14 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SimGameState), "GetMechWarriorValue")]
     static class SimGameState_GetMechWarriorValue
     {
-        static bool Prefix(SimGameState __instance, PilotDef def, ref int __result)
+        static void  Prefix(ref bool __runOriginal, SimGameState __instance, PilotDef def, ref int __result)
         {
+            if (!__runOriginal) return;
+
             CrewDetails details = ModState.GetCrewDetails(def);
             __result = details != null ? details.Salary : 0;
 
-            return false;
+            __runOriginal = false;
         }
     }
 

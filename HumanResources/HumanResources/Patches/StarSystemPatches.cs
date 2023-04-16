@@ -1,10 +1,6 @@
-﻿using BattleTech;
-using Harmony;
-using HumanResources.Crew;
+﻿using HumanResources.Crew;
 using HumanResources.Helper;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace HumanResources.Patches
 {
@@ -14,8 +10,10 @@ namespace HumanResources.Patches
     static class StarSystem_HirePilot
     {
 
-        static void Prefix()
+        static void Prefix(ref bool __runOriginal)
         {
+            if (!__runOriginal) return;
+
             Mod.Log.Debug?.Write("ENABLING HIRING FLOW FLAG");
             ModState.IsHiringFlow = false;
         }
@@ -35,8 +33,10 @@ namespace HumanResources.Patches
         // TODO: Manipulate # of pilots by planet tags
         // TODO: Manipulate # of ronin by planet tags
         // TODO: Check for Allow flags by each type
-        static bool Prefix(StarSystem __instance, int count)
+        static void Prefix(ref bool __runOriginal, StarSystem __instance, int count)
         {
+            if (!__runOriginal) return;
+
             int systemDiff = __instance.Def.GetDifficulty(SimGameState.SimGameType.CAREER);
             Mod.Log.Info?.Write($"Generating pilots for system: {__instance.Name} with difficulty: {systemDiff}");
 
@@ -46,7 +46,7 @@ namespace HumanResources.Patches
                 Math.Max(0, Mod.Random.Next(scarcity.Aerospace.Lower, scarcity.Aerospace.Upper)) : 0;
             int mechTechs = scarcity.MechTechs.Upper > 0 ?
                 Math.Max(0, Mod.Random.Next(scarcity.MechTechs.Lower, scarcity.MechTechs.Upper)) : 0;
-            int mechWarriors = scarcity.MechWarriors.Upper > 0 ? 
+            int mechWarriors = scarcity.MechWarriors.Upper > 0 ?
                 Math.Max(0, Mod.Random.Next(scarcity.MechWarriors.Lower, scarcity.MechWarriors.Upper)) : 0;
             int medTechs = scarcity.MedTechs.Upper > 0 ?
                 Math.Max(0, Mod.Random.Next(scarcity.MedTechs.Lower, scarcity.MedTechs.Upper)) : 0;
@@ -72,15 +72,15 @@ namespace HumanResources.Patches
                     if (!ModState.SimGameState.UsedRoninIDs.Contains(unusedRonin.Description.Id))
                     {
                         Mod.Log.Debug?.Write($"Added ronin: {unusedRonin.Description.DisplayName} to available pilots.");
-                        
-                        PilotDef upgradedDef = CrewGenerator.UpgradeRonin(__instance, unusedRonin);                        
+
+                        PilotDef upgradedDef = CrewGenerator.UpgradeRonin(__instance, unusedRonin);
                         __instance.AvailablePilots.Add(upgradedDef);
                     }
                     else
                     {
                         Mod.Log.Debug?.Write($"Ronin: {unusedRonin.Description.DisplayName} already in use, skipping.");
                     }
-                    
+
                 }
 
                 for (int i = 0; i < mechWarriors; i++)
@@ -126,7 +126,8 @@ namespace HumanResources.Patches
                     __instance.AvailablePilots.Add(pDef);
                 }
             }
-            return false;
+
+            __runOriginal = false;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HumanResources.Helper
+﻿namespace HumanResources.Helper
 {
     public static class GaussianHelper
     {

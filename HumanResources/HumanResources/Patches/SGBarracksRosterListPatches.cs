@@ -1,10 +1,7 @@
-﻿using BattleTech;
-using BattleTech.UI;
+﻿using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
-using Harmony;
 using HumanResources.Comparable;
 using HumanResources.Crew;
-using HumanResources.Helper;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
@@ -14,11 +11,13 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "AddPilot")]
     static class SGBarracksRosterList_AddPilot
     {
-        static bool Prefix(SGBarracksRosterList __instance, 
+        static void Prefix(ref bool __runOriginal, SGBarracksRosterList __instance,
             Pilot pilot, UnityAction<SGBarracksRosterSlot> pilotSelectedOnClick, bool isInHireHall,
             Dictionary<string, SGBarracksRosterSlot> ___currentRoster)
         {
-            if (ModState.SimGameState == null) return true; // Only patch if we're in SimGame
+            if (!__runOriginal) return;
+
+            if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
             Mod.Log.Debug?.Write($"Adding pilot {pilot.Callsign} to roster list.");
 
@@ -47,7 +46,7 @@ namespace HumanResources.Patches
                 //ForceRefreshImmediate();
             }
 
-            return false;
+            __runOriginal = false;
         }
 
     }
@@ -55,9 +54,11 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "ApplySort")]
     static class SGBarracksRosterList_ApplySort
     {
-        static bool Prefix(SGBarracksRosterList __instance, List<SGBarracksRosterSlot> inventory)
+        static void Prefix(ref bool __runOriginal, SGBarracksRosterList __instance, List<SGBarracksRosterSlot> inventory)
         {
-            if (ModState.SimGameState == null) return true; // Only patch if we're in SimGame
+            if (!__runOriginal) return;
+
+            if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
             // TODO: Apply a logical sort here
             Mod.Log.Info?.Write($"Sorting {inventory?.Count} pilot slots");
@@ -75,7 +76,7 @@ namespace HumanResources.Patches
 
             __instance.ForceRefreshImmediate();
 
-            return false;
+            __runOriginal = false;
         }
 
     }
@@ -83,18 +84,20 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksRosterList), "SetRosterBerthText")]
     static class SGBarracksRosterList_SetRosterBerthText
     {
-        static bool Prefix(SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
+        static void Prefix(ref bool __runOriginal, SGBarracksRosterList __instance, LocalizableText ___mechWarriorCount)
         {
-            if (ModState.SimGameState == null) return true; // Only patch if we're in SimGame
+            if (!__runOriginal) return;
+
+            if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
             int usedBerths = CrewHelper.UsedBerths(ModState.SimGameState.PilotRoster);
             Mod.Log.Debug?.Write($"Berths => used: {usedBerths}  available: {ModState.SimGameState.GetMaxMechWarriors()}");
 
             string text = new Localize.Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Berths_Used],
-                new object[] { usedBerths, ModState.SimGameState.GetMaxMechWarriors() }).ToString(); 
+                new object[] { usedBerths, ModState.SimGameState.GetMaxMechWarriors() }).ToString();
             ___mechWarriorCount.SetText(text);
 
-            return false;
+            __runOriginal = false;
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using BattleTech;
-using BattleTech.UI;
-using Harmony;
+﻿using BattleTech.UI;
 using HumanResources.Crew;
 using HumanResources.Helper;
 using System;
@@ -12,10 +10,12 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGLocationWidget), "ReceiveButtonPress")]
     static class SGLocationWidget_ReceiveButtonPress
     {
-        static bool Prepare() => Mod.Config.DebugCommands; 
+        static bool Prepare() => Mod.Config.DebugCommands;
 
-        static bool Prefix(string button)
+        static void Prefix(ref bool __runOriginal, string button)
         {
+            if (!__runOriginal) return;
+
             Mod.Log.Info?.Write($"RBP invoked for button: {button}");
             if ("Hiring".Equals(button, StringComparison.InvariantCultureIgnoreCase))
             {
@@ -53,7 +53,8 @@ namespace HumanResources.Patches
                     ModState.SimGameState.Context.SetObject(GameContextObjectTagEnum.TargetMechWarrior, random);
                     ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, mechWarriorEventTracker);
 
-                    return false;
+                    __runOriginal = false;
+                    return;
                 }
                 else if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift) &&
                     ModState.SimGameState.TravelState == SimGameTravelStatus.IN_SYSTEM)
@@ -82,11 +83,10 @@ namespace HumanResources.Patches
 
                     ModState.SimGameState.OnEventTriggered(newEvent, EventScope.MechWarrior, mechWarriorEventTracker);
 
-                    return false;
+                    __runOriginal = false;
+                    return;
                 }
             }
-
-            return true;
         }
     }
 }

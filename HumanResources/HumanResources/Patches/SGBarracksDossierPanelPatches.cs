@@ -1,15 +1,9 @@
-﻿using BattleTech;
-using BattleTech.UI;
+﻿using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
-using Harmony;
 using HBS.Extensions;
 using HumanResources.Crew;
 using Localize;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HumanResources.Patches

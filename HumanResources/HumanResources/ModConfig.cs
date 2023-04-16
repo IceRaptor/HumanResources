@@ -1,5 +1,4 @@
-﻿using BattleTech;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,7 +31,7 @@ namespace HumanResources
         // ab^x where a = multiplier, b = exponent, x = skill level
         public int SalaryMulti = 30000;
         public float SalaryExponent = 1.1f;
-        
+
         // Salary variance is up or down; if salary is 10,000 variance will calculate from 9,500 to 10,500
         public float SalaryVariance = 0.05f;
         // Bonus variance is always above the salary range; 10,000 salary will be between 10,000 and 13,000
@@ -45,11 +44,11 @@ namespace HumanResources
 
         // Value by MRB level. Should be one less than MRBRepCap in SimGameConstants, as you can always hire below the first value
         //                                                  MRB: 1, 2, 3,  4,  5
-        public float[] ValueThresholdForMRBLevel = new float[] {};
+        public float[] ValueThresholdForMRBLevel = new float[] { };
 
         // For Combat units only; map skill levels to expertise boundaires (Green, Regular, Veteran, Elite, Legendary)
         // Does not apply to units w/o combat skills
-        public float[] SkillToExpertiseThresholds = new float[] {};
+        public float[] SkillToExpertiseThresholds = new float[] { };
 
         // -1 indicates no limit
         public float MaxOfType = -1;
@@ -148,21 +147,21 @@ namespace HumanResources
         public DistributionOpts SkillDistribution = new DistributionOpts()
         {
             // Rookie, Regular, Veteran, Elite, Legendary
-            Breakpoints = new float[] {},
+            Breakpoints = new float[] { },
             PlanetTagModifiers = new Dictionary<string, CrewTagModifier>()
         };
-        
+
         public DistributionOpts SizeDistribution = new DistributionOpts()
         {
             // Tiny, Small, Medium, Large, Huge
-            Breakpoints = new float[] {},
+            Breakpoints = new float[] { },
             PlanetTagModifiers = new Dictionary<string, CrewTagModifier>()
         };
 
         public LifePathOps LifePath = new LifePathOps();
 
         public ScarcityOps Scarcity = new ScarcityOps();
-        
+
         public PointsBySkillAndSizeOpts PointsBySkillAndSize = new PointsBySkillAndSizeOpts();
 
         public CrewOpts AerospaceWings = new CrewOpts
@@ -177,7 +176,7 @@ namespace HumanResources
             BonusVariance = 1.5f,
             MaxOfType = 1,
             HazardPayRatio = 0f
-    };
+        };
 
         public CrewOpts MechTechCrews = new CrewOpts
         {
@@ -240,9 +239,9 @@ namespace HumanResources
 
     public class PointsBySkillAndSizeOpts
     {
-        public int[][] Aerospace = new int[][] {};
-        public int[][] MechTech = new int[][] {};
-        public int[][] MedTech = new int[][] {};
+        public int[][] Aerospace = new int[][] { };
+        public int[][] MechTech = new int[][] { };
+        public int[][] MedTech = new int[][] { };
     }
 
     public class HeadHuntingOpts
@@ -341,10 +340,10 @@ namespace HumanResources
             Mod.Log.Info?.Write($"");
 
             Mod.Log.Info?.Write("--- Hiring Hall Config ---");
-            Mod.Log.Info?.Write($"  SkillDistribution: { string.Join(", ", this.HiringHall.SkillDistribution) }");
-            Mod.Log.Info?.Write($"  SizeDistribution: { string.Join(", ", this.HiringHall.SizeDistribution) }");
+            Mod.Log.Info?.Write($"  SkillDistribution: {string.Join(", ", this.HiringHall.SkillDistribution)}");
+            Mod.Log.Info?.Write($"  SizeDistribution: {string.Join(", ", this.HiringHall.SizeDistribution)}");
             Mod.Log.Info?.Write($"");
-            
+
             Mod.Log.Info?.Write($"  -- Scarcity --");
             Mod.Log.Info?.Write($"  Enabled: {this.HiringHall.Scarcity.Enabled}");
             Mod.Log.Info?.Write($"  - Default Planet Scarcity -");
@@ -412,13 +411,13 @@ namespace HumanResources
 
             Mod.Log.Info?.Write("--- HeadHunting Config ---");
             Mod.Log.Info?.Write($"  Enabled: {this.HeadHunting.Enabled}");
-            Mod.Log.Info?.Write($"  EconMods: [ { string.Join(", ", this.HeadHunting.EconMods) } ]");
-            Mod.Log.Info?.Write($"  ChanceBySkill: [ { string.Join(", ", this.HeadHunting.ChanceBySkill) } ]");
+            Mod.Log.Info?.Write($"  EconMods: [ {string.Join(", ", this.HeadHunting.EconMods)} ]");
+            Mod.Log.Info?.Write($"  ChanceBySkill: [ {string.Join(", ", this.HeadHunting.ChanceBySkill)} ]");
             Mod.Log.Info?.Write($"  FailedCooldownIntervalMin: {this.HeadHunting.FailedCooldownIntervalMin}  FailedCooldownIntervalMax: {this.HeadHunting.FailedCooldownIntervalMax}");
             Mod.Log.Info?.Write($"  SuccessCooldownIntervalMin: {this.HeadHunting.SuccessCooldownIntervalMin}  SuccessCooldownIntervalMax: {this.HeadHunting.SuccessCooldownIntervalMax}");
             Mod.Log.Info?.Write($"  CrewCooldownIntervalMin: {this.HeadHunting.CrewCooldownIntervalMin}  CrewCooldownIntervalMax: {this.HeadHunting.CrewCooldownIntervalMax}");
             Mod.Log.Info?.Write($"  CounterOfferVariance: {this.HeadHunting.CounterOfferVariance}");
-            Mod.Log.Info?.Write($"  PlanetBlacklist: [ { string.Join(", ", this.HeadHunting.PlanetBlacklist) } ]");
+            Mod.Log.Info?.Write($"  PlanetBlacklist: [ {string.Join(", ", this.HeadHunting.PlanetBlacklist)} ]");
 
             Mod.Log.Info?.Write($"");
 
@@ -469,7 +468,7 @@ namespace HumanResources
             {
                 this.Crew.MechwarriorColor = new Color(this.Crew.MechwarriorRGB[0], this.Crew.MechwarriorRGB[1], this.Crew.MechwarriorRGB[2]);
             }
-            if (this.Crew.AerospaceRGB!= null && this.Crew.AerospaceRGB.Length == 3)
+            if (this.Crew.AerospaceRGB != null && this.Crew.AerospaceRGB.Length == 3)
             {
                 this.Crew.AerospaceColor = new Color(this.Crew.AerospaceRGB[0], this.Crew.AerospaceRGB[1], this.Crew.AerospaceRGB[2]);
             }
@@ -531,7 +530,7 @@ namespace HumanResources
             // Tiny, Small, Medium, Large, Huge
             if (this.HiringHall.SizeDistribution.Breakpoints.Length == 0)
                 this.HiringHall.SizeDistribution.Breakpoints = new float[] { -0.25f, 0.25f, 1.25f, 2f };
-            
+
             // Scarcity
             if (this.HiringHall.Scarcity.PlanetTagModifiers.Count == 0)
             {

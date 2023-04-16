@@ -9,7 +9,7 @@ namespace HumanResources
         public const string GO_HBS_Profile_Layout_Title = "layout_title";
         public const string GO_HBS_Profile_Stats_Block = "mw_Stats";
         public const string GO_HBS_Profile_Layout_Stats = "layout_Stats-Or-HiringCost";
-        
+
         public const string GO_HBS_Barracks_ServicePanel_BattleStats = "obj-BattleStats";
         public const string GO_HBS_Barracks_Dossier_FirstName = "text_firstName";
         public const string GO_HBS_Barracks_Dossier_LastName = "text_lastName";
@@ -53,9 +53,9 @@ namespace HumanResources
         public const string Tag_Attitude_Neutral = "HR_CREW_ATTITUDE_NEUTRAL";
         public const string Tag_Attitude_Poor = "HR_CREW_ATTITUDE_POOR";
         public const string Tag_Attitude_Worst = "HR_CREW_ATTITUDE_WORST";
-        public static List<string> Tags_Attitude_All = new List<string> 
-        { 
-            ModTags.Tag_Attitude_Best, ModTags.Tag_Attitude_Good, ModTags.Tag_Attitude_Neutral, ModTags.Tag_Attitude_Worst, ModTags.Tag_Attitude_Poor 
+        public static List<string> Tags_Attitude_All = new List<string>
+        {
+            ModTags.Tag_Attitude_Best, ModTags.Tag_Attitude_Good, ModTags.Tag_Attitude_Neutral, ModTags.Tag_Attitude_Worst, ModTags.Tag_Attitude_Poor
         };
 
         public const string Tag_CrewType_Aerospace = "HR_CREWTYPE_AEROSPACE";
@@ -101,10 +101,10 @@ namespace HumanResources
         public const string HBS_Company_Funds = "Funds";
 
         public const string Aerospace_Skill = "HR_AerospaceSkill";
-        
+
         public const string Company_Reputation = "HR_CompanyRep";
         public const string Company_CrewDetail_Prefix = "HR_CrewDetail_";
-     
+
         public const string Company_HeadHunting_TestOnDay = "HR_HeadHunting_TestOnDay";
 
         public const string CrewCount_Aerospace = "HR_CrewCount_Aerospace";

@@ -1,6 +1,4 @@
-﻿using BattleTech;
-using BattleTech.UI;
-using Harmony;
+﻿using BattleTech.UI;
 using HumanResources.Crew;
 using System.Collections.Generic;
 
@@ -9,8 +7,10 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(LanceConfiguratorPanel), "SetData")]
     static class LanceConfiguratorPanel_SetData
     {
-        static void Prefix(LanceConfiguratorPanel __instance, ref List<Pilot> pilots)
+        static void Prefix(ref bool __runOriginal, LanceConfiguratorPanel __instance, ref List<Pilot> pilots)
         {
+            if (!__runOriginal) return;
+
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
             // Remove any pilots who are aerospace, mechtechs, or medtechs
@@ -24,7 +24,7 @@ namespace HumanResources.Patches
                     Mod.Log.Debug?.Write($"Pilot {p.Name} is a mechwarrior or vehicle crew, adding as option");
                     selectablePilots.Add(p);
                 }
-                    
+
             }
 
             pilots.Clear();

@@ -1,7 +1,5 @@
-﻿using BattleTech;
-using BattleTech.StringInterpolation;
+﻿using BattleTech.StringInterpolation;
 using BattleTech.UI;
-using Harmony;
 using HBS.Collections;
 using HBS.Extensions;
 using HumanResources.Crew;
@@ -10,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace HumanResources.Patches
@@ -18,7 +15,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(typeof(SGBarracksServicePanel), "SetPilot")]
     static class SGBarracksServicePanel_SetPilot
     {
-        static void Postfix(SGBarracksServicePanel __instance, Pilot p, 
+        static void Postfix(SGBarracksServicePanel __instance, Pilot p,
             BattleTech.UI.TMProWrapper.LocalizableText ___biographyLabel, SimGameState ___sim, HBSTagView ___tagViewer)
         {
             if (p == null) return;
@@ -37,7 +34,7 @@ namespace HumanResources.Patches
             List<string> filteredTags = p.pilotDef.PilotTags.Where(t => !t.StartsWith(ModTags.Tag_GUID)).ToList();
             TagSet baseTags = new TagSet(filteredTags);
             foreach (string tag in p.pilotDef.PilotTags)
-            ___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
+                ___tagViewer.Initialize(baseTags, ___sim.Context, ___sim.DebugMode, 4);
 
             Mod.Log.Debug?.Write("Updating attitude fields.");
 
@@ -78,7 +75,7 @@ namespace HumanResources.Patches
                 if (details.FavoredFactionId > 0)
                 {
                     FactionValue faction = FactionEnumeration.GetFactionByID(details.FavoredFactionId);
-                    string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored], 
+                    string favoredFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Favored],
                         new object[] { faction.FactionDef.CapitalizedName }).ToString();
                     sb.Append(favoredFactionS);
                     sb.Append("\n");
@@ -88,7 +85,7 @@ namespace HumanResources.Patches
                 if (details.HatedFactionId > 0)
                 {
                     FactionValue faction = FactionEnumeration.GetFactionByID(details.HatedFactionId);
-                    string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated], 
+                    string hatedFactionS = new Text(Mod.LocalizedText.Labels[ModText.LT_Crew_Dossier_Biography_Faction_Hated],
                         new object[] { faction.FactionDef.CapitalizedName }).ToString();
                     sb.Append(hatedFactionS);
                     sb.Append("\n");

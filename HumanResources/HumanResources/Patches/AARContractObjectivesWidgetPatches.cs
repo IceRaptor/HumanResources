@@ -1,7 +1,5 @@
-﻿using BattleTech;
-using BattleTech.Framework;
+﻿using BattleTech.Framework;
 using BattleTech.UI;
-using Harmony;
 using HumanResources.Crew;
 using Localize;
 using System;
@@ -28,7 +26,7 @@ namespace HumanResources.Patches
                 }
                 Mod.Log.Debug?.Write($"Total hazard pay for mission is: {hazardPaySum}");
 
-                string hazardPayTitleS = new Text(Mod.LocalizedText.Labels[ModText.LT_Contract_Hazard_Pay], 
+                string hazardPayTitleS = new Text(Mod.LocalizedText.Labels[ModText.LT_Contract_Hazard_Pay],
                     new object[] { SimGameState.GetCBillString(hazardPaySum) }).ToString();
                 string guid = Guid.NewGuid().ToString();
 

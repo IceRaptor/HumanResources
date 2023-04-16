@@ -1,7 +1,5 @@
-﻿using BattleTech;
-using BattleTech.UI;
+﻿using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
-using Harmony;
 using HumanResources.Crew;
 using HumanResources.Helper;
 using Localize;
@@ -16,7 +14,7 @@ namespace HumanResources.Patches.UI
         static void Postfix(SGSystemViewPopulator __instance, List<LocalizableText> ___SystemDescriptionFields)
         {
             Mod.Log.Debug?.Write("Updating system description with scarcity");
-            
+
             StarSystem selectedSystem = ModState.SimGameState.Starmap.CurSelected.System;
             PlanetScarcity scarcity = selectedSystem.GetScarcityForPlanet();
 

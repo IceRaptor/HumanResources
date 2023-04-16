@@ -1,11 +1,8 @@
-﻿using BattleTech;
-using BattleTech.Data;
+﻿using BattleTech.Data;
 using BattleTech.Portraits;
-using Harmony;
 using HBS.Collections;
 using HumanResources.Helper;
 using HumanResources.Lifepath;
-using IRBTModUtils;
 using Localize;
 using System;
 using System.Collections.Generic;
@@ -84,7 +81,7 @@ namespace HumanResources.Crew
             return baseRoninDef;
         }
 
-        public static CrewDetails GenerateDetailsForVanillaMechwarrior(PilotDef basePilotDef, bool isFounder=false)
+        public static CrewDetails GenerateDetailsForVanillaMechwarrior(PilotDef basePilotDef, bool isFounder = false)
         {
             (FactionValue favored, FactionValue hated) = GenerateCrewFactions(null);
             CrewDetails details = new CrewDetails(basePilotDef, CrewType.MechWarrior, favored, hated);
@@ -239,7 +236,7 @@ namespace HumanResources.Crew
                     string tagS = tag.Substring(ModTags.Tag_Prefix_Ronin_Salary_Multi.Length);
                     try
                     {
-                        salaryCfg.Multi =  Int32.Parse(tagS, CultureInfo.InvariantCulture);
+                        salaryCfg.Multi = Int32.Parse(tagS, CultureInfo.InvariantCulture);
                         Mod.Log.Debug?.Write($" -- found salaryMulti: {salaryCfg.Multi}");
                     }
                     catch (Exception e)
@@ -300,7 +297,7 @@ namespace HumanResources.Crew
             }
 
             // Normalize size and skill to index values
-            CrewDetails details = new CrewDetails(roninDef, type, favored, hated, size - 1, skill - 1, isFounder, 
+            CrewDetails details = new CrewDetails(roninDef, type, favored, hated, size - 1, skill - 1, isFounder,
                 salaryCfg.IsDefault() ? null : salaryCfg);
 
             return details;

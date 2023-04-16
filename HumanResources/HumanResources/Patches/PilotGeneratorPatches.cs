@@ -1,6 +1,4 @@
-﻿using BattleTech;
-using Harmony;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace HumanResources.Patches
@@ -9,7 +7,7 @@ namespace HumanResources.Patches
     [HarmonyPatch(new Type[] { typeof(SimGameState), typeof(List<LifepathNodeDef>), typeof(List<SimGameStringList>) })]
     static class PilotGenerator_Ctor
     {
-        static void Postfix(SimGameState sim, PilotGenerator __instance, 
+        static void Postfix(SimGameState sim, PilotGenerator __instance,
             List<LifepathNodeDef> ___lifepaths, List<LifepathNodeDef> ___startingPaths,
             List<LifepathNodeDef> ___advanceStartingPaths, GenderedOptionsListDef ___voiceList)
         {

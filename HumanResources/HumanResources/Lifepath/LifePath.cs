@@ -1,5 +1,4 @@
-﻿using Localize;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace HumanResources.Lifepath
@@ -17,7 +16,7 @@ namespace HumanResources.Lifepath
         public (int, int) WeightBounds = (0, 0);
         [JsonIgnore]
         public int WeightTotal = 0;
-        
+
         public Dictionary<string, LifePath> Lifepaths;
     }
 

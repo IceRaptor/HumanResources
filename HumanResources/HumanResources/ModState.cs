@@ -1,6 +1,4 @@
-﻿
-using BattleTech;
-using HumanResources.Crew;
+﻿using HumanResources.Crew;
 using HumanResources.Helper;
 using Newtonsoft.Json;
 using System;
@@ -48,7 +46,7 @@ namespace HumanResources
             Mod.Log.Info?.Write("CLEARING ALL MOD STATE DATA");
             SimGameState = null;
             CrewCreateState = new CrewCreateState();
-            
+
             ExpiredContracts.Clear();
             HeadHuntedPilot = null;
 
@@ -184,7 +182,7 @@ namespace HumanResources
                 Mod.Log.Debug?.Write($" -- no GUID found for pilotDef in tag or details, adding new details GUID: {newDetails.GUID}");
             }
             if (guid == null && !String.IsNullOrEmpty(newDetails.GUID))
-            {               
+            {
                 guid = newDetails.GUID;
                 Mod.Log.Debug?.Write($" -- no GUID found for pilotDef in tags, using new details GUID: {newDetails.GUID}");
             }

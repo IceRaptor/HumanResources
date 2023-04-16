@@ -1,12 +1,8 @@
-﻿using BattleTech;
-using BattleTech.UI;
+﻿using BattleTech.UI;
 using BattleTech.UI.TMProWrapper;
 using BattleTech.UI.Tooltips;
-using Harmony;
 using HBS.Extensions;
 using HumanResources.Crew;
-using HumanResources.Helper;
-using IRBTModUtils;
 using SVGImporter;
 using TMPro;
 using UnityEngine;
@@ -24,7 +20,7 @@ namespace HumanResources.Patches
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
             Mod.Log.Debug?.Write($"Refreshing availability for pilot: {___pilot.Name}");
-            
+
             // TODO: This may need to be improved, as it's used inside a loop. Maybe write to company stats?
             CrewDetails details = ModState.GetCrewDetails(___pilot.pilotDef);
             Mod.Log.Debug?.Write($"  -- pilot requires: {details.Size} berths");
@@ -79,47 +75,21 @@ namespace HumanResources.Patches
         }
     }
 
-    //[HarmonyPatch(typeof(SGBarracksRosterSlot), "Init")]
-    //static class SGBarracksRosterSlot_Init
-    //{
-    //    static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
-    //    {
-    //        Mod.Log.Debug?.Write($"Initing with pilot: {___pilot?.Name}");
-    //    }
-    //}
-
-    //[HarmonyPatch(typeof(SGBarracksRosterSlot), "InitNoDrag")]
-    //static class SGBarracksRosterSlot_InitNoDrag
-    //{
-    //    static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
-    //    {
-    //        Mod.Log.Debug?.Write($"InitNoDrag with pilot: {___pilot?.Name}");
-    //    }
-    //}
-
-
-    //[HarmonyPatch(typeof(SGBarracksRosterSlot), "InitNoInteract")]
-    //static class SGBarracksRosterSlot_InitNoInteract
-    //{
-    //    static void Prefix(SGBarracksRosterSlot __instance, Pilot ___pilot)
-    //    {
-    //        Mod.Log.Debug?.Write($"InitNoInteract with pilot: {___pilot?.Name}");
-    //    }
-    //}
-
     [HarmonyPatch(typeof(SGBarracksRosterSlot), "Refresh")]
     static class SGBarracksRosterSlot_Refresh
     {
-        static void Prefix(Pilot ___pilot)
+        static void Prefix(ref bool __runOriginal, Pilot ___pilot)
         {
+            if (!__runOriginal) return;
+
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
 
             Mod.Log.Debug?.Write($"PRE Calling refresh for pilot: {___pilot.Name}");
         }
 
-        static void Postfix(SGBarracksRosterSlot __instance, Pilot ___pilot, 
+        static void Postfix(SGBarracksRosterSlot __instance, Pilot ___pilot,
             GameObject ___AbilitiesObject, LocalizableText ___callsign, Image ___portrait,
-            SVGImage ___roninIcon, SVGImage ___veteranIcon, 
+            SVGImage ___roninIcon, SVGImage ___veteranIcon,
             LocalizableText ___expertise, HBSTooltip ___ExpertiseTooltip)
         {
             if (ModState.SimGameState == null) return; // Only patch if we're in SimGame
@@ -365,7 +335,7 @@ namespace HumanResources.Patches
                 vlg.childForceExpandHeight = false;
                 vlg.childForceExpandWidth = false;
                 vlg.childAlignment = TextAnchor.MiddleLeft;
-                
+
                 layoutGO.transform.SetAsFirstSibling();
                 //Mod.Log.Debug?.Write("ADDED CONTENT FITTER BLOCK");
 

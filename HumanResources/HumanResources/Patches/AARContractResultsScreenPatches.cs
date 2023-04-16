@@ -1,6 +1,4 @@
-﻿using BattleTech;
-using BattleTech.UI;
-using Harmony;
+﻿using BattleTech.UI;
 using HumanResources.Crew;
 using Localize;
 using System.Collections.Generic;
@@ -18,7 +16,7 @@ namespace HumanResources.Patches
         {
 
             StringBuilder bodySB = new StringBuilder();
-            bodySB.Append(new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Body], new object[] { }).ToString());            
+            bodySB.Append(new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Body], new object[] { }).ToString());
 
             int killedPilotsMod = Mod.Config.Attitude.PerMission.PilotKilledMod * ___theContract.KilledPilots.Count;
             if (___theContract.KilledPilots.Count > 0)
@@ -185,7 +183,7 @@ namespace HumanResources.Patches
                 string detailsS = string.Join(", ", detailDescs);
                 bodySB.Append(
                     new Text(Mod.LocalizedText.Dialogs[ModText.DIAT_AAR_Pilot_Line],
-                    new object[] {details.Attitude, p.Callsign, detailsS }).ToString()
+                    new object[] { details.Attitude, p.Callsign, detailsS }).ToString()
                     );
 
                 ModState.UpdateOrCreateCrewDetails(p.pilotDef, details);
